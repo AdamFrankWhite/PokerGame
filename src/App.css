@@ -7,32 +7,67 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  min-height: 100vh;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.poker-table {
+  width: 70vw;
+  height: 30vw;
+  background: darkgreen;
+  border-radius: 50%;
+  margin: auto;
+  border: 3px solid black;
+  box-shadow: 3px 3px 3px gray;
+  position: relative;
+}
+
+.avatar {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  width: 8%;
+  border: 2px black solid;
+  border-radius: 10%;
+  height: auto;
+  position: absolute;
+  background: white;
+}
+.avatar h2 {
+  margin: 0;
+  font-size: 0.8em;
+  text-transform: capitalize;
+}
+.avatar.avatar-1 {
+  top: -10%;
+  left: 45%;
+}
+.avatar.avatar-2 {
+  bottom: -10%;
+  left: 45%;
 }
 
-.App-link {
-  color: #61dafb;
+.holecards {
+  position: absolute;
+  display: flex;
+  width: 12%;
+  height: auto;
+}
+.holecards img {
+  width: 50%;
+}
+.holecards.avatar-1 {
+  top: 10%;
+  left: 43%;
+}
+.holecards.avatar-2 {
+  bottom: 10%;
+  left: 43%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/*# sourceMappingURL=App.css.map */

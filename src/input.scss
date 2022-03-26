@@ -1,0 +1,72 @@
+.App {
+    text-align: center;
+}
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+.App {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    min-height: 100vh;
+}
+.poker-table {
+    width: 70vw;
+    height: 30vw;
+    background: darkgreen;
+    border-radius: 50%;
+    margin: auto;
+    border: 3px solid black;
+    box-shadow: 3px 3px 3px gray;
+    position: relative;
+}
+
+.avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 8%;
+    border: 2px black solid;
+    border-radius: 10%;
+    height: auto;
+    position: absolute;
+    background: white;
+    h2 {
+        margin: 0;
+        font-size: 0.8em;
+        text-transform: capitalize;
+    }
+
+    &.avatar-1 {
+        top: -10%;
+        left: 45%;
+        // right: 45%;
+    }
+    &.avatar-2 {
+        bottom: -10%;
+        left: 45%;
+        // right: 45%;
+    }
+}
+
+.holecards {
+    position: absolute;
+    display: flex;
+    width: 12%;
+    height: auto;
+    img {
+        width: 50%;
+    }
+    &.avatar-1 {
+        top: 10%;
+        left: 43%;
+    }
+    &.avatar-2 {
+        bottom: 10%;
+        left: 43%;
+    }
+}
