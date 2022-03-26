@@ -2,12 +2,20 @@
     text-align: center;
 }
 
+html {
+    width: 100vw;
+    overflow-x: hidden;
+}
+
 .App-logo {
     height: 40vmin;
     pointer-events: none;
 }
 .App {
     display: flex;
+    background-image: url("/public/marble-2362265_1280.jpg");
+    background-size: cover;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100vw;
@@ -15,7 +23,7 @@
 }
 .poker-table {
     width: 70vw;
-    height: 30vw;
+    height: 25vw;
     background: darkgreen;
     border-radius: 50%;
     margin: auto;
@@ -26,15 +34,25 @@
 
 .avatar {
     display: flex;
-    flex-direction: column;
+    // flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 8%;
+    padding: 0.25em 0.5em;
     border: 2px black solid;
     border-radius: 10%;
-    height: auto;
+    min-width: 12%;
     position: absolute;
     background: white;
+    img {
+        // width: 5em;
+        // height: auto;
+    }
+    .avatar-text {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
     h2 {
         margin: 0;
         font-size: 0.8em;
@@ -43,14 +61,18 @@
 
     &.avatar-1 {
         top: -10%;
-        left: 45%;
+        left: 42%;
         // right: 45%;
     }
     &.avatar-2 {
         bottom: -10%;
-        left: 45%;
+        left: 42%;
         // right: 45%;
     }
+}
+
+.chip-count {
+    margin: 0;
 }
 
 .holecards {
@@ -62,11 +84,92 @@
         width: 50%;
     }
     &.avatar-1 {
-        top: 10%;
+        top: 14%;
         left: 43%;
     }
     &.avatar-2 {
-        bottom: 10%;
+        bottom: 14%;
         left: 43%;
     }
+}
+
+.betting-ui {
+    .betting-ui-btns {
+        display: flex;
+        button {
+            padding: 1.5em 2em;
+            border-radius: 10px;
+
+            margin: 1em;
+            background: rgb(0, 61, 0);
+            color: white;
+            &:hover {
+                box-shadow: 3px 3px 3px gray;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+header {
+    background: white;
+    padding: 3em;
+    border-radius: 10px;
+}
+.dealer-btn {
+    background: white;
+    color: black;
+    border-radius: 50%;
+    padding: 0.5em;
+    line-height: 1em;
+    width: 1em;
+}
+.dealer-top {
+    position: absolute;
+    top: 25%;
+    left: 37%;
+}
+.dealer-bottom {
+    position: absolute;
+    bottom: 25%;
+    left: 37%;
+}
+
+.slidecontainer {
+    width: 100%; /* Width of the outside container */
+}
+
+/* The slider itself */
+.slider {
+    -webkit-appearance: none; /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 25px; /* Specified height */
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
+    transition: opacity 0.2s;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #04aa6d; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #04aa6d; /* Green background */
+    cursor: pointer; /* Cursor on hover */
 }

@@ -8,7 +8,10 @@ export default function Avatar(props) {
                 src={props.player == "computer" ? avatar1 : avatar2}
                 alt="avatar"
             />
-            <h2>{props.player}</h2>
+            <div className="avatar-text">
+                <p className="chip-count">{props.chips}</p>
+                <h2>{props.player}</h2>
+            </div>
         </div>
     );
 }
