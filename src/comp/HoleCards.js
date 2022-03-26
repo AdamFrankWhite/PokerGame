@@ -1,6 +1,6 @@
-import React from "react";
-
-export default function HoleCards(props) {
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+function HoleCards(props) {
     function importAll(r) {
         let images = {};
         r.keys().map((item) => {
@@ -8,25 +8,33 @@ export default function HoleCards(props) {
         });
         return images;
     }
-
     const images = importAll(require.context("../img/cards", false, /.svg/));
-    console.log(props.hand);
+    const [cardImages, setCardImages] = useState({
+        card1: images["1B.svg"],
+        card2: images["1B.svg"],
+    });
+    useEffect(() => {
+        console.log(props.user.humanHand);
+
+        //Check if state is loaded before updating img src - huge pain to fix
+        if (props.user.humanHand.card1 && props.user.humanHand.card2) {
+            setCardImages({
+                card1: images[
+                    `${props.user.humanHand.card1.card.toUpperCase()}.svg`
+                ],
+                card2: images[
+                    `${props.user.humanHand.card2.card.toUpperCase()}.svg`
+                ],
+            });
+        }
+    }, [props.user.humanHand]);
+
     return (
         <div className={"holecards " + props.id}>
             {props.isHuman ? (
                 <>
-                    <img
-                        src={
-                            props.hand.card1.card &&
-                            images[`${props.hand.card1.card.toUpperCase()}.svg`]
-                        }
-                    />
-                    <img
-                        src={
-                            props.hand.card2.card &&
-                            images[`${props.hand.card2.card.toUpperCase()}.svg`]
-                        }
-                    />
+                    <img src={cardImages.card1} />
+                    <img src={cardImages.card2} />
                 </>
             ) : (
                 <>
@@ -37,3 +45,10 @@ export default function HoleCards(props) {
         </div>
     );
 }
+
+const mapStateToProps = (state) => {
+    return { user: state.user };
+};
+
+const mapActionsToProps = {};
+export default connect(mapStateToProps, mapActionsToProps)(HoleCards);

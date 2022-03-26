@@ -96,10 +96,14 @@ html {
 .betting-ui {
     .betting-ui-btns {
         display: flex;
+
         button {
             padding: 1.5em 2em;
             border-radius: 10px;
-
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             margin: 1em;
             background: rgb(0, 61, 0);
             color: white;

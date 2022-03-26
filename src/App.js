@@ -2,6 +2,7 @@ import "./App.css";
 import { useState } from "react";
 import IntroScreen from "./comp/IntroScreen";
 import GameView from "./comp/GameView";
+
 function App() {
     const [user, setUser] = useState("");
     const createGame = (newGame, name) => {
@@ -9,6 +10,7 @@ function App() {
             setUser(name);
         }
     };
+
     return (
         <div className="App">
             {user ? (

@@ -1,12 +1,24 @@
 import React from "react";
 import { useState } from "react";
-export default function BettingUI(props) {
+import { connect } from "react-redux";
+import { updateHumanChips } from "../redux/actions/userActions";
+function BettingUI(props) {
     const [betAmount, setBetAmount] = useState(100);
     return (
         <div className="betting-ui">
             <div className="betting-ui-btns">
-                <button>Fold</button>
-                <button>Bet</button>
+                <button onClick={() => props.newHand()}>Fold</button>
+                <button
+                    onClick={() =>
+                        props.updateHumanChips(
+                            props.user.humanChips,
+                            "lose",
+                            betAmount
+                        )
+                    }
+                >
+                    Bet
+                </button>
                 <button>Call</button>
                 <button>Raise</button>
             </div>
@@ -25,3 +37,13 @@ export default function BettingUI(props) {
         </div>
     );
 }
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+    };
+};
+
+const mapActionsToProps = {
+    updateHumanChips,
+};
+export default connect(mapStateToProps, mapActionsToProps)(BettingUI);

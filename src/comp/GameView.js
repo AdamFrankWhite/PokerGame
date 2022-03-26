@@ -6,64 +6,49 @@ import { useState } from "react";
 import BigBlind from "./BigBlind";
 import DealerBtn from "./DealerBtn";
 import BettingUI from "./BettingUI";
-export default function GameView(props) {
+import { connect } from "react-redux";
+import { newHand } from "../redux/actions/userActions";
+function GameView(props) {
     const [computerHand, setComputerHand] = useState({ card1: "", card2: "" });
     const [userHand, setUserHand] = useState({ card1: "", card2: "" });
     const [bigBlind, setBigBlind] = useState("computer");
     const [smallBlind, setSmallBlind] = useState("human");
-    const [computerChips, updateComputerChips] = useState(3000);
-    const [humanChips, updateHumanChips] = useState(3000);
-    const getRandomCard = (currentDeckSize) => {
-        return Math.floor(Math.random() * currentDeckSize);
-    };
-    const newHand = () => {
-        // let currentDeck = cards.map((item) => item);
-        let updatedDeck = [...cards];
-        let card1 = updatedDeck[getRandomCard(updatedDeck.length)];
-        updatedDeck = updatedDeck.filter((item) => item.card != card1.card);
-        let card2 = updatedDeck[getRandomCard(updatedDeck.length)];
-        updatedDeck = updatedDeck.filter((item) => item.card != card2.card);
-        setComputerHand({ card1, card2 });
 
-        let card3 = updatedDeck[getRandomCard(updatedDeck.length)];
-        updatedDeck = updatedDeck.filter((item) => item.card != card3.card);
-        let card4 = updatedDeck[getRandomCard(updatedDeck.length)];
-        updatedDeck = updatedDeck.filter((item) => item.card != card4.card);
-        setUserHand({ card1: card3, card2: card4 });
-        console.log(updatedDeck);
-        setBigBlind(bigBlind == "computer" ? "human" : "computer");
-        setSmallBlind(smallBlind == "computer" ? "human" : "computer");
-    };
     useEffect(() => {
-        newHand();
-        preflop();
+        props.newHand();
+        // preflop();
     }, []);
 
-    const preflop = () => {};
+    // const preflop = () => {};
     return (
         <>
             <div class="poker-table">
                 <Avatar
                     player="computer"
                     id={"avatar-1"}
-                    chips={computerChips}
+                    chips={props.user.computerChips}
                 />
-                <HoleCards
-                    isHuman={false}
-                    id={"avatar-1"}
-                    hand={computerHand}
-                />
+                <HoleCards isHuman={false} id={"avatar-1"} />
                 <Avatar
-                    player={props.user}
+                    player={"human"}
                     id={"avatar-2"}
-                    chips={humanChips}
+                    chips={props.user.humanChips}
                 />
-                <HoleCards isHuman={true} id={"avatar-2"} hand={userHand} />
+                <HoleCards isHuman={true} id={"avatar-2"} />
                 <BigBlind player={bigBlind} />
                 <DealerBtn player={smallBlind} />
             </div>
-            <BettingUI chips={humanChips} />
+            <BettingUI chips={props.user.humanChips} />
             <button onClick={() => newHand()}>New hand</button>
         </>
     );
 }
+
+const mapStateToProps = (state) => {
+    return { user: state.user };
+};
+
+const mapActionsToProps = {
+    newHand,
+};
+export default connect(mapStateToProps, mapActionsToProps)(GameView);
