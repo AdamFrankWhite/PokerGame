@@ -39,7 +39,7 @@ function GameView(props) {
                 <DealerBtn player={smallBlind} />
             </div>
             <BettingUI chips={props.user.humanChips} />
-            <button onClick={() => newHand()}>New hand</button>
+            <button onClick={() => props.newHand()}>New hand</button>
         </>
     );
 }

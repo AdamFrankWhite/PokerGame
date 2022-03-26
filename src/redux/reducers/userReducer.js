@@ -3,8 +3,9 @@ import { UPDATE_HUMAN_CHIPS, UPDATE_COMPUTER_CHIPS, SET_HANDS } from "../types";
 const initialState = {
     humanChips: 3000,
     computerChips: 3000,
-    humanHand: {},
-    computerHand: {},
+    hands: {},
+    bigBlind: "computer",
+    gameState: "preflop",
 };
 
 export default function (state = initialState, action) {
@@ -22,8 +23,10 @@ export default function (state = initialState, action) {
         case SET_HANDS:
             return {
                 ...state,
-                computerHand: action.payload.computer,
-                humanHand: action.payload.human,
+                hands: {
+                    computerHand: action.payload.computer,
+                    humanHand: action.payload.human,
+                },
             };
 
         default:

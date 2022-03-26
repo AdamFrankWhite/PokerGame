@@ -17,17 +17,17 @@ function HoleCards(props) {
         console.log(props.user.humanHand);
 
         //Check if state is loaded before updating img src - huge pain to fix
-        if (props.user.humanHand.card1 && props.user.humanHand.card2) {
+        if (props.user.hands) {
             setCardImages({
                 card1: images[
-                    `${props.user.humanHand.card1.card.toUpperCase()}.svg`
+                    `${props.user.hands.humanHand.card1.card.toUpperCase()}.svg`
                 ],
                 card2: images[
-                    `${props.user.humanHand.card2.card.toUpperCase()}.svg`
+                    `${props.user.hands.humanHand.card2.card.toUpperCase()}.svg`
                 ],
             });
         }
-    }, [props.user.humanHand]);
+    }, [props.user.hands]);
 
     return (
         <div className={"holecards " + props.id}>

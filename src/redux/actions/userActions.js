@@ -44,3 +44,5 @@ export const newHand = () => (dispatch) => {
     // setBigBlind(bigBlind == "computer" ? "human" : "computer");
     // setSmallBlind(smallBlind == "computer" ? "human" : "computer");
 };
+
+const preflop = () => {};

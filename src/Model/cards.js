@@ -33,7 +33,7 @@ export const cards = [
 
     { card: "9H", path: `../img/cards/9H.svg`, suit: "Hearts", value: 9 },
 
-    { card: "10H", path: `../img/cards/10H.svg`, suit: "Hearts", value: 10 },
+    { card: "TH", path: `../img/cards/TH.svg`, suit: "Hearts", value: 10 },
 
     {
         card: "jH",
@@ -81,7 +81,7 @@ export const cards = [
 
     { card: "9S", path: `../img/cards/9S.svg`, suit: "Spades", value: 9 },
 
-    { card: "10S", path: `../img/cards/10S.svg`, suit: "Spades", value: 10 },
+    { card: "TS", path: `../img/cards/TS.svg`, suit: "Spades", value: 10 },
 
     {
         card: "jS",
@@ -129,7 +129,7 @@ export const cards = [
 
     { card: "9D", path: `../img/cards/9D.svg`, suit: "Diamonds", value: 9 },
 
-    { card: "10D", path: `../img/cards/10D.svg`, suit: "Diamonds", value: 10 },
+    { card: "TD", path: `../img/cards/TD.svg`, suit: "Diamonds", value: 10 },
 
     {
         card: "jD",
@@ -176,7 +176,7 @@ export const cards = [
 
     { card: "9C", path: `../img/cards/9C.svg`, suit: "Clubs", value: 9 },
 
-    { card: "10C", path: `../img/cards/10C.svg`, suit: "Clubs", value: 10 },
+    { card: "TC", path: `../img/cards/TC.svg`, suit: "Clubs", value: 10 },
 
     {
         card: "jC",
