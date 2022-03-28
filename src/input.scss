@@ -15,11 +15,13 @@ html {
     display: flex;
     background-image: url("/public/marble-2362265_1280.jpg");
     background-size: cover;
+    width: 100vw;
+    height: 100vh;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100vw;
-    min-height: 100vh;
+
+    min-height: 600px;
 }
 .poker-table {
     width: 70vw;
@@ -78,10 +80,13 @@ html {
 .holecards {
     position: absolute;
     display: flex;
-    width: 12%;
+    width: 11%;
     height: auto;
     img {
         width: 50%;
+    }
+    .computer-hole-cards {
+        width: 80%;
     }
     &.avatar-1 {
         top: 14%;
@@ -98,6 +103,10 @@ html {
         display: flex;
 
         button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
             padding: 1.5em 2em;
             border-radius: 10px;
             text-transform: uppercase;
@@ -110,6 +119,9 @@ html {
             &:hover {
                 box-shadow: 3px 3px 3px gray;
                 cursor: pointer;
+            }
+            span:nth-of-type(2) {
+                font-weight: 400;
             }
         }
     }
@@ -138,11 +150,31 @@ header {
     bottom: 25%;
     left: 37%;
 }
+.pot {
+    position: absolute;
+    bottom: 45%;
+    left: 45%;
+}
+
+.community-cards {
+    position: absolute;
+    display: flex;
+    width: 27%;
+    height: auto;
+    img {
+        width: 20%;
+        margin: 0.1em;
+    }
+    left: 40%;
+    top: 40%;
+}
 
 .slidecontainer {
     width: 100%; /* Width of the outside container */
 }
-
+.slidecontainer ~ p {
+    margin: 0;
+}
 /* The slider itself */
 .slider {
     -webkit-appearance: none; /* Override default CSS styles */

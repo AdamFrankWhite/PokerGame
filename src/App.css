@@ -16,11 +16,12 @@ html {
   display: flex;
   background-image: url("/public/marble-2362265_1280.jpg");
   background-size: cover;
+  width: 100vw;
+  height: 100vh;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  min-height: 100vh;
+  min-height: 600px;
 }
 
 .poker-table {
@@ -72,11 +73,14 @@ html {
 .holecards {
   position: absolute;
   display: flex;
-  width: 12%;
+  width: 11%;
   height: auto;
 }
 .holecards img {
   width: 50%;
+}
+.holecards .computer-hole-cards {
+  width: 80%;
 }
 .holecards.avatar-1 {
   top: 14%;
@@ -91,6 +95,10 @@ html {
   display: flex;
 }
 .betting-ui .betting-ui-btns button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   padding: 1.5em 2em;
   border-radius: 10px;
   text-transform: uppercase;
@@ -104,6 +112,9 @@ html {
 .betting-ui .betting-ui-btns button:hover {
   box-shadow: 3px 3px 3px gray;
   cursor: pointer;
+}
+.betting-ui .betting-ui-btns button span:nth-of-type(2) {
+  font-weight: 400;
 }
 
 header {
@@ -133,9 +144,32 @@ header {
   left: 37%;
 }
 
+.pot {
+  position: absolute;
+  bottom: 45%;
+  left: 45%;
+}
+
+.community-cards {
+  position: absolute;
+  display: flex;
+  width: 27%;
+  height: auto;
+  left: 40%;
+  top: 40%;
+}
+.community-cards img {
+  width: 20%;
+  margin: 0.1em;
+}
+
 .slidecontainer {
   width: 100%;
   /* Width of the outside container */
+}
+
+.slidecontainer ~ p {
+  margin: 0;
 }
 
 /* The slider itself */

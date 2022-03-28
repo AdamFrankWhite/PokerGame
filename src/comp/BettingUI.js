@@ -17,7 +17,8 @@ function BettingUI(props) {
                         )
                     }
                 >
-                    Bet
+                    <span>Bet</span>
+                    <span>{betAmount}</span>
                 </button>
                 <button>Call</button>
                 <button>Raise</button>

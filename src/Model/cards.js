@@ -1,8 +1,8 @@
 export const cards = [
     // Hearts
     {
-        card: "aH",
-        path: `../img/cards/aH.svg`,
+        card: "AH",
+        path: `../img/cards/AH.svg`,
         suit: "Hearts",
         value: 14,
     },
@@ -36,22 +36,22 @@ export const cards = [
     { card: "TH", path: `../img/cards/TH.svg`, suit: "Hearts", value: 10 },
 
     {
-        card: "jH",
-        path: `../img/cards/jH.svg`,
+        card: "JH",
+        path: `../img/cards/JH.svg`,
         suit: "Hearts",
         value: 11,
     },
 
     {
-        card: "qH",
-        path: `../img/cards/qH.svg`,
+        card: "QH",
+        path: `../img/cards/QH.svg`,
         suit: "Hearts",
         value: 12,
     },
 
     {
-        card: "kH",
-        path: `../img/cards/kH.svg`,
+        card: "KH",
+        path: `../img/cards/KH.svg`,
         suit: "Hearts",
         value: 13,
     },
@@ -59,8 +59,8 @@ export const cards = [
     // Spades
 
     {
-        card: "aS",
-        path: `../img/cards/aS.svg`,
+        card: "AS",
+        path: `../img/cards/AS.svg`,
         suit: "Spades",
         value: 14,
     },
@@ -84,22 +84,22 @@ export const cards = [
     { card: "TS", path: `../img/cards/TS.svg`, suit: "Spades", value: 10 },
 
     {
-        card: "jS",
-        path: `../img/cards/jS.svg`,
+        card: "JS",
+        path: `../img/cards/JS.svg`,
         suit: "Spades",
         value: 11,
     },
 
     {
-        card: "qS",
-        path: `../img/cards/qS.svg`,
+        card: "QS",
+        path: `../img/cards/QS.svg`,
         suit: "Spades",
         value: 12,
     },
 
     {
-        card: "kS",
-        path: `../img/cards/kS.svg`,
+        card: "KS",
+        path: `../img/cards/KS.svg`,
         suit: "Spades",
         value: 13,
     },
@@ -107,8 +107,8 @@ export const cards = [
     // Diamonds
 
     {
-        card: "aD",
-        path: `../img/cards/aD.svg`,
+        card: "AD",
+        path: `../img/cards/AD.svg`,
         suit: "Diamonds",
         value: 14,
     },
@@ -132,30 +132,30 @@ export const cards = [
     { card: "TD", path: `../img/cards/TD.svg`, suit: "Diamonds", value: 10 },
 
     {
-        card: "jD",
-        path: `../img/cards/jD.svg`,
+        card: "JD",
+        path: `../img/cards/JD.svg`,
         suit: "Diamonds",
         value: 11,
     },
 
     {
-        card: "qD",
-        path: `../img/cards/qD.svg`,
+        card: "QD",
+        path: `../img/cards/QD.svg`,
         suit: "Diamonds",
         value: 12,
     },
 
     {
-        card: "kD",
-        path: `../img/cards/kD.svg`,
+        card: "KD",
+        path: `../img/cards/KD.svg`,
         suit: "Diamonds",
         value: 13,
     },
 
     // Clubs
     {
-        card: "aC",
-        path: `../img/cards/aC.svg`,
+        card: "AC",
+        path: `../img/cards/AC.svg`,
         suit: "Clubs",
         value: 14,
     },
@@ -179,22 +179,22 @@ export const cards = [
     { card: "TC", path: `../img/cards/TC.svg`, suit: "Clubs", value: 10 },
 
     {
-        card: "jC",
-        path: `../img/cards/jC.svg`,
+        card: "JC",
+        path: `../img/cards/JC.svg`,
         suit: "Clubs",
         value: 11,
     },
 
     {
-        card: "qC",
-        path: `../img/cards/qC.svg`,
+        card: "QC",
+        path: `../img/cards/QC.svg`,
         suit: "Clubs",
         value: 12,
     },
 
     {
-        card: "kC",
-        path: `../img/cards/kC.svg`,
+        card: "KC",
+        path: `../img/cards/KC.svg`,
         suit: "Clubs",
         value: 13,
     },

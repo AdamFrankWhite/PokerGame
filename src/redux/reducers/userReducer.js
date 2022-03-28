@@ -1,4 +1,9 @@
-import { UPDATE_HUMAN_CHIPS, UPDATE_COMPUTER_CHIPS, SET_HANDS } from "../types";
+import {
+    UPDATE_HUMAN_CHIPS,
+    UPDATE_COMPUTER_CHIPS,
+    SET_HANDS,
+    SET_REMAINING_DECK,
+} from "../types";
 
 const initialState = {
     humanChips: 3000,
@@ -6,6 +11,7 @@ const initialState = {
     hands: {},
     bigBlind: "computer",
     gameState: "preflop",
+    remainingDeck: [],
 };
 
 export default function (state = initialState, action) {
@@ -28,7 +34,11 @@ export default function (state = initialState, action) {
                     humanHand: action.payload.human,
                 },
             };
-
+        case SET_REMAINING_DECK:
+            return {
+                ...state,
+                remainingDeck: action.payload,
+            };
         default:
             return { ...state };
     }

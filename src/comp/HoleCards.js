@@ -14,17 +14,14 @@ function HoleCards(props) {
         card2: images["1B.svg"],
     });
     useEffect(() => {
-        console.log(props.user.humanHand);
+        // console.log(props.user.humanHand);
 
         //Check if state is loaded before updating img src - huge pain to fix
-        if (props.user.hands) {
+        // if (props.user.hands.humanHand.card1 != images["1B.svg"]) {
+        if (Object.keys(props.user.hands).length > 0) {
             setCardImages({
-                card1: images[
-                    `${props.user.hands.humanHand.card1.card.toUpperCase()}.svg`
-                ],
-                card2: images[
-                    `${props.user.hands.humanHand.card2.card.toUpperCase()}.svg`
-                ],
+                card1: images[`${props.user.hands.humanHand.card1.card}.svg`],
+                card2: images[`${props.user.hands.humanHand.card2.card}.svg`],
             });
         }
     }, [props.user.hands]);
@@ -37,10 +34,10 @@ function HoleCards(props) {
                     <img src={cardImages.card2} />
                 </>
             ) : (
-                <>
+                <div className="computer-hole-cards">
                     <img src={images["1B.svg"]} />
                     <img src={images["1B.svg"]} />
-                </>
+                </div>
             )}
         </div>
     );

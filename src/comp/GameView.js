@@ -6,6 +6,8 @@ import { useState } from "react";
 import BigBlind from "./BigBlind";
 import DealerBtn from "./DealerBtn";
 import BettingUI from "./BettingUI";
+import CommunityCards from "./CommunityCards";
+import Pot from "./Pot";
 import { connect } from "react-redux";
 import { newHand } from "../redux/actions/userActions";
 function GameView(props) {
@@ -29,6 +31,8 @@ function GameView(props) {
                     chips={props.user.computerChips}
                 />
                 <HoleCards isHuman={false} id={"avatar-1"} />
+                <Pot />
+                <CommunityCards />
                 <Avatar
                     player={"human"}
                     id={"avatar-2"}
