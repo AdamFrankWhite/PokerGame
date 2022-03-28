@@ -3,6 +3,7 @@ import {
     UPDATE_COMPUTER_CHIPS,
     SET_HANDS,
     SET_REMAINING_DECK,
+    SET_FLOP,
 } from "../types";
 import { cards } from "../../Model/cards";
 export const updateHumanChips =
@@ -38,7 +39,7 @@ export const newHand = () => (dispatch) => {
     let card4 = updatedDeck[getRandomCard(updatedDeck.length)];
     updatedDeck = updatedDeck.filter((item) => item.card != card4.card);
     // setUserHand({ card1: card3, card2: card4 });
-    dispatch({ type: SET_REMAINING_DECK, payload: updatedDeck });
+    dispatch({ type: SET_REMAINING_DECK, payload: { updatedDeck, trip: 0 } });
     console.log(card3, card4);
     dispatch({
         type: SET_HANDS,
@@ -52,8 +53,23 @@ export const newHand = () => (dispatch) => {
     // setSmallBlind(smallBlind == "computer" ? "human" : "computer");
 };
 
-export const updateDeck = (deck) => (dispatch) => {
-    console.log(deck);
-    dispatch({ type: SET_REMAINING_DECK, payload: deck });
+export const updateDeck = (deckMinusFlop, holeCards) => (dispatch) => {
+    let holeCardsArray = [
+        holeCards.card1.card,
+        holeCards.card2.card,
+        holeCards.card3.card,
+        holeCards.card4.card,
+    ];
+    let res = deckMinusFlop.filter(
+        (card) => !holeCardsArray.includes(card.card)
+    );
+    console.log(res.length);
+    // remove holecards and community cards from deck
+    // dispatch({
+    //     type: SET_REMAINING_DECK,
+    //     payload: { updatedDeck: deckMinusFlopAndHoleCards, trip: 1 },
+    // });
 };
-const preflop = () => {};
+export const setFlop = (cards) => (dispatch) => {
+    dispatch({ type: SET_FLOP, payload: cards });
+};
