@@ -21,6 +21,7 @@ const initialState = {
     trip: 0,
     pot: 0,
     prevAction: "",
+    thinkingTimer: false,
 };
 
 export default function (state = initialState, action) {
@@ -42,6 +43,7 @@ export default function (state = initialState, action) {
                     computerHand: action.payload.computer,
                     humanHand: action.payload.human,
                 },
+                pot: 0,
                 prevAction: "",
             };
         case SET_REMAINING_DECK:
@@ -60,6 +62,7 @@ export default function (state = initialState, action) {
                 ...state,
                 prevAction: action.payload.action,
                 pot: action.payload.updatedPot,
+                thinkingTimer: true,
             };
         default:
             return { ...state };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { connect } from "react-redux";
 import {
@@ -9,17 +9,22 @@ import {
 function BettingUI(props) {
     const [betAmount, setBetAmount] = useState(100);
     const [callAmount, setCallAmount] = useState(0);
+    const [action, setAction] = useState("");
+
+    useEffect(() => {
+        setAction(props.user.prevAction);
+    }, [props.user.prevAction]);
     return (
         <div className="betting-ui">
             <div className="betting-ui-btns">
                 <button onClick={() => props.newHand()}>Fold</button>
-                {props.user.prevAction == "" && (
+                {(action == "" || action == "call") && (
                     <button
                         onClick={() =>
                             props.updateGameplay(
                                 "human",
                                 "check",
-                                props.user.prevAction,
+                                action,
                                 props.user.pot,
                                 0
                             )
@@ -28,8 +33,7 @@ function BettingUI(props) {
                         Check
                     </button>
                 )}
-                {(props.user.prevAction == "" ||
-                    props.user.prevAction == "check") && (
+                {(action == "" || action == "check" || action == "call") && (
                     <button
                         onClick={() => {
                             props.updateHumanChips(
@@ -40,7 +44,7 @@ function BettingUI(props) {
                             props.updateGameplay(
                                 "human",
                                 "bet",
-                                props.user.prevAction,
+                                action,
                                 props.user.pot,
                                 Number(betAmount)
                             );
@@ -50,8 +54,8 @@ function BettingUI(props) {
                         <span>{betAmount}</span>
                     </button>
                 )}
-                {props.user.prevAction == "bet" ||
-                    (props.user.prevAction == "raise" && (
+                {action == "bet" ||
+                    (action == "raise" && (
                         <button
                             onClick={() => {
                                 props.updateHumanChips(
@@ -62,7 +66,7 @@ function BettingUI(props) {
                                 props.updateGameplay(
                                     "human",
                                     "call",
-                                    props.user.prevAction,
+                                    action,
                                     props.user.pot,
                                     Number(callAmount)
                                 );
@@ -71,7 +75,7 @@ function BettingUI(props) {
                             Call
                         </button>
                     ))}
-                {props.user.prevAction == "bet" && (
+                {action == "bet" && (
                     <button
                         onClick={() => {
                             props.updateHumanChips(
@@ -82,7 +86,7 @@ function BettingUI(props) {
                             props.updateGameplay(
                                 "human",
                                 "raise",
-                                props.user.prevAction,
+                                action,
                                 props.user.pot,
                                 Number(callAmount + betAmount)
                             );

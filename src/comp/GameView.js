@@ -7,6 +7,7 @@ import BigBlind from "./BigBlind";
 import DealerBtn from "./DealerBtn";
 import BettingUI from "./BettingUI";
 import CommunityCards from "./CommunityCards";
+import ComputerTimer from "./ComputerTimer";
 import Pot from "./Pot";
 import { connect } from "react-redux";
 import { newHand } from "../redux/actions/userActions";
@@ -31,6 +32,7 @@ function GameView(props) {
                     chips={props.user.computerChips}
                 />
                 <HoleCards isHuman={false} id={"avatar-1"} />
+                <ComputerTimer />
                 <Pot />
                 <CommunityCards />
                 <Avatar

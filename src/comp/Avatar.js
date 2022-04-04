@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import avatar1 from "../img/avatar-1.png";
 import avatar2 from "../img/avatar-2.png";
-export default function Avatar(props) {
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import { connect } from "react-redux";
+function Avatar(props) {
     return (
         <div className={"avatar " + props.id}>
             <img
@@ -15,3 +17,12 @@ export default function Avatar(props) {
         </div>
     );
 }
+
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+    };
+};
+
+const mapActionsToProps = {};
+export default connect(mapStateToProps, mapActionsToProps)(Avatar);

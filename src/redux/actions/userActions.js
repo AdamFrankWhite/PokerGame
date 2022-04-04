@@ -77,13 +77,32 @@ export const setFlop = (cards) => (dispatch) => {
 export const updateGameplay =
     (player, action, prevAction, currentPot, chips) => (dispatch) => {
         let updatedPot = (currentPot += chips);
+        const AI_MOVE = (prevAction, currentPot, humanBet) => {
+            let updatedPot = currentPot + humanBet; // match human bet
+            console.log("ai thinking");
+            if (prevAction == "bet") {
+                setTimeout(() => {
+                    dispatch({
+                        type: UPDATE_GAMEPLAY,
+                        payload: {
+                            action: "call",
+                            updatedPot,
+                            setThinkingTimer: false,
+                        },
+                    });
+                }, 2000);
+            }
+        };
         // AI gameplay
         if (player == "computer") {
         } else {
             // Human gameplay
+
             dispatch({
                 type: UPDATE_GAMEPLAY,
-                payload: { action, updatedPot },
+                payload: { action, updatedPot, setThinkingTimer: true },
             });
+
+            AI_MOVE(action, currentPot, chips);
         }
     };
