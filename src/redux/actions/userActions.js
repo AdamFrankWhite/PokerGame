@@ -4,6 +4,7 @@ import {
     SET_HANDS,
     SET_REMAINING_DECK,
     SET_FLOP,
+    UPDATE_GAMEPLAY,
 } from "../types";
 import { cards } from "../../Model/cards";
 export const updateHumanChips =
@@ -63,7 +64,6 @@ export const updateDeck = (deckMinusFlop, holeCards) => (dispatch) => {
     let res = deckMinusFlop.filter(
         (card) => !holeCardsArray.includes(card.card)
     );
-    console.log(res.length);
     // remove holecards and community cards from deck
     // dispatch({
     //     type: SET_REMAINING_DECK,
@@ -73,3 +73,17 @@ export const updateDeck = (deckMinusFlop, holeCards) => (dispatch) => {
 export const setFlop = (cards) => (dispatch) => {
     dispatch({ type: SET_FLOP, payload: cards });
 };
+
+export const updateGameplay =
+    (player, action, prevAction, currentPot, chips) => (dispatch) => {
+        let updatedPot = (currentPot += chips);
+        // AI gameplay
+        if (player == "computer") {
+        } else {
+            // Human gameplay
+            dispatch({
+                type: UPDATE_GAMEPLAY,
+                payload: { action, updatedPot },
+            });
+        }
+    };

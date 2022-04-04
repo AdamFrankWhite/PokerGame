@@ -4,6 +4,7 @@ import {
     SET_HANDS,
     SET_REMAINING_DECK,
     SET_FLOP,
+    UPDATE_GAMEPLAY,
 } from "../types";
 
 import { cards } from "../../Model/cards";
@@ -18,6 +19,8 @@ const initialState = {
     remainingDeck: [],
     communityCards: {},
     trip: 0,
+    pot: 0,
+    prevAction: "",
 };
 
 export default function (state = initialState, action) {
@@ -39,6 +42,7 @@ export default function (state = initialState, action) {
                     computerHand: action.payload.computer,
                     humanHand: action.payload.human,
                 },
+                prevAction: "",
             };
         case SET_REMAINING_DECK:
             return {
@@ -50,6 +54,12 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 communityCards: action.payload,
+            };
+        case UPDATE_GAMEPLAY:
+            return {
+                ...state,
+                prevAction: action.payload.action,
+                pot: action.payload.updatedPot,
             };
         default:
             return { ...state };

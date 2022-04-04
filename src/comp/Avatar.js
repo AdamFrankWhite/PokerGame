@@ -10,7 +10,7 @@ export default function Avatar(props) {
             />
             <div className="avatar-text">
                 <p className="chip-count">{props.chips}</p>
-                <h2>{props.player}</h2>
+                <h2>{props.name}</h2>
             </div>
         </div>
     );

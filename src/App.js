@@ -14,7 +14,7 @@ function App() {
     return (
         <div className="App">
             {user ? (
-                <GameView user={user} />
+                <GameView name={user} />
             ) : (
                 <IntroScreen createGame={createGame} />
             )}

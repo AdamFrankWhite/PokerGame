@@ -35,6 +35,7 @@ function GameView(props) {
                 <CommunityCards />
                 <Avatar
                     player={"human"}
+                    name={props.name}
                     id={"avatar-2"}
                     chips={props.user.humanChips}
                 />
