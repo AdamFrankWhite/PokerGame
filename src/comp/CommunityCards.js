@@ -47,7 +47,10 @@ function CommunityCards(props) {
     };
     //monitor changes to deck, if a new hand, trip will be 0, so hand can be dealt, to avoid endless looping when setting flop/turn/river cards, trip is set on new hand, and reset only when new hand is dealt
     useEffect(() => {
-        if (props.user.remainingDeck.length > 0 && props.user.trip === 0) {
+        if (
+            props.user.remainingDeck.length > 0 &&
+            props.user.gameState === "flop"
+        ) {
             dealFlop();
         }
     }, [props.user.remainingDeck]);

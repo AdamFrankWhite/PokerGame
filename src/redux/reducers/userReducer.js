@@ -5,6 +5,7 @@ import {
     SET_REMAINING_DECK,
     SET_FLOP,
     UPDATE_GAMEPLAY,
+    SET_SMALLBLIND,
 } from "../types";
 
 import { cards } from "../../Model/cards";
@@ -13,7 +14,7 @@ const initialState = {
     humanChips: 3000,
     computerChips: 3000,
     hands: {},
-    bigBlind: "computer",
+    smallBlind: "computer",
     gameState: "preflop",
     startDeck: cards,
     remainingDeck: [],
@@ -22,10 +23,20 @@ const initialState = {
     pot: 0,
     prevAction: "",
     thinkingTimer: false,
+    playerTurn: "human",
 };
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case SET_SMALLBLIND:
+            return {
+                ...state,
+                smallBlind: action.payload.smallBlind,
+                pot: action.payload.humanChips + action.payload.computerChips,
+                humanChips: state.humanChips - action.payload.humanChips,
+                computerChips:
+                    state.computerChips - action.payload.computerChips,
+            };
         case UPDATE_COMPUTER_CHIPS:
             return {
                 ...state,
@@ -43,7 +54,6 @@ export default function (state = initialState, action) {
                     computerHand: action.payload.computer,
                     humanHand: action.payload.human,
                 },
-                pot: 0,
                 prevAction: "",
             };
         case SET_REMAINING_DECK:

@@ -4,6 +4,7 @@ import {
     SET_HANDS,
     SET_REMAINING_DECK,
     SET_FLOP,
+    SET_SMALLBLIND,
     UPDATE_GAMEPLAY,
 } from "../types";
 import { cards } from "../../Model/cards";
@@ -22,7 +23,26 @@ export const updateComputerChips =
         dispatch({ type: UPDATE_COMPUTER_CHIPS, payload: updatedChips });
     };
 
-export const newHand = () => (dispatch) => {
+export const newHand = (prevSB) => (dispatch) => {
+    if (prevSB == "computer") {
+        dispatch({
+            type: SET_SMALLBLIND,
+            payload: {
+                smallBlind: "human",
+                humanChips: 50,
+                computerChips: 100,
+            },
+        });
+    } else {
+        dispatch({
+            type: SET_SMALLBLIND,
+            payload: {
+                smallBlind: "computer",
+                humanChips: 100,
+                computerChips: 50,
+            },
+        });
+    }
     const getRandomCard = (currentDeckSize) => {
         return Math.floor(Math.random() * currentDeckSize);
     };
@@ -41,7 +61,7 @@ export const newHand = () => (dispatch) => {
     updatedDeck = updatedDeck.filter((item) => item.card != card4.card);
     // setUserHand({ card1: card3, card2: card4 });
     dispatch({ type: SET_REMAINING_DECK, payload: { updatedDeck, trip: 0 } });
-    console.log(card3, card4);
+
     dispatch({
         type: SET_HANDS,
         payload: {
@@ -76,6 +96,7 @@ export const setFlop = (cards) => (dispatch) => {
 
 export const updateGameplay =
     (player, action, prevAction, currentPot, chips) => (dispatch) => {
+        let gameState = ["preflop", "flop", "turn", "river", "showdown"];
         let updatedPot = (currentPot += chips);
         const AI_MOVE = (prevAction, currentPot, humanBet) => {
             let updatedPot = currentPot + humanBet; // match human bet

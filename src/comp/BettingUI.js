@@ -55,46 +55,50 @@ function BettingUI(props) {
                     </button>
                 )}
                 {action == "bet" ||
-                    (action == "raise" && (
-                        <button
-                            onClick={() => {
-                                props.updateHumanChips(
-                                    props.user.humanChips,
-                                    "lose",
-                                    betAmount
-                                );
-                                props.updateGameplay(
-                                    "human",
-                                    "call",
-                                    action,
-                                    props.user.pot,
-                                    Number(callAmount)
-                                );
-                            }}
-                        >
-                            Call
-                        </button>
-                    ))}
-                {action == "bet" && (
-                    <button
-                        onClick={() => {
-                            props.updateHumanChips(
-                                props.user.humanChips,
-                                "lose",
-                                Number(callAmount + betAmount)
-                            );
-                            props.updateGameplay(
-                                "human",
-                                "raise",
-                                action,
-                                props.user.pot,
-                                Number(callAmount + betAmount)
-                            );
-                        }}
-                    >
-                        Raise
-                    </button>
-                )}
+                    action == "raise" ||
+                    (props.user.smallBlind == "human" &&
+                        props.user.gameState == "preflop" && (
+                            <button
+                                onClick={() => {
+                                    props.updateHumanChips(
+                                        props.user.humanChips,
+                                        "lose",
+                                        betAmount
+                                    );
+                                    props.updateGameplay(
+                                        "human",
+                                        "call",
+                                        action,
+                                        props.user.pot,
+                                        Number(callAmount)
+                                    );
+                                }}
+                            >
+                                Call
+                            </button>
+                        ))}
+                {action == "bet" ||
+                    (props.user.smallBlind == "human" &&
+                        props.user.gameState == "preflop" && (
+                            <button
+                                onClick={() => {
+                                    props.updateHumanChips(
+                                        props.user.humanChips,
+                                        "lose",
+                                        Number(callAmount + betAmount)
+                                    );
+                                    props.updateGameplay(
+                                        "human",
+                                        "raise",
+                                        action,
+                                        props.user.pot,
+                                        Number(callAmount + betAmount)
+                                    );
+                                }}
+                            >
+                                Raise
+                            </button>
+                        ))}
             </div>
             <div class="slidecontainer">
                 <input

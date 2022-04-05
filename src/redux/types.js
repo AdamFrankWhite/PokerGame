@@ -7,3 +7,4 @@ export const SET_REMAINING_DECK = "SET_REMAINING_DECK";
 export const SET_FLOP = "SET_FLOP";
 export const UPDATE_POT = "UPDATE_POT";
 export const UPDATE_GAMEPLAY = "UPDATE_GAMEPLAY";
+export const SET_SMALLBLIND = "SET_SMALLBLIND";

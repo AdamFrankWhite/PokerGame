@@ -15,13 +15,17 @@ function GameView(props) {
     const [computerHand, setComputerHand] = useState({ card1: "", card2: "" });
     const [userHand, setUserHand] = useState({ card1: "", card2: "" });
     const [bigBlind, setBigBlind] = useState("computer");
-    const [smallBlind, setSmallBlind] = useState("human");
+    const [smallBlind, setSmallBlind] = useState(props.user.smallBlind);
 
     useEffect(() => {
-        props.newHand();
+        props.newHand(smallBlind);
         // preflop();
     }, []);
 
+    useEffect(() => {
+        console.log(props.user.smallBlind);
+        setSmallBlind(props.user.smallBlind);
+    }, [props.user.smallBlind]);
     // const preflop = () => {};
     return (
         <>
@@ -29,6 +33,7 @@ function GameView(props) {
                 <Avatar
                     player="computer"
                     id={"avatar-1"}
+                    name={"Computer"}
                     chips={props.user.computerChips}
                 />
                 <HoleCards isHuman={false} id={"avatar-1"} />
@@ -46,7 +51,9 @@ function GameView(props) {
                 <DealerBtn player={smallBlind} />
             </div>
             <BettingUI chips={props.user.humanChips} />
-            <button onClick={() => props.newHand()}>New hand</button>
+            <button onClick={() => props.newHand(props.user.smallBlind)}>
+                New hand
+            </button>
         </>
     );
 }
