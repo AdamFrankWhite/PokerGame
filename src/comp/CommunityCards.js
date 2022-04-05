@@ -17,8 +17,8 @@ function CommunityCards(props) {
     const getRandomCard = (currentDeckSize) => {
         return Math.floor(Math.random() * currentDeckSize);
     };
-    const dealHand = () => {
-        let deckMinusFlopCards = props.user.startDeck;
+    const dealFlop = () => {
+        let deckMinusFlopCards = props.user.remainingDeck;
         let card1 =
             deckMinusFlopCards[getRandomCard(deckMinusFlopCards.length)];
         deckMinusFlopCards = deckMinusFlopCards.filter(
@@ -48,7 +48,7 @@ function CommunityCards(props) {
     //monitor changes to deck, if a new hand, trip will be 0, so hand can be dealt, to avoid endless looping when setting flop/turn/river cards, trip is set on new hand, and reset only when new hand is dealt
     useEffect(() => {
         if (props.user.remainingDeck.length > 0 && props.user.trip === 0) {
-            dealHand();
+            dealFlop();
         }
     }, [props.user.remainingDeck]);
 
