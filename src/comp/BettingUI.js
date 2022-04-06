@@ -8,7 +8,7 @@ import {
 } from "../redux/actions/userActions";
 function BettingUI(props) {
     const [betAmount, setBetAmount] = useState(100);
-    const [callAmount, setCallAmount] = useState(0);
+    const [callAmount, setCallAmount] = useState(50);
     const [action, setAction] = useState("");
 
     useEffect(() => {
@@ -18,22 +18,26 @@ function BettingUI(props) {
         <div className="betting-ui">
             <div className="betting-ui-btns">
                 <button onClick={() => props.newHand()}>Fold</button>
-                {(action == "" || action == "call") && (
-                    <button
-                        onClick={() =>
-                            props.updateGameplay(
-                                "human",
-                                "check",
-                                action,
-                                props.user.pot,
-                                0
-                            )
-                        }
-                    >
-                        Check
-                    </button>
-                )}
-                {(action == "" || action == "check" || action == "call") && (
+                {action == "" ||
+                    (action == "call" && (
+                        // || (props.user.gameState !== "preflop" &&
+                        //     props.user.smallBlind == "human"
+                        <button
+                            onClick={() =>
+                                props.updateGameplay(
+                                    "human",
+                                    "check",
+                                    action,
+                                    props.user.pot,
+                                    0,
+                                    props.user.gameState
+                                )
+                            }
+                        >
+                            Check
+                        </button>
+                    ))}
+                {action == "check" && (
                     <button
                         onClick={() => {
                             props.updateHumanChips(
@@ -46,7 +50,8 @@ function BettingUI(props) {
                                 "bet",
                                 action,
                                 props.user.pot,
-                                Number(betAmount)
+                                Number(betAmount),
+                                props.user.gameState
                             );
                         }}
                     >
@@ -63,18 +68,21 @@ function BettingUI(props) {
                                     props.updateHumanChips(
                                         props.user.humanChips,
                                         "lose",
-                                        betAmount
+                                        callAmount
                                     );
                                     props.updateGameplay(
                                         "human",
                                         "call",
                                         action,
                                         props.user.pot,
-                                        Number(callAmount)
+                                        Number(callAmount),
+                                        props.user.gameState
                                     );
+                                    setCallAmount("");
                                 }}
                             >
-                                Call
+                                <span>Call</span>
+                                <span>{callAmount}</span>
                             </button>
                         ))}
                 {action == "bet" ||
@@ -92,7 +100,8 @@ function BettingUI(props) {
                                         "raise",
                                         action,
                                         props.user.pot,
-                                        Number(callAmount + betAmount)
+                                        Number(callAmount + betAmount),
+                                        props.user.gameState
                                     );
                                 }}
                             >

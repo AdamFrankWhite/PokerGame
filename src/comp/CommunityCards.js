@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { connect } from "react-redux";
-import { newHand, updateDeck, setFlop } from "../redux/actions/userActions";
+import {
+    newHand,
+    updateDeck,
+    setFlop,
+    setTurn,
+} from "../redux/actions/userActions";
 function CommunityCards(props) {
     function importAll(r) {
         let images = {};
@@ -38,12 +43,30 @@ function CommunityCards(props) {
         );
         props.setFlop({ card1, card2, card3 });
         // console.log(cardImages);
-        props.updateDeck(deckMinusFlopCards, {
-            card1: props.user.hands.computerHand.card1,
-            card2: props.user.hands.computerHand.card2,
-            card3: props.user.hands.humanHand.card1,
-            card4: props.user.hands.humanHand.card2,
-        });
+
+        let deckMinusFlopAndHoleCards = deckMinusFlopCards.filter(
+            (item) =>
+                item.card != props.user.hands.computerHand.card1 &&
+                item.card != props.user.hands.computerHand.card2 &&
+                item.card != props.user.hands.computerHand.card3 &&
+                item.card != props.user.hands.computerHand.card4
+        );
+        props.updateDeck(deckMinusFlopAndHoleCards);
+    };
+
+    const dealTurn = () => {
+        let deckMinusCommunityCards = props.user.remainingDeck;
+        let card4 =
+            deckMinusCommunityCards[
+                getRandomCard(deckMinusCommunityCards.length)
+            ];
+        deckMinusCommunityCards = deckMinusCommunityCards.filter(
+            (item) => item.card != card4.card
+        );
+
+        props.setTurn({ card4 });
+        // console.log(cardImages);
+        props.updateDeck(deckMinusCommunityCards);
     };
     //monitor changes to deck, if a new hand, trip will be 0, so hand can be dealt, to avoid endless looping when setting flop/turn/river cards, trip is set on new hand, and reset only when new hand is dealt
     useEffect(() => {
@@ -53,19 +76,26 @@ function CommunityCards(props) {
         ) {
             dealFlop();
         }
-    }, [props.user.remainingDeck]);
+        if (props.user.gameState === "turn") {
+            dealTurn();
+        }
+    }, [props.user.gameState]);
 
     useEffect(() => {
         setCommunityCardImages(props.user.communityCards);
     }, [props.user.communityCards]);
     return (
         <div className="community-cards">
-            {Object.keys(communityCardImages).map((key) => {
-                // console.log(`${cardImages[key].card}.svg`);
-                return (
-                    <img src={images[`${communityCardImages[key].card}.svg`]} />
-                );
-            })}
+            {/* Only show community cards post-flop */}
+            {props.user.gameState !== "preflop" &&
+                Object.keys(communityCardImages).map((key) => {
+                    // console.log(`${cardImages[key].card}.svg`);
+                    return (
+                        <img
+                            src={images[`${communityCardImages[key].card}.svg`]}
+                        />
+                    );
+                })}
         </div>
     );
 }
@@ -73,5 +103,5 @@ function CommunityCards(props) {
 const mapStateToProps = (state) => {
     return { user: state.user };
 };
-const mapActionsToProps = { updateDeck, setFlop };
+const mapActionsToProps = { updateDeck, setFlop, setTurn };
 export default connect(mapStateToProps, mapActionsToProps)(CommunityCards);

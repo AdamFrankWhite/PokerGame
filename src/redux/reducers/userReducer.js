@@ -4,8 +4,10 @@ import {
     SET_HANDS,
     SET_REMAINING_DECK,
     SET_FLOP,
+    SET_TURN,
     UPDATE_GAMEPLAY,
     SET_SMALLBLIND,
+    CHANGE_GAMESTATE,
 } from "../types";
 
 import { cards } from "../../Model/cards";
@@ -62,10 +64,20 @@ export default function (state = initialState, action) {
                 remainingDeck: action.payload.updatedDeck,
                 trip: action.payload.trip,
             };
+        case CHANGE_GAMESTATE:
+            return {
+                ...state,
+                gameState: action.payload,
+            };
         case SET_FLOP:
             return {
                 ...state,
                 communityCards: action.payload,
+            };
+        case SET_TURN:
+            return {
+                ...state,
+                communityCards: { ...state.communityCards, ...action.payload },
             };
         case UPDATE_GAMEPLAY:
             return {

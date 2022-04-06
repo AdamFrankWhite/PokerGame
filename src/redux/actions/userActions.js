@@ -4,8 +4,10 @@ import {
     SET_HANDS,
     SET_REMAINING_DECK,
     SET_FLOP,
+    SET_TURN,
     SET_SMALLBLIND,
     UPDATE_GAMEPLAY,
+    CHANGE_GAMESTATE,
 } from "../types";
 import { cards } from "../../Model/cards";
 export const updateHumanChips =
@@ -43,6 +45,13 @@ export const newHand = (prevSB) => (dispatch) => {
             },
         });
     }
+
+    // clear community cards
+
+    dispatch({
+        type: CHANGE_GAMESTATE,
+        payload: "preflop",
+    });
     const getRandomCard = (currentDeckSize) => {
         return Math.floor(Math.random() * currentDeckSize);
     };
@@ -74,34 +83,40 @@ export const newHand = (prevSB) => (dispatch) => {
     // setSmallBlind(smallBlind == "computer" ? "human" : "computer");
 };
 
-export const updateDeck = (deckMinusFlop, holeCards) => (dispatch) => {
-    let holeCardsArray = [
-        holeCards.card1.card,
-        holeCards.card2.card,
-        holeCards.card3.card,
-        holeCards.card4.card,
-    ];
-    let res = deckMinusFlop.filter(
-        (card) => !holeCardsArray.includes(card.card)
-    );
+export const updateDeck = (updatedDeck, holeCards) => (dispatch) => {
+    // let holeCardsArray = [
+    //     holeCards.card1.card,
+    //     holeCards.card2.card,
+    //     holeCards.card3.card,
+    //     holeCards.card4.card,
+    // ];
+    // let res = deckMinusFlop.filter(
+    //     (card) => !holeCardsArray.includes(card.card)
+    // );
     // remove holecards and community cards from deck
-    // dispatch({
-    //     type: SET_REMAINING_DECK,
-    //     payload: { updatedDeck: deckMinusFlopAndHoleCards, trip: 1 },
-    // });
+    dispatch({
+        type: SET_REMAINING_DECK,
+        payload: { updatedDeck: updatedDeck, trip: 1 },
+    });
 };
 export const setFlop = (cards) => (dispatch) => {
     dispatch({ type: SET_FLOP, payload: cards });
 };
 
+export const setTurn = (card) => (dispatch) => {
+    dispatch({ type: SET_TURN, payload: card });
+};
+
 export const updateGameplay =
-    (player, action, prevAction, currentPot, chips) => (dispatch) => {
-        let gameState = ["preflop", "flop", "turn", "river", "showdown"];
+    (player, action, prevAction, currentPot, chips, gameState) =>
+    (dispatch) => {
+        // let gameState = ["preflop", "flop", "turn", "river", "showdown"];
         let updatedPot = (currentPot += chips);
         const AI_MOVE = (prevAction, currentPot, humanBet) => {
             let updatedPot = currentPot + humanBet; // match human bet
             console.log("ai thinking");
             if (prevAction == "bet") {
+                // AI autocall
                 setTimeout(() => {
                     dispatch({
                         type: UPDATE_GAMEPLAY,
@@ -113,12 +128,35 @@ export const updateGameplay =
                     });
                 }, 2000);
             }
+
+            if (prevAction == "check") {
+                // AI autocheck
+                setTimeout(() => {
+                    dispatch({
+                        type: UPDATE_GAMEPLAY,
+                        payload: {
+                            action: "check",
+                            updatedPot,
+                            setThinkingTimer: false,
+                        },
+                    });
+                }, 2000);
+            }
+            if (
+                gameState == "flop" &&
+                (action == "call" || action == "check")
+            ) {
+                dispatch({ type: CHANGE_GAMESTATE, payload: "turn" });
+            }
         };
         // AI gameplay
         if (player == "computer") {
         } else {
             // Human gameplay
-
+            console.log(action);
+            if (gameState == "preflop" && action == "call") {
+                dispatch({ type: CHANGE_GAMESTATE, payload: "flop" });
+            }
             dispatch({
                 type: UPDATE_GAMEPLAY,
                 payload: { action, updatedPot, setThinkingTimer: true },
