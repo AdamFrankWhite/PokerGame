@@ -143,7 +143,7 @@ function CommunityCards(props) {
                     count: cardCounts[key],
                 };
             });
-            // console.log(cardCountsArr);
+
             let sort1 = cardCountsArr.sort((a, b) =>
                 a.count > b.count ? 1 : -1
             );
@@ -155,6 +155,20 @@ function CommunityCards(props) {
                     : 0
             );
             console.log(sort2);
+            sort2.forEach((card) => {
+                if (card.cardValue == "11") {
+                    card.cardValue = "J";
+                }
+                if (card.cardValue == "12") {
+                    card.cardValue = "Q";
+                }
+                if (card.cardValue == "13") {
+                    card.cardValue = "K";
+                }
+                if (card.cardValue == "14") {
+                    card.cardValue = "A";
+                }
+            });
             // Get highest pair
             let xOfAKind = sort2[12];
 
@@ -187,7 +201,7 @@ function CommunityCards(props) {
                 } else {
                     handType = [
                         `3 of a kind ${xOfAKind.cardValue}s`,
-                        xOfAKind.cardValue,
+                        `${sort2[11].cardValue} ${sort2[10].cardValue} kicker`,
                     ];
                 }
             }
