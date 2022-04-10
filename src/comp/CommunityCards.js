@@ -107,7 +107,46 @@ function CommunityCards(props) {
         const checkHandStrength = (cardSet) => {
             let cards = Object.keys(cardSet).map((key) => cardSet[key]); //Check royal flush
             let handType = [];
-            // let sortedCards =
+            // check straight
+            const sortCards = cards.sort((a, b) =>
+                a.value > b.value ? 1 : -1
+            );
+
+            const getCardValues = sortCards.map((card) => card.value);
+
+            const straightTypes = [
+                // A, 2, 3, 4, 5
+                [14, 2, 3, 4, 5],
+                [2, 3, 4, 5, 6],
+                [3, 4, 5, 6, 7],
+                [4, 5, 6, 7, 8],
+                [5, 6, 7, 8, 9],
+                [6, 7, 8, 9, 10],
+                [7, 8, 9, 10, 11],
+                [8, 9, 10, 11, 12],
+                [9, 10, 11, 12, 13],
+                // T, J, Q, K, A
+                [10, 11, 12, 13, 14],
+            ];
+            let straight;
+            straightTypes.forEach((straightType) => {
+                const check = straightType.every((straightType) =>
+                    getCardValues.includes(straightType)
+                );
+
+                if (check) {
+                    //Check for highest straight
+                    if (straight) {
+                        if (straightType[4] > straight[4]) {
+                            handType = ["Straight", straightType];
+                            console.log(handType);
+                        }
+                    } else {
+                        handType = ["Straight", straightType];
+                        console.log(handType);
+                    }
+                }
+            });
 
             //check flush
             const checkClubs = cards.filter((card) => card.suit == "Clubs");
@@ -129,7 +168,7 @@ function CommunityCards(props) {
                     flushCheck[0][0].suit,
                     flushCheck[0].sort((a, b) => (a.value > b.value ? -1 : 1)),
                 ];
-                console.log(handType);
+                // console.log(handType);
             }
             // let res = cards.filter(card => )
         };
