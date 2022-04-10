@@ -5,6 +5,7 @@ import {
     SET_REMAINING_DECK,
     SET_FLOP,
     SET_TURN,
+    SET_RIVER,
     UPDATE_GAMEPLAY,
     SET_SMALLBLIND,
     CHANGE_GAMESTATE,
@@ -75,6 +76,11 @@ export default function (state = initialState, action) {
                 communityCards: action.payload,
             };
         case SET_TURN:
+            return {
+                ...state,
+                communityCards: { ...state.communityCards, ...action.payload },
+            };
+        case SET_RIVER:
             return {
                 ...state,
                 communityCards: { ...state.communityCards, ...action.payload },

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 function ComputerTimer(props) {
     const [thinkingTimer, setThinkingTimer] = useState(false);
     const thinkingDuration = Math.floor(Math.random() * 3000);
-    console.log(thinkingDuration);
+    // console.log(thinkingDuration);
     useEffect(() => {
         props.user.thinkingTimer
             ? setThinkingTimer(props.user.thinkingTimer)

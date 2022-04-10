@@ -23,7 +23,7 @@ function GameView(props) {
     }, []);
 
     useEffect(() => {
-        console.log(props.user.smallBlind);
+        // console.log(props.user.smallBlind);
         setSmallBlind(props.user.smallBlind);
     }, [props.user.smallBlind]);
     // const preflop = () => {};

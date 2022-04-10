@@ -13,6 +13,8 @@ function HoleCards(props) {
         card1: images["1B.svg"],
         card2: images["1B.svg"],
     });
+
+    const [showComputerCards, toggleShowComputerCards] = useState(false);
     useEffect(() => {
         // console.log(props.user.humanHand);
 
@@ -22,10 +24,21 @@ function HoleCards(props) {
             setCardImages({
                 card1: images[`${props.user.hands.humanHand.card1.card}.svg`],
                 card2: images[`${props.user.hands.humanHand.card2.card}.svg`],
+                card3: images[
+                    `${props.user.hands.computerHand.card1.card}.svg`
+                ],
+                card4: images[
+                    `${props.user.hands.computerHand.card2.card}.svg`
+                ],
             });
         }
     }, [props.user.hands]);
 
+    useEffect(() => {
+        if (props.user.gameState == "showdown") {
+            toggleShowComputerCards(true);
+        }
+    }, [props.user.gameState]);
     return (
         <div className={"holecards " + props.id}>
             {props.isHuman ? (
@@ -35,8 +48,17 @@ function HoleCards(props) {
                 </>
             ) : (
                 <div className="computer-hole-cards">
-                    <img src={images["1B.svg"]} />
-                    <img src={images["1B.svg"]} />
+                    {!showComputerCards ? (
+                        <>
+                            <img src={images["1B.svg"]} />
+                            <img src={images["1B.svg"]} />
+                        </>
+                    ) : (
+                        <>
+                            <img src={cardImages.card3} />
+                            <img src={cardImages.card4} />
+                        </>
+                    )}
                 </div>
             )}
         </div>

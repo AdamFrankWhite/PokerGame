@@ -6,6 +6,7 @@ import {
     updateDeck,
     setFlop,
     setTurn,
+    setRiver,
 } from "../redux/actions/userActions";
 function CommunityCards(props) {
     function importAll(r) {
@@ -68,6 +69,20 @@ function CommunityCards(props) {
         // console.log(cardImages);
         props.updateDeck(deckMinusCommunityCards);
     };
+
+    const dealRiver = () => {
+        let deckMinusCommunityCards = props.user.remainingDeck;
+        let card5 =
+            deckMinusCommunityCards[
+                getRandomCard(deckMinusCommunityCards.length)
+            ];
+        deckMinusCommunityCards = deckMinusCommunityCards.filter(
+            (item) => item.card != card5.card
+        );
+        // console.log(card5);
+        props.setRiver({ card5 });
+        props.updateDeck(deckMinusCommunityCards);
+    };
     //monitor changes to deck, if a new hand, trip will be 0, so hand can be dealt, to avoid endless looping when setting flop/turn/river cards, trip is set on new hand, and reset only when new hand is dealt
     useEffect(() => {
         if (
@@ -79,8 +94,66 @@ function CommunityCards(props) {
         if (props.user.gameState === "turn") {
             dealTurn();
         }
+        if (props.user.gameState === "river") {
+            dealRiver();
+        }
     }, [props.user.gameState]);
 
+    const compareHands = (computerHand, humanHand, communityCards) => {
+        let computerCardSet = { ...computerHand, ...communityCards };
+        let humanCardSet = { ...humanHand, ...communityCards };
+        console.log(computerCardSet, humanCardSet);
+
+        const checkHandStrength = (cardSet) => {
+            let cards = Object.keys(cardSet).map((key) => cardSet[key]); //Check royal flush
+            let handType = [];
+            // let sortedCards =
+
+            //check flush
+            const checkClubs = cards.filter((card) => card.suit == "Clubs");
+            const checkSpades = cards.filter((card) => card.suit == "Spades");
+            const checkHearts = cards.filter((card) => card.suit == "Hearts");
+            const checkDiamonds = cards.filter(
+                (card) => card.suit == "Diamonds"
+            );
+            const flushCheckSuits = [
+                checkClubs,
+                checkDiamonds,
+                checkHearts,
+                checkSpades,
+            ];
+            let flushCheck = flushCheckSuits.filter((suit) => suit.length == 5);
+            if (flushCheck.length > 0) {
+                handType = [
+                    "Flush",
+                    flushCheck[0][0].suit,
+                    flushCheck[0].sort((a, b) => (a.value > b.value ? -1 : 1)),
+                ];
+                console.log(handType);
+            }
+            // let res = cards.filter(card => )
+        };
+        checkHandStrength(computerCardSet);
+        checkHandStrength(humanCardSet);
+    };
+    const [showHandWinner, toggleShowdown] = useState(false);
+    useEffect(() => {
+        if (props.user.gameState == "showdown") {
+            const humanHand = {
+                card6: props.user.hands.humanHand.card1,
+                card7: props.user.hands.humanHand.card2,
+            };
+            const computerHand = {
+                card6: props.user.hands.computerHand.card1,
+                card7: props.user.hands.computerHand.card2,
+            };
+
+            compareHands(computerHand, humanHand, props.user.communityCards);
+            toggleShowdown(true);
+        } else {
+            toggleShowdown(false);
+        }
+    }, [props.user.gameState]);
     useEffect(() => {
         setCommunityCardImages(props.user.communityCards);
     }, [props.user.communityCards]);
@@ -96,6 +169,7 @@ function CommunityCards(props) {
                         />
                     );
                 })}
+            {showHandWinner && <span>Showdown</span>}
         </div>
     );
 }
@@ -103,5 +177,5 @@ function CommunityCards(props) {
 const mapStateToProps = (state) => {
     return { user: state.user };
 };
-const mapActionsToProps = { updateDeck, setFlop, setTurn };
+const mapActionsToProps = { updateDeck, setFlop, setTurn, setRiver };
 export default connect(mapStateToProps, mapActionsToProps)(CommunityCards);

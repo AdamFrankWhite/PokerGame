@@ -5,6 +5,7 @@ import {
     SET_REMAINING_DECK,
     SET_FLOP,
     SET_TURN,
+    SET_RIVER,
     SET_SMALLBLIND,
     UPDATE_GAMEPLAY,
     CHANGE_GAMESTATE,
@@ -107,6 +108,10 @@ export const setTurn = (card) => (dispatch) => {
     dispatch({ type: SET_TURN, payload: card });
 };
 
+export const setRiver = (card) => (dispatch) => {
+    dispatch({ type: SET_RIVER, payload: card });
+};
+
 export const updateGameplay =
     (player, action, prevAction, currentPot, chips, gameState) =>
     (dispatch) => {
@@ -114,7 +119,7 @@ export const updateGameplay =
         let updatedPot = (currentPot += chips);
         const AI_MOVE = (prevAction, currentPot, humanBet) => {
             let updatedPot = currentPot + humanBet; // match human bet
-            console.log("ai thinking");
+            // console.log("ai thinking");
             if (prevAction == "bet") {
                 // AI autocall
                 setTimeout(() => {
@@ -142,18 +147,30 @@ export const updateGameplay =
                     });
                 }, 2000);
             }
+            if (gameState == "flop") {
+                if (action == "call" || action == "check") {
+                    dispatch({ type: CHANGE_GAMESTATE, payload: "turn" });
+                }
+            }
             if (
-                gameState == "flop" &&
+                gameState == "turn" &&
                 (action == "call" || action == "check")
             ) {
-                dispatch({ type: CHANGE_GAMESTATE, payload: "turn" });
+                dispatch({ type: CHANGE_GAMESTATE, payload: "river" });
+            }
+
+            if (
+                gameState == "river" &&
+                (action == "call" || action == "check")
+            ) {
+                dispatch({ type: CHANGE_GAMESTATE, payload: "showdown" });
             }
         };
         // AI gameplay
         if (player == "computer") {
         } else {
             // Human gameplay
-            console.log(action);
+            // console.log(action);
             if (gameState == "preflop" && action == "call") {
                 dispatch({ type: CHANGE_GAMESTATE, payload: "flop" });
             }

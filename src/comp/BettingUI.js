@@ -9,35 +9,36 @@ import {
 function BettingUI(props) {
     const [betAmount, setBetAmount] = useState(100);
     const [callAmount, setCallAmount] = useState(50);
-    const [action, setAction] = useState("");
+    const [prevAction, setPrevAction] = useState("");
 
     useEffect(() => {
-        setAction(props.user.prevAction);
+        setPrevAction(props.user.prevAction);
+        // console.log(prevAction);
     }, [props.user.prevAction]);
     return (
         <div className="betting-ui">
             <div className="betting-ui-btns">
                 <button onClick={() => props.newHand()}>Fold</button>
-                {action == "" ||
-                    (action == "call" && (
-                        // || (props.user.gameState !== "preflop" &&
-                        //     props.user.smallBlind == "human"
-                        <button
-                            onClick={() =>
-                                props.updateGameplay(
-                                    "human",
-                                    "check",
-                                    action,
-                                    props.user.pot,
-                                    0,
-                                    props.user.gameState
-                                )
-                            }
-                        >
-                            Check
-                        </button>
-                    ))}
-                {action == "check" && (
+                {prevAction == "" ||
+                    (prevAction == "call" &&
+                        props.user.gameState !== "preflop" &&
+                        props.user.smallBlind == "human" && (
+                            <button
+                                onClick={() =>
+                                    props.updateGameplay(
+                                        "human",
+                                        "check",
+                                        prevAction,
+                                        props.user.pot,
+                                        0,
+                                        props.user.gameState
+                                    )
+                                }
+                            >
+                                Check
+                            </button>
+                        ))}
+                {prevAction == "check" && (
                     <button
                         onClick={() => {
                             props.updateHumanChips(
@@ -48,7 +49,7 @@ function BettingUI(props) {
                             props.updateGameplay(
                                 "human",
                                 "bet",
-                                action,
+                                prevAction,
                                 props.user.pot,
                                 Number(betAmount),
                                 props.user.gameState
@@ -59,8 +60,8 @@ function BettingUI(props) {
                         <span>{betAmount}</span>
                     </button>
                 )}
-                {action == "bet" ||
-                    action == "raise" ||
+                {prevAction == "bet" ||
+                    prevAction == "raise" ||
                     (props.user.smallBlind == "human" &&
                         props.user.gameState == "preflop" && (
                             <button
@@ -73,7 +74,7 @@ function BettingUI(props) {
                                     props.updateGameplay(
                                         "human",
                                         "call",
-                                        action,
+                                        prevAction,
                                         props.user.pot,
                                         Number(callAmount),
                                         props.user.gameState
@@ -85,7 +86,7 @@ function BettingUI(props) {
                                 <span>{callAmount}</span>
                             </button>
                         ))}
-                {action == "bet" ||
+                {prevAction == "bet" ||
                     (props.user.smallBlind == "human" &&
                         props.user.gameState == "preflop" && (
                             <button
@@ -98,7 +99,7 @@ function BettingUI(props) {
                                     props.updateGameplay(
                                         "human",
                                         "raise",
-                                        action,
+                                        prevAction,
                                         props.user.pot,
                                         Number(callAmount + betAmount),
                                         props.user.gameState
