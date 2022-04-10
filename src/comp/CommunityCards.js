@@ -107,13 +107,106 @@ function CommunityCards(props) {
         const checkHandStrength = (cardSet) => {
             let cards = Object.keys(cardSet).map((key) => cardSet[key]); //Check royal flush
             let handType = [];
-            // check straight
+
+            // sort card objects
             const sortCards = cards.sort((a, b) =>
                 a.value > b.value ? 1 : -1
             );
-
+            console.log(sortCards);
+            // get card values
             const getCardValues = sortCards.map((card) => card.value);
 
+            // check x of a kind
+            const cardCounts = {
+                2: 0,
+                3: 0,
+                4: 0,
+                5: 0,
+                6: 0,
+                7: 0,
+                8: 0,
+                9: 0,
+                10: 0,
+                11: 0,
+                12: 0,
+                13: 0,
+                14: 0,
+            };
+
+            getCardValues.forEach(
+                (cardValue) =>
+                    (cardCounts[cardValue] = cardCounts[cardValue] + 1)
+            );
+            let cardCountsArr = Object.keys(cardCounts).map((key) => {
+                return {
+                    cardValue: key,
+                    count: cardCounts[key],
+                };
+            });
+            // console.log(cardCountsArr);
+            let sort1 = cardCountsArr.sort((a, b) =>
+                a.count > b.count ? 1 : -1
+            );
+            let sort2 = sort1.sort((a, b) =>
+                a.count == b.count
+                    ? Number(a.cardValue) > Number(b.cardValue)
+                        ? 1
+                        : -1
+                    : 0
+            );
+            console.log(sort2);
+            // Get highest pair
+            let xOfAKind = sort2[12];
+
+            // Swap in card picture values
+            if (xOfAKind.cardValue == 11) {
+                xOfAKind.cardValue = "J";
+            }
+            if (xOfAKind.cardValue == 12) {
+                xOfAKind.cardValue = "Q";
+            }
+            if (xOfAKind.cardValue == 13) {
+                xOfAKind.cardValue = "K";
+            }
+            if (xOfAKind.cardValue == 14) {
+                xOfAKind.cardValue = "A";
+            }
+            if (xOfAKind.count == 4) {
+                handType = [
+                    `4 of a kind ${xOfAKind.cardValue}s`,
+                    xOfAKind.cardValue,
+                ];
+            }
+            if (xOfAKind.count == 3) {
+                //CHECK FULLHOUSE
+                if (sort2[11].count == 2) {
+                    handType = [
+                        `Full House ${xOfAKind.cardValue}s over ${sort2[11].cardValue}s`,
+                        xOfAKind.cardValue,
+                    ];
+                } else {
+                    handType = [
+                        `3 of a kind ${xOfAKind.cardValue}s`,
+                        xOfAKind.cardValue,
+                    ];
+                }
+            }
+            if (xOfAKind.count == 2) {
+                //CHECK 2 Pair
+                if (sort2[11].count == 2) {
+                    handType = [
+                        `2 Pairs ${xOfAKind.cardValue}s and ${sort2[11].cardValue}s`,
+                        `${sort2[10].cardValue} kicker`,
+                    ];
+                } else {
+                    handType = [
+                        `Pair of ${xOfAKind.cardValue}s`,
+                        `${sort2[11].cardValue} kicker`,
+                    ];
+                }
+            }
+            console.log(handType);
+            // check straight
             const straightTypes = [
                 // A, 2, 3, 4, 5
                 [14, 2, 3, 4, 5],
@@ -139,11 +232,11 @@ function CommunityCards(props) {
                     if (straight) {
                         if (straightType[4] > straight[4]) {
                             handType = ["Straight", straightType];
-                            console.log(handType);
+                            // console.log(handType);
                         }
                     } else {
                         handType = ["Straight", straightType];
-                        console.log(handType);
+                        // console.log(handType);
                     }
                 }
             });
@@ -161,16 +254,16 @@ function CommunityCards(props) {
                 checkHearts,
                 checkSpades,
             ];
-            let flushCheck = flushCheckSuits.filter((suit) => suit.length == 5);
+            // check for 5+ of same suit
+            let flushCheck = flushCheckSuits.filter((suit) => suit.length >= 5);
+            //if flush exists, update handType
             if (flushCheck.length > 0) {
                 handType = [
                     "Flush",
-                    flushCheck[0][0].suit,
                     flushCheck[0].sort((a, b) => (a.value > b.value ? -1 : 1)),
+                    flushCheck[0][0].suit,
                 ];
-                // console.log(handType);
             }
-            // let res = cards.filter(card => )
         };
         checkHandStrength(computerCardSet);
         checkHandStrength(humanCardSet);
