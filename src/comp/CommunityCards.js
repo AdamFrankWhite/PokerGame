@@ -112,41 +112,51 @@ function CommunityCards(props) {
             const sortCards = cards.sort((a, b) =>
                 a.value > b.value ? 1 : -1
             );
-            console.log(sortCards);
             // get card values
-            const getCardValues = sortCards.map((card) => card.value);
+            const getCardValues = sortCards.map((card) => {
+                return {
+                    value: card.value,
+                    data: card,
+                };
+            });
 
             // check x of a kind
             const cardCounts = {
-                2: 0,
-                3: 0,
-                4: 0,
-                5: 0,
-                6: 0,
-                7: 0,
-                8: 0,
-                9: 0,
-                10: 0,
-                11: 0,
-                12: 0,
-                13: 0,
-                14: 0,
+                2: { count: 0, cardData: {} },
+                3: { count: 0, cardData: {} },
+                4: { count: 0, cardData: {} },
+                5: { count: 0, cardData: {} },
+                6: { count: 0, cardData: {} },
+                7: { count: 0, cardData: {} },
+                8: { count: 0, cardData: {} },
+                9: { count: 0, cardData: {} },
+                10: { count: 0, cardData: {} },
+                11: { count: 0, cardData: {} },
+                12: { count: 0, cardData: {} },
+                13: { count: 0, cardData: {} },
+                14: { count: 0, cardData: {} },
             };
 
-            getCardValues.forEach(
-                (cardValue) =>
-                    (cardCounts[cardValue] = cardCounts[cardValue] + 1)
-            );
+            getCardValues.forEach((card) => {
+                cardCounts[card.value]["count"] =
+                    cardCounts[card.value]["count"] + 1;
+                // collect data on duplicate value cards, using same count
+                cardCounts[card.value]["cardData"][
+                    `card${cardCounts[card.value]["count"]}`
+                ] = card.data;
+            });
             let cardCountsArr = Object.keys(cardCounts).map((key) => {
                 return {
                     cardValue: key,
-                    count: cardCounts[key],
+                    count: cardCounts[key]["count"],
+                    cardData: cardCounts[key]["cardData"],
                 };
             });
 
             let sort1 = cardCountsArr.sort((a, b) =>
                 a.count > b.count ? 1 : -1
             );
+            // sort non-duplicate cards by cardValue, keeping xOfAKind at end of array
             let sort2 = sort1.sort((a, b) =>
                 a.count == b.count
                     ? Number(a.cardValue) > Number(b.cardValue)
@@ -154,7 +164,23 @@ function CommunityCards(props) {
                         : -1
                     : 0
             );
-            console.log(sort2);
+            // console.log(sort2);
+
+            let cardData = sort2.map((card) => card.cardData);
+            let extractedCardData = [];
+            console.log(cardData);
+            cardData.forEach((card) => {
+                // loop through cards data object
+
+                for (const [key, value] of Object.entries(card)) {
+                    extractedCardData.push(value);
+                }
+            });
+
+            let finalHand = extractedCardData.slice(2, 7);
+
+            // console.log(finalHand);
+            // Swap in picture card names
             sort2.forEach((card) => {
                 if (card.cardValue == "11") {
                     card.cardValue = "J";
@@ -189,6 +215,7 @@ function CommunityCards(props) {
                 handType = [
                     `4 of a kind ${xOfAKind.cardValue}s`,
                     xOfAKind.cardValue,
+                    finalHand,
                 ];
             }
             if (xOfAKind.count == 3) {
@@ -197,11 +224,13 @@ function CommunityCards(props) {
                     handType = [
                         `Full House ${xOfAKind.cardValue}s over ${sort2[11].cardValue}s`,
                         xOfAKind.cardValue,
+                        finalHand,
                     ];
                 } else {
                     handType = [
                         `3 of a kind ${xOfAKind.cardValue}s`,
                         `${sort2[11].cardValue} ${sort2[10].cardValue} kicker`,
+                        finalHand,
                     ];
                 }
             }
@@ -211,11 +240,13 @@ function CommunityCards(props) {
                     handType = [
                         `2 Pairs ${xOfAKind.cardValue}s and ${sort2[11].cardValue}s`,
                         `${sort2[10].cardValue} kicker`,
+                        finalHand,
                     ];
                 } else {
                     handType = [
                         `Pair of ${xOfAKind.cardValue}s`,
                         `${sort2[11].cardValue} kicker`,
+                        finalHand,
                     ];
                 }
             }
@@ -245,12 +276,10 @@ function CommunityCards(props) {
                     //Check for highest straight
                     if (straight) {
                         if (straightType[4] > straight[4]) {
-                            handType = ["Straight", straightType];
-                            // console.log(handType);
+                            handType = ["Straight", straightType, finalHand];
                         }
                     } else {
-                        handType = ["Straight", straightType];
-                        // console.log(handType);
+                        handType = ["Straight", straightType, finalHand];
                     }
                 }
             });
@@ -276,6 +305,7 @@ function CommunityCards(props) {
                     "Flush",
                     flushCheck[0].sort((a, b) => (a.value > b.value ? -1 : 1)),
                     flushCheck[0][0].suit,
+                    finalHand,
                 ];
             }
         };
