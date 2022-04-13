@@ -112,13 +112,8 @@ function CommunityCards(props) {
             const sortCards = cards.sort((a, b) =>
                 a.value > b.value ? 1 : -1
             );
-            // get card values
-            const getCardValues = sortCards.map((card) => {
-                return {
-                    value: card.value,
-                    data: card,
-                };
-            });
+            // get card values for simpler checks
+            const getCardValues = sortCards.map((card) => card.value);
 
             // check x of a kind
             const cardCounts = {
@@ -137,13 +132,13 @@ function CommunityCards(props) {
                 14: { count: 0, cardData: {} },
             };
 
-            getCardValues.forEach((card) => {
+            sortCards.forEach((card) => {
                 cardCounts[card.value]["count"] =
                     cardCounts[card.value]["count"] + 1;
                 // collect data on duplicate value cards, using same count
                 cardCounts[card.value]["cardData"][
                     `card${cardCounts[card.value]["count"]}`
-                ] = card.data;
+                ] = card;
             });
             let cardCountsArr = Object.keys(cardCounts).map((key) => {
                 return {
@@ -250,7 +245,7 @@ function CommunityCards(props) {
                     ];
                 }
             }
-            console.log(handType);
+
             // check straight
             const straightTypes = [
                 // A, 2, 3, 4, 5
@@ -271,15 +266,30 @@ function CommunityCards(props) {
                 const check = straightType.every((straightType) =>
                     getCardValues.includes(straightType)
                 );
-
+                console.log(check);
                 if (check) {
+                    straight = straightType;
+                    let straightDuplicate = straight.map((card) => card);
+                    // grab card data
+                    let handOutput = [];
+                    // remove card from straight array, to avoid duplicate cards in finalHand - simpler than checking handOutput by object values
+                    straightDuplicate.forEach((cardValue) => {
+                        sortCards.forEach((card) => {
+                            card.value == cardValue && handOutput.push(card);
+                            straightDuplicate.filter(
+                                (cardValue) => cardValue !== card.value
+                            );
+                        });
+                    });
+                    finalHand = handOutput;
                     //Check for highest straight
-                    if (straight) {
-                        if (straightType[4] > straight[4]) {
-                            handType = ["Straight", straightType, finalHand];
-                        }
+
+                    if (straightType[4] > straight[4]) {
+                        handType = ["Straight", straight, finalHand];
                     } else {
-                        handType = ["Straight", straightType, finalHand];
+                        handType = ["Straight", straight, finalHand];
+                        console.log(handType);
+                        // return;
                     }
                 }
             });
@@ -300,14 +310,19 @@ function CommunityCards(props) {
             // check for 5+ of same suit
             let flushCheck = flushCheckSuits.filter((suit) => suit.length >= 5);
             //if flush exists, update handType
+
             if (flushCheck.length > 0) {
-                handType = [
-                    "Flush",
-                    flushCheck[0].sort((a, b) => (a.value > b.value ? -1 : 1)),
-                    flushCheck[0][0].suit,
-                    finalHand,
-                ];
+                finalHand = flushCheck[0].sort((a, b) =>
+                    a.value > b.value ? -1 : 1
+                );
+                handType = ["Flush", flushCheck[0][0].suit, finalHand];
             }
+
+            // Check high card
+            if (handType.length == 0) {
+                handType = [`${finalHand[4].value} High Card`, finalHand];
+            }
+            console.log(handType);
         };
         checkHandStrength(computerCardSet);
         checkHandStrength(humanCardSet);
