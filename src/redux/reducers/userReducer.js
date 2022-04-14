@@ -12,6 +12,7 @@ import {
     SET_STRAIGHT_FLUSH,
     SET_HAND_WINNER,
     EMPTY_POT,
+    SET_SHOWDOWN_DESCRIPTION,
 } from "../types";
 
 import { cards } from "../../Model/cards";
@@ -30,6 +31,7 @@ const initialState = {
     prevAction: "",
     thinkingTimer: false,
     playerTurn: "human",
+    showdownDescription: "",
 };
 
 export default function (state = initialState, action) {
@@ -138,6 +140,12 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 pot: 0,
+            };
+        }
+        case SET_SHOWDOWN_DESCRIPTION: {
+            return {
+                ...state,
+                showdownDescription: action.payload,
             };
         }
         default:

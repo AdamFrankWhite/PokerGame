@@ -373,10 +373,37 @@ function CommunityCards(props) {
             console.log(handType);
             // Check high card
             if (handType.length == 0) {
+                let highCard = finalHand[4].value;
+                let kicker = finalHand[3].value;
+                if (kicker == 11) {
+                    kicker = "J";
+                }
+                if (highCard == 11) {
+                    highCard = "J";
+                }
+                if (kicker == 12) {
+                    kicker = "Q";
+                }
+                if (highCard == 12) {
+                    highCard = "Q";
+                }
+                if (kicker == 13) {
+                    kicker = "K";
+                }
+                if (highCard == 13) {
+                    highCard = "K";
+                }
+                if (kicker == 14) {
+                    kicker = "A";
+                }
+                if (highCard == 14) {
+                    highCard = "A";
+                }
+
                 handType = {
                     handType: "High Card",
-                    description: `${finalHand[4].value} High Card`,
-                    cardValue: finalHand[4].value,
+                    description: `${highCard} high, ${kicker} kicker`,
+                    cardValue: highCard,
                     finalHand,
                 };
             }
@@ -440,23 +467,21 @@ function CommunityCards(props) {
                     .reverse()
                     .every((card, index) => {
                         if (card.value > humanHandReverse[index].value) {
-                            console.log(
-                                `Computer wins with ${computerHandData.description}`
-                            );
+                            let showdownDescription = `Computer wins with ${computerHandData.description}`;
                             props.setHandWinner(
                                 "computer",
                                 props.user.computerChips,
-                                props.user.pot
+                                props.user.pot,
+                                showdownDescription
                             );
                             return false;
                         } else if (card.value < humanHandReverse[index].value) {
-                            console.log(
-                                `Human wins with ${humanHandData.description}`
-                            );
+                            let showdownDescription = `Human wins with ${humanHandData.description}`;
                             props.setHandWinner(
                                 "human",
                                 props.user.humanChips,
-                                props.user.pot
+                                props.user.pot,
+                                showdownDescription
                             );
                             return false;
                         } else {
@@ -470,8 +495,12 @@ function CommunityCards(props) {
                     JSON.stringify(computerHandValues) ==
                     JSON.stringify(humanHandValues)
                 ) {
-                    console.log(
-                        `Hand tied with ${computerHandType}. Split pot.`
+                    let showdownDescription = `Hand tied with ${computerHandType}. Split pot.`;
+                    props.setHandWinner(
+                        "tie",
+                        props.user.humanChips,
+                        props.user.pot,
+                        showdownDescription
                     );
                 }
             }
@@ -513,7 +542,11 @@ function CommunityCards(props) {
                         />
                     );
                 })}
-            {showHandWinner && <span>Showdown</span>}
+            {showHandWinner && (
+                <div className="showdown-cont">
+                    <p>{props.user.showdownDescription}</p>
+                </div>
+            )}
         </div>
     );
 }

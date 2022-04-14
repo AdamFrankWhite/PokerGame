@@ -95,6 +95,7 @@ html {
   display: flex;
 }
 .betting-ui .betting-ui-btns button {
+  min-height: 80px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -147,7 +148,7 @@ header {
 .pot {
   position: absolute;
   bottom: 42%;
-  left: 30%;
+  left: 27%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -174,12 +175,23 @@ header {
   display: flex;
   width: 27%;
   height: auto;
-  left: 40%;
+  left: 35%;
   top: 40%;
 }
 .community-cards img {
   width: 20%;
   margin: 0.1em;
+}
+
+.showdown-cont {
+  color: white;
+  position: absolute;
+  left: 110%;
+  width: fit-content;
+}
+.showdown-cont p {
+  margin: 0;
+  text-align: left;
 }
 
 .slidecontainer {

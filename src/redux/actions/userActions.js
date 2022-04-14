@@ -11,6 +11,7 @@ import {
     CHANGE_GAMESTATE,
     SET_STRAIGHT_FLUSH,
     EMPTY_POT,
+    SET_SHOWDOWN_DESCRIPTION,
 } from "../types";
 import { cards } from "../../Model/cards";
 export const updateHumanChips =
@@ -117,8 +118,10 @@ export const setRiver = (card) => (dispatch) => {
 export const updateGameplay =
     (player, action, prevAction, currentPot, chips, gameState) =>
     (dispatch) => {
+        console.log(gameState);
         // let gameState = ["preflop", "flop", "turn", "river", "showdown"];
         let updatedPot = (currentPot += chips);
+
         const AI_MOVE = (prevAction, currentPot, humanBet) => {
             let updatedPot = currentPot + humanBet; // match human bet
             // console.log("ai thinking");
@@ -189,14 +192,26 @@ export const setStraightFlush = () => (dispatch) => {
     dispatch({ type: SET_STRAIGHT_FLUSH, payload: "" });
 };
 
-export const setHandWinner = (winner, currentChips, pot) => (dispatch) => {
-    let updatedChips = currentChips + pot;
-    console.log(winner);
-    if (winner == "computer") {
-        dispatch({ type: UPDATE_COMPUTER_CHIPS, payload: updatedChips });
-    }
-    if (winner == "human") {
-        dispatch({ type: UPDATE_HUMAN_CHIPS, payload: updatedChips });
-    }
-    dispatch({ type: EMPTY_POT, payload: 0 });
-};
+export const setHandWinner =
+    (winner, currentChips, pot, showdownDescription) => (dispatch) => {
+        console.log(showdownDescription);
+        let updatedChips = currentChips + pot;
+        if (winner == "tie") {
+            dispatch({
+                type: UPDATE_COMPUTER_CHIPS,
+                payload: updatedChips / 2,
+            });
+            dispatch({ type: UPDATE_HUMAN_CHIPS, payload: updatedChips / 2 });
+        }
+        if (winner == "computer") {
+            dispatch({ type: UPDATE_COMPUTER_CHIPS, payload: updatedChips });
+        }
+        if (winner == "human") {
+            dispatch({ type: UPDATE_HUMAN_CHIPS, payload: updatedChips });
+        }
+        dispatch({ type: EMPTY_POT, payload: 0 });
+        dispatch({
+            type: SET_SHOWDOWN_DESCRIPTION,
+            payload: showdownDescription,
+        });
+    };
