@@ -7,6 +7,7 @@ import {
     setFlop,
     setTurn,
     setRiver,
+    setHandWinner,
 } from "../redux/actions/userActions";
 function CommunityCards(props) {
     function importAll(r) {
@@ -369,9 +370,9 @@ function CommunityCards(props) {
                     };
                 }
             }
-
+            console.log(handType);
             // Check high card
-            if (handType.handType.length == 0) {
+            if (handType.length == 0) {
                 handType = {
                     handType: "High Card",
                     description: `${finalHand[4].value} High Card`,
@@ -410,11 +411,21 @@ function CommunityCards(props) {
                 handTypes.indexOf(humanHandType)
             ) {
                 console.log(`Computer wins with ${computerHandType}`);
+                props.setHandWinner(
+                    "computer",
+                    props.user.computerChips,
+                    props.user.pot
+                );
             } else if (
                 handTypes.indexOf(computerHandType) <
                 handTypes.indexOf(humanHandType)
             ) {
                 console.log(`Human wins with ${humanHandType}`);
+                props.setHandWinner(
+                    "human",
+                    props.user.humanChips,
+                    props.user.pot
+                );
             } else if (
                 handTypes.indexOf(computerHandType) ==
                 handTypes.indexOf(humanHandType)
@@ -432,10 +443,20 @@ function CommunityCards(props) {
                             console.log(
                                 `Computer wins with ${computerHandData.description}`
                             );
+                            props.setHandWinner(
+                                "computer",
+                                props.user.computerChips,
+                                props.user.pot
+                            );
                             return false;
                         } else if (card.value < humanHandReverse[index].value) {
                             console.log(
                                 `Human wins with ${humanHandData.description}`
+                            );
+                            props.setHandWinner(
+                                "human",
+                                props.user.humanChips,
+                                props.user.pot
                             );
                             return false;
                         } else {
@@ -500,5 +521,11 @@ function CommunityCards(props) {
 const mapStateToProps = (state) => {
     return { user: state.user };
 };
-const mapActionsToProps = { updateDeck, setFlop, setTurn, setRiver };
+const mapActionsToProps = {
+    updateDeck,
+    setFlop,
+    setTurn,
+    setRiver,
+    setHandWinner,
+};
 export default connect(mapStateToProps, mapActionsToProps)(CommunityCards);

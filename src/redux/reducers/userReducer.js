@@ -10,6 +10,8 @@ import {
     SET_SMALLBLIND,
     CHANGE_GAMESTATE,
     SET_STRAIGHT_FLUSH,
+    SET_HAND_WINNER,
+    EMPTY_POT,
 } from "../types";
 
 import { cards } from "../../Model/cards";
@@ -132,6 +134,12 @@ export default function (state = initialState, action) {
                     },
                 ],
             };
+        case EMPTY_POT: {
+            return {
+                ...state,
+                pot: 0,
+            };
+        }
         default:
             return { ...state };
     }

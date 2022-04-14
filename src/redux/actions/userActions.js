@@ -10,6 +10,7 @@ import {
     UPDATE_GAMEPLAY,
     CHANGE_GAMESTATE,
     SET_STRAIGHT_FLUSH,
+    EMPTY_POT,
 } from "../types";
 import { cards } from "../../Model/cards";
 export const updateHumanChips =
@@ -186,4 +187,16 @@ export const updateGameplay =
 
 export const setStraightFlush = () => (dispatch) => {
     dispatch({ type: SET_STRAIGHT_FLUSH, payload: "" });
+};
+
+export const setHandWinner = (winner, currentChips, pot) => (dispatch) => {
+    let updatedChips = currentChips + pot;
+    console.log(winner);
+    if (winner == "computer") {
+        dispatch({ type: UPDATE_COMPUTER_CHIPS, payload: updatedChips });
+    }
+    if (winner == "human") {
+        dispatch({ type: UPDATE_HUMAN_CHIPS, payload: updatedChips });
+    }
+    dispatch({ type: EMPTY_POT, payload: 0 });
 };
