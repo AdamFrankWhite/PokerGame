@@ -9,6 +9,7 @@ import {
     UPDATE_GAMEPLAY,
     SET_SMALLBLIND,
     CHANGE_GAMESTATE,
+    SET_STRAIGHT_FLUSH,
 } from "../types";
 
 import { cards } from "../../Model/cards";
@@ -91,6 +92,45 @@ export default function (state = initialState, action) {
                 prevAction: action.payload.action,
                 pot: action.payload.updatedPot,
                 thinkingTimer: true,
+            };
+        case SET_STRAIGHT_FLUSH:
+            return {
+                ...state,
+                communityCards: [
+                    {
+                        card: "TH",
+                        path: `../img/cards/TH.svg`,
+                        suit: "Hearts",
+                        value: 10,
+                    },
+
+                    {
+                        card: "JH",
+                        path: `../img/cards/JH.svg`,
+                        suit: "Hearts",
+                        value: 11,
+                    },
+
+                    {
+                        card: "QH",
+                        path: `../img/cards/QH.svg`,
+                        suit: "Hearts",
+                        value: 12,
+                    },
+
+                    {
+                        card: "KH",
+                        path: `../img/cards/KH.svg`,
+                        suit: "Hearts",
+                        value: 13,
+                    },
+                    {
+                        card: "9H",
+                        path: `../img/cards/9H.svg`,
+                        suit: "Hearts",
+                        value: 9,
+                    },
+                ],
             };
         default:
             return { ...state };

@@ -9,6 +9,7 @@ import {
     SET_SMALLBLIND,
     UPDATE_GAMEPLAY,
     CHANGE_GAMESTATE,
+    SET_STRAIGHT_FLUSH,
 } from "../types";
 import { cards } from "../../Model/cards";
 export const updateHumanChips =
@@ -182,3 +183,7 @@ export const updateGameplay =
             AI_MOVE(action, currentPot, chips);
         }
     };
+
+export const setStraightFlush = () => (dispatch) => {
+    dispatch({ type: SET_STRAIGHT_FLUSH, payload: "" });
+};

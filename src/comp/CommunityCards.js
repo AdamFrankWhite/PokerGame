@@ -99,12 +99,14 @@ function CommunityCards(props) {
         }
     }, [props.user.gameState]);
 
-    const compareHands = (computerHand, humanHand, communityCards) => {
-        let computerCardSet = { ...computerHand, ...communityCards };
-        let humanCardSet = { ...humanHand, ...communityCards };
-        console.log(computerCardSet, humanCardSet);
-
-        const checkHandStrength = (cardSet) => {
+    const compareHands = (computerCards, humanCards, communityCards) => {
+        let computerCardSet = { ...computerCards, ...communityCards };
+        let humanCardSet = { ...humanCards, ...communityCards };
+        // should handType check ascend or descend? ascend would mean unnecessary going through all, even with bad hand, descending would make more sense, algthough straigt flush needs considering
+        let computerHand = [];
+        let humanHand = [];
+        let handWinner = [];
+        const checkHandStrength = (cardSet, player) => {
             let cards = Object.keys(cardSet).map((key) => cardSet[key]); //Check royal flush
             let handType = [];
 
@@ -163,7 +165,6 @@ function CommunityCards(props) {
 
             let cardData = sort2.map((card) => card.cardData);
             let extractedCardData = [];
-            console.log(cardData);
             cardData.forEach((card) => {
                 // loop through cards data object
 
@@ -208,6 +209,7 @@ function CommunityCards(props) {
             }
             if (xOfAKind.count == 4) {
                 handType = [
+                    "Four of a Kind",
                     `4 of a kind ${xOfAKind.cardValue}s`,
                     xOfAKind.cardValue,
                     finalHand,
@@ -216,33 +218,37 @@ function CommunityCards(props) {
             if (xOfAKind.count == 3) {
                 //CHECK FULLHOUSE
                 if (sort2[11].count == 2) {
-                    handType = [
-                        `Full House ${xOfAKind.cardValue}s over ${sort2[11].cardValue}s`,
-                        xOfAKind.cardValue,
+                    handType = {
+                        handType: "Full House",
+                        description: `Full House ${xOfAKind.cardValue}s over ${sort2[11].cardValue}s`,
+                        cardValue: xOfAKind.cardValue,
                         finalHand,
-                    ];
+                    };
                 } else {
-                    handType = [
-                        `3 of a kind ${xOfAKind.cardValue}s`,
-                        `${sort2[11].cardValue} ${sort2[10].cardValue} kicker`,
+                    handType = {
+                        handType: "Three of a Kind",
+                        description: `3 of a kind ${xOfAKind.cardValue}s`,
+                        cardValue: `${sort2[11].cardValue} ${sort2[10].cardValue} kicker`,
                         finalHand,
-                    ];
+                    };
                 }
             }
             if (xOfAKind.count == 2) {
                 //CHECK 2 Pair
                 if (sort2[11].count == 2) {
-                    handType = [
-                        `2 Pairs ${xOfAKind.cardValue}s and ${sort2[11].cardValue}s`,
-                        `${sort2[10].cardValue} kicker`,
+                    handType = {
+                        handType: "Two Pairs",
+                        description: `2 Pairs ${xOfAKind.cardValue}s and ${sort2[11].cardValue}s`,
+                        cardValue: `${sort2[10].cardValue} kicker`,
                         finalHand,
-                    ];
+                    };
                 } else {
-                    handType = [
-                        `Pair of ${xOfAKind.cardValue}s`,
-                        `${sort2[11].cardValue} kicker`,
+                    handType = {
+                        handType: "Pair",
+                        description: `Pair of ${xOfAKind.cardValue}s`,
+                        cardValue: `${sort2[11].cardValue} kicker`,
                         finalHand,
-                    ];
+                    };
                 }
             }
 
@@ -266,7 +272,6 @@ function CommunityCards(props) {
                 const check = straightType.every((straightType) =>
                     getCardValues.includes(straightType)
                 );
-                console.log(check);
                 if (check) {
                     straight = straightType;
                     let straightDuplicate = straight.map((card) => card);
@@ -283,12 +288,25 @@ function CommunityCards(props) {
                     });
                     finalHand = handOutput;
                     //Check for highest straight
-
+                    let textOutput = "";
+                    straight.forEach((num) => {
+                        textOutput += num + " ";
+                    });
                     if (straightType[4] > straight[4]) {
-                        handType = ["Straight", straight, finalHand];
+                        handType = {
+                            handType: "Straight",
+                            description: `Straight ${textOutput}`,
+                            cardValue: straight,
+                            finalHand,
+                        };
                     } else {
-                        handType = ["Straight", straight, finalHand];
-                        console.log(handType);
+                        console.log(straight);
+                        handType = {
+                            handType: "Straight",
+                            description: `Straight ${textOutput}`,
+                            cardValue: straight,
+                            finalHand,
+                        };
                         // return;
                     }
                 }
@@ -315,17 +333,131 @@ function CommunityCards(props) {
                 finalHand = flushCheck[0].sort((a, b) =>
                     a.value > b.value ? -1 : 1
                 );
-                handType = ["Flush", flushCheck[0][0].suit, finalHand];
+                finalHand = finalHand.slice(0, 5);
+                //TODO CHECK EXTRA FLUSH CARDS, e.g. 3H, AND OTHER STRAIGHT CARDS, e.g. 10S
+                // check straight flush
+
+                if (handType.handType == "Straight") {
+                    if (
+                        JSON.stringify(straight) ==
+                        JSON.stringify([10, 11, 12, 13, 14])
+                    ) {
+                        handType = {
+                            handType: "Royal Flush",
+                            description: `Royal Flush ${flushCheck[0][0].suit}`,
+                            cardValue: flushCheck[0][0].suit,
+                            finalHand,
+                        };
+                    } else {
+                        handType = {
+                            handType: "Straight Flush",
+                            description: `Straight flush ${straight.forEach(
+                                (num) => {
+                                    return num + " ";
+                                }
+                            )}`,
+                            cardValue: flushCheck[0][0].suit,
+                            finalHand,
+                        };
+                    }
+                } else {
+                    handType = {
+                        handType: "Flush",
+                        description: `Flush ${finalHand[0].value} High`,
+                        cardValue: flushCheck[0][0].suit,
+                        finalHand,
+                    };
+                }
             }
 
             // Check high card
-            if (handType.length == 0) {
-                handType = [`${finalHand[4].value} High Card`, finalHand];
+            if (handType.handType.length == 0) {
+                handType = {
+                    handType: "High Card",
+                    description: `${finalHand[4].value} High Card`,
+                    cardValue: finalHand[4].value,
+                    finalHand,
+                };
             }
-            console.log(handType);
+
+            if (player == "computer") {
+                computerHand = handType;
+            } else {
+                humanHand = handType;
+            }
         };
-        checkHandStrength(computerCardSet);
-        checkHandStrength(humanCardSet);
+
+        const checkHandWinner = (computerHandData, humanHandData) => {
+            console.log(computerHandData, humanHandData);
+            let computerHandType = computerHandData.handType;
+            let humanHandType = humanHandData.handType;
+            let computerHand = computerHandData.finalHand;
+            let humanHand = humanHandData.finalHand;
+            let handTypes = [
+                "High Card",
+                "Pair",
+                "Two Pairs",
+                "Three of a Kind",
+                "Straight",
+                "Flush",
+                "Full House",
+                "Four of a Kind",
+                "Straight Flush",
+                "Royal Flush",
+            ];
+            if (
+                handTypes.indexOf(computerHandType) >
+                handTypes.indexOf(humanHandType)
+            ) {
+                console.log(`Computer wins with ${computerHandType}`);
+            } else if (
+                handTypes.indexOf(computerHandType) <
+                handTypes.indexOf(humanHandType)
+            ) {
+                console.log(`Human wins with ${humanHandType}`);
+            } else if (
+                handTypes.indexOf(computerHandType) ==
+                handTypes.indexOf(humanHandType)
+            ) {
+                // check for tie
+                // shallow copy then reverse
+                let humanHandReverse = humanHand.slice().reverse();
+                console.log(computerHand.slice().reverse());
+                console.log(humanHand.slice().reverse());
+                computerHand
+                    .slice()
+                    .reverse()
+                    .every((card, index) => {
+                        if (card.value > humanHandReverse[index].value) {
+                            console.log(
+                                `Computer wins with ${computerHandData.description}`
+                            );
+                            return false;
+                        } else if (card.value < humanHandReverse[index].value) {
+                            console.log(
+                                `Human wins with ${humanHandData.description}`
+                            );
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    });
+                //check tie
+                let computerHandValues = computerHand.map((card) => card.value);
+                let humanHandValues = humanHand.map((card) => card.value);
+                if (
+                    JSON.stringify(computerHandValues) ==
+                    JSON.stringify(humanHandValues)
+                ) {
+                    console.log(
+                        `Hand tied with ${computerHandType}. Split pot.`
+                    );
+                }
+            }
+        };
+        checkHandStrength(computerCardSet, "computer");
+        checkHandStrength(humanCardSet, "human");
+        checkHandWinner(computerHand, humanHand);
     };
     const [showHandWinner, toggleShowdown] = useState(false);
     useEffect(() => {
