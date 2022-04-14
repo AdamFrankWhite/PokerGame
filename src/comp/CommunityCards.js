@@ -101,14 +101,15 @@ function CommunityCards(props) {
     }, [props.user.gameState]);
 
     const compareHands = (computerCards, humanCards, communityCards) => {
+        console.log("comparing...");
         let computerCardSet = { ...computerCards, ...communityCards };
         let humanCardSet = { ...humanCards, ...communityCards };
         // should handType check ascend or descend? ascend would mean unnecessary going through all, even with bad hand, descending would make more sense, algthough straigt flush needs considering
         let computerHand = [];
         let humanHand = [];
-        let handWinner = [];
         const checkHandStrength = (cardSet, player) => {
-            let cards = Object.keys(cardSet).map((key) => cardSet[key]); //Check royal flush
+            // extract cards into array
+            let cards = Object.keys(cardSet).map((key) => cardSet[key]);
             let handType = [];
 
             // sort card objects
@@ -162,12 +163,12 @@ function CommunityCards(props) {
                         : -1
                     : 0
             );
-            // console.log(sort2);
+            console.log(sort2);
 
             let cardData = sort2.map((card) => card.cardData);
             let extractedCardData = [];
             cardData.forEach((card) => {
-                // loop through cards data object
+                // loop through cards data object extracting all the individual cards
 
                 for (const [key, value] of Object.entries(card)) {
                     extractedCardData.push(value);
@@ -437,21 +438,23 @@ function CommunityCards(props) {
                 handTypes.indexOf(computerHandType) >
                 handTypes.indexOf(humanHandType)
             ) {
-                console.log(`Computer wins with ${computerHandType}`);
+                let showdownDescription = `Computer wins with ${computerHandData.description}`;
                 props.setHandWinner(
                     "computer",
                     props.user.computerChips,
-                    props.user.pot
+                    props.user.pot,
+                    showdownDescription
                 );
             } else if (
                 handTypes.indexOf(computerHandType) <
                 handTypes.indexOf(humanHandType)
             ) {
-                console.log(`Human wins with ${humanHandType}`);
+                let showdownDescription = `Human wins with ${humanHandData.description}`;
                 props.setHandWinner(
                     "human",
                     props.user.humanChips,
-                    props.user.pot
+                    props.user.pot,
+                    showdownDescription
                 );
             } else if (
                 handTypes.indexOf(computerHandType) ==
@@ -460,8 +463,6 @@ function CommunityCards(props) {
                 // check for tie
                 // shallow copy then reverse
                 let humanHandReverse = humanHand.slice().reverse();
-                console.log(computerHand.slice().reverse());
-                console.log(humanHand.slice().reverse());
                 computerHand
                     .slice()
                     .reverse()
