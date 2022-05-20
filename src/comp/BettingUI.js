@@ -17,17 +17,17 @@ function BettingUI(props) {
 
     useEffect(() => {
         // get hand started if computer SB
-        // if (props.user.smallBlind == "computer") {
-        //     props.updateGameplay(
-        //         "computer",
-        //         props.user.smallBlind,
-        //         "check",
-        //         prevAction,
-        //         props.user.pot,
-        //         50,
-        //         props.user.gameState
-        //     );
-        // }
+        if (props.user.smallBlind == "computer") {
+            props.updateGameplay(
+                "computer",
+                props.user.smallBlind,
+                "call",
+                prevAction,
+                props.user.pot,
+                50,
+                props.user.gameState
+            );
+        }
     }, [props.user.smallBlind]);
     // Check which buttons to show
     useEffect(() => {
@@ -117,7 +117,11 @@ function BettingUI(props) {
             <div className="betting-ui-btns">
                 <button
                     onClick={() =>
-                        props.newHand(props.user.smallBlind, props.user.pot)
+                        props.newHand(
+                            props.user.smallBlind,
+                            props.user.pot,
+                            "computer"
+                        )
                     }
                 >
                     Fold

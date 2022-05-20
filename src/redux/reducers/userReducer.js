@@ -22,7 +22,7 @@ const initialState = {
     humanChips: 3000,
     computerChips: 3000,
     hands: {},
-    smallBlind: "computer",
+    smallBlind: "human",
     gameState: "preflop",
     startDeck: cards,
     remainingDeck: [],
@@ -42,6 +42,8 @@ export default function (state = initialState, action) {
                 ...state,
                 gameState: "preflop",
                 pot: 0,
+                [`${action.payload.winner}Chips`]:
+                    state[`${action.payload.winner}Chips`] + action.payload.pot,
                 prevAction: "",
             };
         case SET_SMALLBLIND:
