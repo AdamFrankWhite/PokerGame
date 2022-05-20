@@ -14,8 +14,7 @@ html {
 
 .App {
   display: flex;
-  background-image: url("/public/marble-2362265_1280.jpg");
-  background-size: cover;
+  background: #292a4c;
   width: 100vw;
   height: 100vh;
   flex-direction: column;
@@ -27,7 +26,7 @@ html {
 .poker-table {
   width: 70vw;
   height: 25vw;
-  background: darkgreen;
+  background: #08080f;
   border-radius: 50%;
   margin: auto;
   border: 3px solid black;
@@ -41,7 +40,7 @@ html {
   justify-content: center;
   padding: 0.25em 0.5em;
   border: 2px black solid;
-  border-radius: 10%;
+  border-radius: 50px;
   min-width: 12%;
   position: absolute;
   background: white;
@@ -107,7 +106,7 @@ html {
   letter-spacing: 0.05em;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 1em;
-  background: #003d00;
+  background: black;
   color: white;
 }
 .betting-ui .betting-ui-btns button:hover {
@@ -216,6 +215,8 @@ header {
   /* Grey background */
   outline: none;
   /* Remove outline */
+  border-radius: 10px;
+  overflow: hidden;
   opacity: 0.7;
   /* Set transparency (for mouse-over effects on hover) */
   -webkit-transition: 0.2s;
