@@ -11,6 +11,7 @@ import {
     CHANGE_GAMESTATE,
     SET_STRAIGHT_FLUSH,
     EMPTY_POT,
+    NEW_HAND,
     SET_SHOWDOWN_DESCRIPTION,
 } from "../types";
 import { cards } from "../../Model/cards";
@@ -30,31 +31,11 @@ export const updateComputerChips =
     };
 
 export const newHand = (prevSB) => (dispatch) => {
-    if (prevSB == "computer") {
-        dispatch({
-            type: SET_SMALLBLIND,
-            payload: {
-                smallBlind: "human",
-                humanChips: 50,
-                computerChips: 100,
-            },
-        });
-    } else {
-        dispatch({
-            type: SET_SMALLBLIND,
-            payload: {
-                smallBlind: "computer",
-                humanChips: 100,
-                computerChips: 50,
-            },
-        });
-    }
-
     // clear community cards
 
     dispatch({
-        type: CHANGE_GAMESTATE,
-        payload: "preflop",
+        type: NEW_HAND,
+        payload: "",
     });
     const getRandomCard = (currentDeckSize) => {
         return Math.floor(Math.random() * currentDeckSize);
@@ -82,7 +63,25 @@ export const newHand = (prevSB) => (dispatch) => {
             computer: { card1, card2 },
         },
     });
-
+    if (prevSB == "computer") {
+        dispatch({
+            type: SET_SMALLBLIND,
+            payload: {
+                smallBlind: "human",
+                humanChips: 50,
+                computerChips: 100,
+            },
+        });
+    } else {
+        dispatch({
+            type: SET_SMALLBLIND,
+            payload: {
+                smallBlind: "computer",
+                humanChips: 100,
+                computerChips: 50,
+            },
+        });
+    }
     // setBigBlind(bigBlind == "computer" ? "human" : "computer");
     // setSmallBlind(smallBlind == "computer" ? "human" : "computer");
 };
@@ -116,15 +115,13 @@ export const setRiver = (card) => (dispatch) => {
 };
 
 export const updateGameplay =
-    (player, action, prevAction, currentPot, chips, gameState) =>
+    (player, smallBlind, action, prevAction, currentPot, chips, gameState) =>
     (dispatch) => {
-        console.log(gameState);
-        // let gameState = ["preflop", "flop", "turn", "river", "showdown"];
-        let updatedPot = (currentPot += chips);
-
+        console.log(player);
         const AI_MOVE = (prevAction, currentPot, humanBet) => {
             let updatedPot = currentPot + humanBet; // match human bet
-            // console.log("ai thinking");
+            console.log("ai thinking", prevAction);
+
             if (prevAction == "bet") {
                 // AI autocall
                 setTimeout(() => {
@@ -152,6 +149,21 @@ export const updateGameplay =
                     });
                 }, 2000);
             }
+            // start of hand where computer sb
+            if (prevAction == "") {
+                // AI autocheck
+                console.log("pc call");
+                setTimeout(() => {
+                    dispatch({
+                        type: UPDATE_GAMEPLAY,
+                        payload: {
+                            action: "call",
+                            updatedPot,
+                            setThinkingTimer: false,
+                        },
+                    });
+                }, 2000);
+            }
             if (gameState == "flop") {
                 if (action == "call" || action == "check") {
                     dispatch({ type: CHANGE_GAMESTATE, payload: "turn" });
@@ -171,20 +183,49 @@ export const updateGameplay =
                 dispatch({ type: CHANGE_GAMESTATE, payload: "showdown" });
             }
         };
+        // let gameState = ["preflop", "flop", "turn", "river", "showdown"];
+        let updatedPot = (currentPot += chips);
+        if (gameState == "preflop") {
+            if (smallBlind == "computer") {
+                AI_MOVE(prevAction, currentPot, chips);
+            } else {
+                // Human gameplay
+                // console.log(action);
+                if (
+                    (gameState == "preflop" && action == "call") ||
+                    (gameState == "preflop" && action == "check")
+                ) {
+                    dispatch({ type: CHANGE_GAMESTATE, payload: "flop" });
+                }
+
+                // dispatch({
+                //     type: UPDATE_GAMEPLAY,
+                //     payload: { action, updatedPot, setThinkingTimer: true },
+                // });
+                // TODO CHANGING FROM ACTION TO PREVACTION broke things
+                AI_MOVE(prevAction, currentPot, chips);
+            }
+        }
+
         // AI gameplay
         if (player == "computer") {
+            AI_MOVE(prevAction, currentPot, chips);
         } else {
             // Human gameplay
             // console.log(action);
-            if (gameState == "preflop" && action == "call") {
+            if (
+                (gameState == "preflop" && action == "call") ||
+                (gameState == "preflop" && action == "check")
+            ) {
                 dispatch({ type: CHANGE_GAMESTATE, payload: "flop" });
             }
+
             dispatch({
                 type: UPDATE_GAMEPLAY,
                 payload: { action, updatedPot, setThinkingTimer: true },
             });
-
-            AI_MOVE(action, currentPot, chips);
+            // TODO CHANGING FROM ACTION TO PREVACTION broke things
+            AI_MOVE(prevAction, currentPot, chips);
         }
     };
 

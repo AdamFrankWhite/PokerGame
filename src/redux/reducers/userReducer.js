@@ -12,6 +12,7 @@ import {
     SET_STRAIGHT_FLUSH,
     SET_HAND_WINNER,
     EMPTY_POT,
+    NEW_HAND,
     SET_SHOWDOWN_DESCRIPTION,
 } from "../types";
 
@@ -36,6 +37,13 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case NEW_HAND:
+            return {
+                ...state,
+                gameState: "preflop",
+                pot: 0,
+                prevAction: "",
+            };
         case SET_SMALLBLIND:
             return {
                 ...state,
