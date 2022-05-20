@@ -30,12 +30,12 @@ export const updateComputerChips =
         dispatch({ type: UPDATE_COMPUTER_CHIPS, payload: updatedChips });
     };
 
-export const newHand = (prevSB) => (dispatch) => {
+export const newHand = (prevSB, pot, winner) => (dispatch) => {
     // clear community cards
 
     dispatch({
         type: NEW_HAND,
-        payload: "",
+        payload: { winner, pot },
     });
     const getRandomCard = (currentDeckSize) => {
         return Math.floor(Math.random() * currentDeckSize);
@@ -122,19 +122,20 @@ export const updateGameplay =
         const AI_MOVE = (prevAction, currentPot, humanBet) => {
             let updatedPot = currentPot + humanBet; // match human bet
             console.log("ai thinking", prevAction);
-            // if (prevAction == "") {
-            //     // AI autocall
-            //     setTimeout(() => {
-            //         dispatch({
-            //             type: UPDATE_GAMEPLAY,
-            //             payload: {
-            //                 action: "call",
-            //                 updatedPot: 200,
-            //                 setThinkingTimer: false,
-            //             },
-            //         });
-            //     }, 2000);
-            // }
+            // AI SB preflop
+            if (prevAction == "") {
+                // AI autocall
+                setTimeout(() => {
+                    dispatch({
+                        type: UPDATE_GAMEPLAY,
+                        payload: {
+                            action: "call",
+                            updatedPot: 200,
+                            setThinkingTimer: false,
+                        },
+                    });
+                }, 2000);
+            }
             if (prevAction == "bet") {
                 // AI autocall
                 setTimeout(() => {
@@ -196,32 +197,60 @@ export const updateGameplay =
                 dispatch({ type: CHANGE_GAMESTATE, payload: "showdown" });
             }
         };
+        // END OF AI_MOVE
+
         // let gameState = ["preflop", "flop", "turn", "river", "showdown"];
         let updatedPot = (currentPot += chips);
-        if (gameState == "preflop") {
-            if (smallBlind == "computer") {
-                AI_MOVE(prevAction, currentPot, chips);
-            } else {
-                // Human gameplay
-                // console.log(action);
-                if (
-                    (gameState == "preflop" && action == "call") ||
-                    (gameState == "preflop" && action == "check")
-                ) {
-                    dispatch({ type: CHANGE_GAMESTATE, payload: "flop" });
-                }
+        // if (gameState == "preflop") {
+        //     if (smallBlind == "computer") {
+        //         AI_MOVE(prevAction, currentPot, chips);
+        //     } else {
+        //         // Human gameplay
+        //         // console.log(action);
+        //         if (
+        //             (gameState == "preflop" && action == "call") ||
+        //             (gameState == "preflop" && action == "check")
+        //         ) {
+        //             dispatch({ type: CHANGE_GAMESTATE, payload: "flop" });
+        //         }
 
-                // dispatch({
-                //     type: UPDATE_GAMEPLAY,
-                //     payload: { action, updatedPot, setThinkingTimer: true },
-                // });
-                // TODO CHANGING FROM ACTION TO PREVACTION broke things
-                AI_MOVE(prevAction, currentPot, chips);
-            }
-        }
+        //         // dispatch({
+        //         //     type: UPDATE_GAMEPLAY,
+        //         //     payload: { action, updatedPot, setThinkingTimer: true },
+        //         // });
+        //         // TODO CHANGING FROM ACTION TO PREVACTION broke things
+        //         AI_MOVE(prevAction, currentPot, chips);
+        //     }
+        // }
 
-        // AI gameplay
-        if (player == "computer") {
+        // PREFLOP
+        // if sb == computer, else
+        // if fold, new hand
+        // if call/check, move to flop
+
+        // FLOP
+        // if sb == computer, else
+        // if fold, new hand
+        // if call/check, move to turn
+
+        // TURN
+        // if sb == computer, else
+        // if fold, new hand
+        // if call/check, move to river
+
+        // SHOWDOWN
+
+        // preflop AI SB initiate gameplay
+        if (
+            gameState == "preflop" &&
+            smallBlind == "computer" &&
+            action == "check"
+        ) {
+            dispatch({ type: CHANGE_GAMESTATE, payload: "flop" });
+        } else if (gameState == "preflop" && smallBlind == "computer") {
+            AI_MOVE("", currentPot, 0);
+            console.log("AI SB preflop");
+        } else if (player == "computer") {
             AI_MOVE(prevAction, currentPot, chips);
         } else {
             // Human gameplay
