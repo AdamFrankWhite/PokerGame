@@ -528,9 +528,17 @@ function CommunityCards(props) {
             toggleShowdown(false);
         }
     }, [props.user.gameState]);
+
     useEffect(() => {
         setCommunityCardImages(props.user.communityCards);
     }, [props.user.communityCards]);
+
+    // Avoid previous hand community cards flashing on new flop
+    useEffect(() => {
+        if (props.user.gameState == "preflop") {
+            setCommunityCardImages([]);
+        }
+    }, [props.user.gameState]);
     return (
         <div className="community-cards">
             {/* Only show community cards post-flop */}
