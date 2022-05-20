@@ -117,11 +117,24 @@ export const setRiver = (card) => (dispatch) => {
 export const updateGameplay =
     (player, smallBlind, action, prevAction, currentPot, chips, gameState) =>
     (dispatch) => {
-        console.log(player);
+        // initiate computer SB preflop
+
         const AI_MOVE = (prevAction, currentPot, humanBet) => {
             let updatedPot = currentPot + humanBet; // match human bet
             console.log("ai thinking", prevAction);
-
+            // if (prevAction == "") {
+            //     // AI autocall
+            //     setTimeout(() => {
+            //         dispatch({
+            //             type: UPDATE_GAMEPLAY,
+            //             payload: {
+            //                 action: "call",
+            //                 updatedPot: 200,
+            //                 setThinkingTimer: false,
+            //             },
+            //         });
+            //     }, 2000);
+            // }
             if (prevAction == "bet") {
                 // AI autocall
                 setTimeout(() => {

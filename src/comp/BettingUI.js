@@ -10,11 +10,25 @@ function BettingUI(props) {
     const [betAmount, setBetAmount] = useState(100);
     const [callAmount, setCallAmount] = useState(50);
     const [prevAction, setPrevAction] = useState("");
-    const [showCheck, setShowCheck] = useState(true);
-    const [showCall, setShowCall] = useState(true);
-    const [showBet, setShowBet] = useState(true);
-    const [showRaise, setShowRaise] = useState(true);
+    const [showCheck, setShowCheck] = useState(false);
+    const [showCall, setShowCall] = useState(false);
+    const [showBet, setShowBet] = useState(false);
+    const [showRaise, setShowRaise] = useState(false);
 
+    useEffect(() => {
+        // get hand started if computer SB
+        // if (props.user.smallBlind == "computer") {
+        //     props.updateGameplay(
+        //         "computer",
+        //         props.user.smallBlind,
+        //         "check",
+        //         prevAction,
+        //         props.user.pot,
+        //         50,
+        //         props.user.gameState
+        //     );
+        // }
+    }, [props.user.smallBlind]);
     // Check which buttons to show
     useEffect(() => {
         let prevAction = props.user.prevAction;
@@ -73,7 +87,7 @@ function BettingUI(props) {
         } else {
             setShowRaise(false);
         }
-    }, [props.user.prevAction]);
+    }, [props.user.prevAction, props.user.smallBlind]);
 
     useEffect(() => {
         setPrevAction(props.user.prevAction);

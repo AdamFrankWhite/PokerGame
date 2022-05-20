@@ -1,0 +1,5 @@
+// #1
+
+i) First tried doing UI btn conditionals on on actual button components - big issues with rerendering and complicatied conditionals
+ii) added useEffect to check which buttons to show following each time the play updated via prevAction state
+iii) moved logic to separate function
