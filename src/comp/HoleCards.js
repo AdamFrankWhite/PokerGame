@@ -37,6 +37,8 @@ function HoleCards(props) {
     useEffect(() => {
         if (props.user.gameState == "showdown") {
             toggleShowComputerCards(true);
+        } else {
+            toggleShowComputerCards(false);
         }
     }, [props.user.gameState]);
     return (
