@@ -10,6 +10,7 @@ import {
     UPDATE_GAMEPLAY,
     CHANGE_GAMESTATE,
     SET_STRAIGHT_FLUSH,
+    SET_PLAYER,
     EMPTY_POT,
     NEW_HAND,
     SET_SHOWDOWN_DESCRIPTION,
@@ -63,22 +64,22 @@ export const newHand = (prevSB, pot, winner) => (dispatch) => {
             computer: { card1, card2 },
         },
     });
-    if (prevSB == "computer") {
-        dispatch({
-            type: SET_SMALLBLIND,
-            payload: {
-                smallBlind: "human",
-                humanChips: 50,
-                computerChips: 100,
-            },
-        });
-    } else {
+    if (prevSB == "human") {
         dispatch({
             type: SET_SMALLBLIND,
             payload: {
                 smallBlind: "computer",
                 humanChips: 100,
                 computerChips: 50,
+            },
+        });
+    } else {
+        dispatch({
+            type: SET_SMALLBLIND,
+            payload: {
+                smallBlind: "human",
+                humanChips: 50,
+                computerChips: 100,
             },
         });
     }
@@ -113,29 +114,119 @@ export const setTurn = (card) => (dispatch) => {
 export const setRiver = (card) => (dispatch) => {
     dispatch({ type: SET_RIVER, payload: card });
 };
+let checkIfBothPlayersBeen = false;
+export const updateGameState =
+    (smallBlind, currentPlayer, action, gameState) => (dispatch) => {
+        if (gameState == "preflop") {
+            if (smallBlind == currentPlayer) {
+                checkIfBothPlayersBeen = true;
+            }
+        }
+        if (gameState != "preflop" && smallBlind != currentPlayer) {
+            checkIfBothPlayersBeen = true;
+        }
 
+        if (checkIfBothPlayersBeen) {
+            if (gameState == "preflop") {
+                if (action == "call" || action == "check") {
+                    //reset check
+                    checkIfBothPlayersBeen = false;
+                    dispatch({ type: CHANGE_GAMESTATE, payload: "flop" });
+                }
+            }
+            if (gameState == "flop") {
+                if (action == "call" || action == "check") {
+                    //reset check
+                    checkIfBothPlayersBeen = false;
+                    dispatch({ type: CHANGE_GAMESTATE, payload: "turn" });
+                }
+            }
+            if (
+                gameState == "turn" &&
+                (action == "call" || action == "check")
+            ) {
+                //reset check
+                checkIfBothPlayersBeen = false;
+                dispatch({ type: CHANGE_GAMESTATE, payload: "river" });
+            }
+
+            if (
+                gameState == "river" &&
+                (action == "call" || action == "check")
+            ) {
+                //reset check
+                checkIfBothPlayersBeen = false;
+                dispatch({ type: CHANGE_GAMESTATE, payload: "showdown" });
+            }
+        }
+    };
+
+export const setPlayer = (player) => (dispatch) => {
+    dispatch({ type: SET_PLAYER, payload: player });
+};
 export const updateGameplay =
     (player, smallBlind, action, prevAction, currentPot, chips, gameState) =>
     (dispatch) => {
-        // initiate computer SB preflop
+        if (player == "human") {
+            dispatch({ type: SET_PLAYER, payload: "computer" });
+        } else if (player == "computer") {
+            dispatch({ type: SET_PLAYER, payload: "human" });
+        }
 
+        dispatch({
+            type: UPDATE_GAMEPLAY,
+            payload: {
+                action,
+                updatedPot: currentPot + chips,
+                setThinkingTimer: false,
+            },
+        });
+
+        // const updateGameState = () => {
+        //     if (gameState == "preflop") {
+        //         if (action == "call" || action == "check") {
+        //             dispatch({ type: CHANGE_GAMESTATE, payload: "flop" });
+        //         }
+        //     }
+        //     if (gameState == "flop") {
+        //         if (action == "call" || action == "check") {
+        //             dispatch({ type: CHANGE_GAMESTATE, payload: "turn" });
+        //         }
+        //     }
+        //     if (
+        //         gameState == "turn" &&
+        //         (action == "call" || action == "check")
+        //     ) {
+        //         dispatch({ type: CHANGE_GAMESTATE, payload: "river" });
+        //     }
+
+        //     if (
+        //         gameState == "river" &&
+        //         (action == "call" || action == "check")
+        //     ) {
+        //         dispatch({ type: CHANGE_GAMESTATE, payload: "showdown" });
+        //     }
+        // };
         const AI_MOVE = (prevAction, currentPot, humanBet) => {
             let updatedPot = currentPot + humanBet; // match human bet
-            console.log("ai thinking", prevAction);
+
             // AI SB preflop
-            if (prevAction == "") {
+            if (prevAction == "" && gameState == "preflop") {
                 // AI autocall
                 setTimeout(() => {
                     dispatch({
                         type: UPDATE_GAMEPLAY,
                         payload: {
-                            action: "call",
+                            action: "check",
                             updatedPot: 200,
-                            setThinkingTimer: false,
+                            // setThinkingTimer: false,
                         },
                     });
+                    dispatch({ type: SET_PLAYER, payload: "human" });
+                    // updateGameState();
                 }, 2000);
             }
+
             if (prevAction == "bet") {
                 // AI autocall
                 setTimeout(() => {
@@ -144,9 +235,11 @@ export const updateGameplay =
                         payload: {
                             action: "call",
                             updatedPot,
-                            setThinkingTimer: false,
+                            // setThinkingTimer: false,
                         },
                     });
+                    dispatch({ type: SET_PLAYER, payload: "human" });
+                    // updateGameState();
                 }, 2000);
             }
 
@@ -157,71 +250,39 @@ export const updateGameplay =
                         type: UPDATE_GAMEPLAY,
                         payload: {
                             action: "check",
-                            updatedPot,
-                            setThinkingTimer: false,
+                            updatedPot: currentPot,
+                            // setThinkingTimer: false,
                         },
                     });
+                    dispatch({ type: SET_PLAYER, payload: "human" });
+                    // updateGameState();
                 }, 2000);
             }
-            // start of hand where computer sb
-            if (prevAction == "") {
+
+            if (prevAction == "call") {
                 // AI autocheck
                 console.log("pc call");
                 setTimeout(() => {
                     dispatch({
                         type: UPDATE_GAMEPLAY,
                         payload: {
-                            action: "call",
+                            action: "check",
                             updatedPot,
-                            setThinkingTimer: false,
+                            // setThinkingTimer: false,
                         },
                     });
+                    dispatch({ type: SET_PLAYER, payload: "human" });
+                    // updateGameState();
                 }, 2000);
             }
-            if (gameState == "flop") {
-                if (action == "call" || action == "check") {
-                    dispatch({ type: CHANGE_GAMESTATE, payload: "turn" });
-                }
-            }
-            if (
-                gameState == "turn" &&
-                (action == "call" || action == "check")
-            ) {
-                dispatch({ type: CHANGE_GAMESTATE, payload: "river" });
-            }
 
-            if (
-                gameState == "river" &&
-                (action == "call" || action == "check")
-            ) {
-                dispatch({ type: CHANGE_GAMESTATE, payload: "showdown" });
-            }
+            // if (player == "human") {
+            //     updateGameState();
+            // }
         };
         // END OF AI_MOVE
 
-        // let gameState = ["preflop", "flop", "turn", "river", "showdown"];
         let updatedPot = (currentPot += chips);
-        // if (gameState == "preflop") {
-        //     if (smallBlind == "computer") {
-        //         AI_MOVE(prevAction, currentPot, chips);
-        //     } else {
-        //         // Human gameplay
-        //         // console.log(action);
-        //         if (
-        //             (gameState == "preflop" && action == "call") ||
-        //             (gameState == "preflop" && action == "check")
-        //         ) {
-        //             dispatch({ type: CHANGE_GAMESTATE, payload: "flop" });
-        //         }
-
-        //         // dispatch({
-        //         //     type: UPDATE_GAMEPLAY,
-        //         //     payload: { action, updatedPot, setThinkingTimer: true },
-        //         // });
-        //         // TODO CHANGING FROM ACTION TO PREVACTION broke things
-        //         AI_MOVE(prevAction, currentPot, chips);
-        //     }
-        // }
 
         // PREFLOP
         // if sb == computer, else
@@ -240,35 +301,7 @@ export const updateGameplay =
 
         // SHOWDOWN
 
-        // preflop AI SB initiate gameplay
-        if (
-            gameState == "preflop" &&
-            smallBlind == "computer" &&
-            action == "check"
-        ) {
-            dispatch({ type: CHANGE_GAMESTATE, payload: "flop" });
-        } else if (gameState == "preflop" && smallBlind == "computer") {
-            AI_MOVE("", currentPot, 0);
-            console.log("AI SB preflop");
-        } else if (player == "computer") {
-            AI_MOVE(prevAction, currentPot, chips);
-        } else {
-            // Human gameplay
-            // console.log(action);
-            if (
-                (gameState == "preflop" && action == "call") ||
-                (gameState == "preflop" && action == "check")
-            ) {
-                dispatch({ type: CHANGE_GAMESTATE, payload: "flop" });
-            }
-
-            dispatch({
-                type: UPDATE_GAMEPLAY,
-                payload: { action, updatedPot, setThinkingTimer: true },
-            });
-            // TODO CHANGING FROM ACTION TO PREVACTION broke things
-            AI_MOVE(prevAction, currentPot, chips);
-        }
+        AI_MOVE(prevAction, currentPot, chips);
     };
 
 export const setStraightFlush = () => (dispatch) => {

@@ -5,6 +5,8 @@ import {
     updateHumanChips,
     updateGameplay,
     newHand,
+    updateGameState,
+    setPlayer,
 } from "../redux/actions/userActions";
 function BettingUI(props) {
     const [betAmount, setBetAmount] = useState(100);
@@ -14,22 +16,51 @@ function BettingUI(props) {
     const [showCall, setShowCall] = useState(false);
     const [showBet, setShowBet] = useState(false);
     const [showRaise, setShowRaise] = useState(false);
+    const [playerTurn, setPlayerTurn] = useState("human");
+    // useEffect(() => {
+    //     // get hand started if computer SB
+    //     if (props.user.smallBlind == "computer") {
+    //         props.updateGameplay(
+    //             "computer",
+    //             props.user.smallBlind,
+    //             "call",
+    //             prevAction,
+    //             props.user.pot,
+    //             50,
+    //             props.user.gameState
+    //         );
+    //     }
+    // }, [props.user.smallBlind]);
+    // Check which buttons to show
 
     useEffect(() => {
-        // get hand started if computer SB
-        if (props.user.smallBlind == "computer") {
-            props.updateGameplay(
-                "computer",
+        // update Game State when playerTurn changes to computer or human
+        if (props.user.playerTurn != "") {
+            props.updateGameState(
                 props.user.smallBlind,
-                "call",
-                prevAction,
-                props.user.pot,
-                50,
+                props.user.playerTurn,
+                props.user.prevAction,
                 props.user.gameState
             );
         }
-    }, [props.user.smallBlind]);
-    // Check which buttons to show
+
+        setPlayerTurn(props.user.playerTurn);
+    }, [props.user.playerTurn]);
+
+    // Ensure correct player turn each gameState
+
+    useEffect(() => {
+        let smallBlind = props.user.smallBlind;
+        let bigBlind =
+            props.user.smallBlind == "computer" ? "human" : "computer";
+        console.log(bigBlind);
+        if (props.user.gameState == "preflop") {
+            props.setPlayer(smallBlind);
+        } else {
+            props.setPlayer("");
+            props.setPlayer(bigBlind);
+        }
+    }, [props.user.gameState]);
     useEffect(() => {
         let prevAction = props.user.prevAction;
         // Check
@@ -94,6 +125,12 @@ function BettingUI(props) {
         // console.log(prevAction);
     }, [props.user.prevAction]);
 
+    useEffect(() => {
+        if (props.user.gameState == "showdown") {
+            setPlayerTurn("computer");
+            setTimeout(() => props.newHand(props.user.smallBlind), 4000);
+        }
+    }, [props.user.gameState]);
     // new hand prompt computer when dealer to begin hand betting
     // useEffect(() => {
     //     if (
@@ -113,7 +150,10 @@ function BettingUI(props) {
     //     }
     // }, [props.user.smallBlind]);
     return (
-        <div className="betting-ui">
+        <div
+            className="betting-ui"
+            style={playerTurn == "computer" ? { visibility: "hidden" } : {}}
+        >
             <div className="betting-ui-btns">
                 <button
                     onClick={() =>
@@ -184,7 +224,7 @@ function BettingUI(props) {
                                 Number(callAmount),
                                 props.user.gameState
                             );
-                            setCallAmount("");
+                            // setCallAmount("");
                         }}
                     >
                         <span>Call</span>
@@ -225,7 +265,7 @@ function BettingUI(props) {
                     onChange={(e) => setBetAmount(e.target.value)}
                 />
             </div>
-            <p>{betAmount}</p>
+            {/* <p className="bet-amount">{betAmount}</p> */}
         </div>
     );
 }
@@ -239,5 +279,7 @@ const mapActionsToProps = {
     newHand,
     updateHumanChips,
     updateGameplay,
+    updateGameState,
+    setPlayer,
 };
 export default connect(mapStateToProps, mapActionsToProps)(BettingUI);

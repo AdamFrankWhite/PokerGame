@@ -34,6 +34,11 @@ html {
     box-shadow: 3px 3px 3px gray;
     position: relative;
 }
+.timer {
+    width: 3em;
+    position: absolute;
+    right: 0;
+}
 
 .avatar {
     display: flex;
@@ -49,6 +54,9 @@ html {
     img {
         // width: 5em;
         // height: auto;
+        width:35%;
+        padding: 0.5em;
+        height: auto;
     }
     .avatar-text {
         width: 50%;
@@ -171,10 +179,8 @@ header {
 
 .thinking-timer {
     position: absolute;
-    width: 10%;
-    height: auto;
-    top: 20%;
-    right: 30%;
+    top: 13%;
+    right: 40%;
 }
 .community-cards {
     position: absolute;
@@ -244,3 +250,8 @@ header {
     cursor: pointer; /* Cursor on hover */
 }
 
+.bet-amount {
+    color: white;
+    font-size: 2em;
+    font-weight: bold;
+}

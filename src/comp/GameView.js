@@ -18,7 +18,7 @@ function GameView(props) {
     const [smallBlind, setSmallBlind] = useState(props.user.smallBlind);
 
     useEffect(() => {
-        props.newHand(smallBlind);
+        props.newHand();
         // preflop();
     }, []);
 
@@ -51,9 +51,9 @@ function GameView(props) {
                 <DealerBtn player={smallBlind} />
             </div>
             <BettingUI chips={props.user.humanChips} />
-            <button onClick={() => props.setStraightFlush()}>
+            {/* <button onClick={() => props.setStraightFlush()}>
                 Straight flush
-            </button>
+            </button> */}
         </>
     );
 }

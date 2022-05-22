@@ -438,7 +438,7 @@ function CommunityCards(props) {
                 handTypes.indexOf(computerHandType) >
                 handTypes.indexOf(humanHandType)
             ) {
-                let showdownDescription = `Computer wins with ${computerHandData.description}`;
+                let showdownDescription = `Computer wins ${props.user.pot} with ${computerHandData.description}`;
                 props.setHandWinner(
                     "computer",
                     props.user.computerChips,
@@ -449,7 +449,7 @@ function CommunityCards(props) {
                 handTypes.indexOf(computerHandType) <
                 handTypes.indexOf(humanHandType)
             ) {
-                let showdownDescription = `Human wins with ${humanHandData.description}`;
+                let showdownDescription = `Human wins ${props.user.pot} with ${humanHandData.description}`;
                 props.setHandWinner(
                     "human",
                     props.user.humanChips,
@@ -468,7 +468,7 @@ function CommunityCards(props) {
                     .reverse()
                     .every((card, index) => {
                         if (card.value > humanHandReverse[index].value) {
-                            let showdownDescription = `Computer wins with ${computerHandData.description}`;
+                            let showdownDescription = `Computer wins ${props.user.pot} with ${computerHandData.description}`;
                             props.setHandWinner(
                                 "computer",
                                 props.user.computerChips,
@@ -477,7 +477,7 @@ function CommunityCards(props) {
                             );
                             return false;
                         } else if (card.value < humanHandReverse[index].value) {
-                            let showdownDescription = `Human wins with ${humanHandData.description}`;
+                            let showdownDescription = `Human wins ${props.user.pot} with ${humanHandData.description}`;
                             props.setHandWinner(
                                 "human",
                                 props.user.humanChips,

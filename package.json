@@ -1,5 +1,6 @@
 {
   "name": "poker-app",
+  "homepage": "https://adamwhite.tech/poker-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

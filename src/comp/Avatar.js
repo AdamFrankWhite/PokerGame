@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import avatar1 from "../img/avatar-1.png";
 import avatar2 from "../img/avatar-2.png";
-import { CountdownCircleTimer } from "react-countdown-circle-timer";
+
 import { connect } from "react-redux";
 function Avatar(props) {
     return (

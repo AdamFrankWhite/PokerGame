@@ -34,6 +34,12 @@ html {
   position: relative;
 }
 
+.timer {
+  width: 3em;
+  position: absolute;
+  right: 0;
+}
+
 .avatar {
   display: flex;
   align-items: center;
@@ -44,6 +50,11 @@ html {
   min-width: 12%;
   position: absolute;
   background: white;
+}
+.avatar img {
+  width: 35%;
+  padding: 0.5em;
+  height: auto;
 }
 .avatar .avatar-text {
   width: 50%;
@@ -163,10 +174,8 @@ header {
 
 .thinking-timer {
   position: absolute;
-  width: 10%;
-  height: auto;
-  top: 20%;
-  right: 30%;
+  top: 13%;
+  right: 40%;
 }
 
 .community-cards {
@@ -254,6 +263,12 @@ header {
   /* Green background */
   cursor: pointer;
   /* Cursor on hover */
+}
+
+.bet-amount {
+  color: white;
+  font-size: 2em;
+  font-weight: bold;
 }
 
 /*# sourceMappingURL=App.css.map */

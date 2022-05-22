@@ -14,6 +14,7 @@ import {
     EMPTY_POT,
     NEW_HAND,
     SET_SHOWDOWN_DESCRIPTION,
+    SET_PLAYER,
 } from "../types";
 
 import { cards } from "../../Model/cards";
@@ -45,6 +46,11 @@ export default function (state = initialState, action) {
                 [`${action.payload.winner}Chips`]:
                     state[`${action.payload.winner}Chips`] + action.payload.pot,
                 prevAction: "",
+            };
+        case SET_PLAYER:
+            return {
+                ...state,
+                playerTurn: action.payload,
             };
         case SET_SMALLBLIND:
             return {
@@ -99,6 +105,8 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 communityCards: { ...state.communityCards, ...action.payload },
+                prevAction: "",
+                playerTurn: "",
             };
         case UPDATE_GAMEPLAY:
             return {

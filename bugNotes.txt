@@ -3,3 +3,16 @@
 i) First tried doing UI btn conditionals on on actual button components - big issues with rerendering and complicatied conditionals
 ii) added useEffect to check which buttons to show following each time the play updated via prevAction state
 iii) moved logic to separate function
+
+// #2
+
+When folding continuously, sometimes updateGameplay fires, messing up UI, sometimes doesn't
+
+i) Found problem in useEffect for computer initiatehand as sb, in BettingUI
+ii) it is the async nature - useEffect hook not waiting for array dependency to finish
+TRY to solve issue without using useEffect?
+
+// #3
+
+After moving updateGameState functionality, bug of changing gameState too many times, using changing player to check
+Fix: changing order to change player after changeGameState in useEffect, bettingUI line 38. Then 
