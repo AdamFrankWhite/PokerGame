@@ -84,6 +84,23 @@ function BettingUI(props) {
                 "preflop"
             );
         }
+
+        if (
+            props.user.gameState != "preflop" &&
+            props.user.prevAction == "" &&
+            props.user.playerTurn == "computer"
+        ) {
+            console.log(prevAction);
+            props.updateGameplay(
+                "computer",
+                props.user.smallBlind,
+                "",
+                prevAction,
+                props.user.pot,
+                0,
+                "preflop"
+            );
+        }
     }, [props.user.playerTurn]);
     useEffect(() => {
         let prevAction = props.user.prevAction;
@@ -240,7 +257,8 @@ function BettingUI(props) {
                                 prevAction,
                                 props.user.pot,
                                 Number(betAmount),
-                                props.user.gameState
+                                props.user.gameState,
+                                props.user.computerChips
                             );
                         }}
                     >

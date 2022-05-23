@@ -178,7 +178,16 @@ export const setPlayer = (player) => (dispatch) => {
     dispatch({ type: SET_PLAYER, payload: player });
 };
 export const updateGameplay =
-    (player, smallBlind, action, prevAction, currentPot, chips, gameState) =>
+    (
+        player,
+        smallBlind,
+        action,
+        prevAction,
+        currentPot,
+        bet,
+        gameState,
+        computerChips
+    ) =>
     (dispatch) => {
         if (gameState != "showdown") {
             if (player == "human") {
@@ -195,7 +204,7 @@ export const updateGameplay =
             type: UPDATE_GAMEPLAY,
             payload: {
                 action,
-                updatedPot: currentPot + chips,
+                updatedPot: currentPot + bet,
                 setThinkingTimer: false,
             },
         });
@@ -225,9 +234,9 @@ export const updateGameplay =
         //         dispatch({ type: CHANGE_GAMESTATE, payload: "showdown" });
         //     }
         // };
-        const AI_MOVE = (prevAction, currentPot, humanBet) => {
-            let updatedPot = currentPot; // match human bet
-
+        const AI_MOVE = (prevAction, currentPot, computerChips, humanBet) => {
+            let updatedPot = currentPot + humanBet; // match human bet
+            console.log(prevAction, currentPot, computerChips, humanBet);
             // AI SB preflop
             if (prevAction == "" && gameState == "preflop") {
                 // AI autocall
@@ -236,15 +245,32 @@ export const updateGameplay =
                         type: UPDATE_GAMEPLAY,
                         payload: {
                             action: "check",
-                            updatedPot,
+                            updatedPot: updatedPot + bet,
                             // setThinkingTimer: false,
                         },
                     });
+
                     dispatch({ type: SET_PLAYER, payload: "human" });
                     // updateGameState();
                 }, 2000);
             }
 
+            if (prevAction == "" && gameState != "preflop") {
+                // AI autocall
+                setTimeout(() => {
+                    dispatch({
+                        type: UPDATE_GAMEPLAY,
+                        payload: {
+                            action: "check",
+                            updatedPot: updatedPot,
+                            // setThinkingTimer: false,
+                        },
+                    });
+
+                    dispatch({ type: SET_PLAYER, payload: "human" });
+                    // updateGameState();
+                }, 2000);
+            }
             if (prevAction == "bet") {
                 // AI autocall
                 setTimeout(() => {
@@ -255,6 +281,11 @@ export const updateGameplay =
                             updatedPot: updatedPot + humanBet,
                             // setThinkingTimer: false,
                         },
+                    });
+                    dispatch({
+                        type: UPDATE_COMPUTER_CHIPS,
+                        updatedPot: updatedPot + humanBet,
+                        payload: computerChips - humanBet,
                     });
                     dispatch({ type: SET_PLAYER, payload: "human" });
                     // updateGameState();
@@ -272,7 +303,7 @@ export const updateGameplay =
                             // setThinkingTimer: false,
                         },
                     });
-                    dispatch({ type: SET_PLAYER, payload: "human" });
+                    dispatch({ type: SET_PLAYER, payload: "" });
                     // updateGameState();
                 }, 2000);
             }
@@ -300,8 +331,6 @@ export const updateGameplay =
         };
         // END OF AI_MOVE
 
-        let updatedPot = (currentPot += chips);
-
         // PREFLOP
         // if sb == computer, else
         // if fold, new hand
@@ -320,7 +349,7 @@ export const updateGameplay =
         // SHOWDOWN
         console.log("316", gameState);
         if (gameState != "showdown") {
-            AI_MOVE(prevAction, currentPot, chips);
+            AI_MOVE(action, currentPot, computerChips, bet);
         }
     };
 
