@@ -32,7 +32,7 @@ const initialState = {
     pot: 0,
     prevAction: "",
     thinkingTimer: false,
-    playerTurn: "human",
+    playerTurn: "",
     showdownDescription: "",
 };
 
@@ -164,6 +164,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 showdownDescription: action.payload,
+                // playerTurn: "",
             };
         }
         default:

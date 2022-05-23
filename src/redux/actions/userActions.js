@@ -73,6 +73,10 @@ export const newHand = (prevSB, pot, winner) => (dispatch) => {
                 computerChips: 50,
             },
         });
+        // dispatch({
+        //     type: SET_PLAYER,
+        //     payload: "computer",
+        // });
     } else {
         dispatch({
             type: SET_SMALLBLIND,
@@ -82,6 +86,10 @@ export const newHand = (prevSB, pot, winner) => (dispatch) => {
                 computerChips: 100,
             },
         });
+        // dispatch({
+        //     type: SET_PLAYER,
+        //     payload: "human",
+        // });
     }
     // setBigBlind(bigBlind == "computer" ? "human" : "computer");
     // setSmallBlind(smallBlind == "computer" ? "human" : "computer");
@@ -167,11 +175,16 @@ export const setPlayer = (player) => (dispatch) => {
 export const updateGameplay =
     (player, smallBlind, action, prevAction, currentPot, chips, gameState) =>
     (dispatch) => {
-        if (player == "human") {
-            dispatch({ type: SET_PLAYER, payload: "computer" });
-        } else if (player == "computer") {
-            dispatch({ type: SET_PLAYER, payload: "human" });
+        if (gameState != "showdown") {
+            if (player == "human") {
+                dispatch({ type: SET_PLAYER, payload: "computer" });
+            } else if (player == "computer") {
+                dispatch({ type: SET_PLAYER, payload: "human" });
+            }
         }
+        // else {
+        //     dispatch({ type: SET_PLAYER, payload: "" });
+        // }
 
         dispatch({
             type: UPDATE_GAMEPLAY,
@@ -300,8 +313,10 @@ export const updateGameplay =
         // if call/check, move to river
 
         // SHOWDOWN
-
-        AI_MOVE(prevAction, currentPot, chips);
+        console.log("316", gameState);
+        if (gameState != "showdown") {
+            AI_MOVE(prevAction, currentPot, chips);
+        }
     };
 
 export const setStraightFlush = () => (dispatch) => {
@@ -325,9 +340,13 @@ export const setHandWinner =
         if (winner == "human") {
             dispatch({ type: UPDATE_HUMAN_CHIPS, payload: updatedChips });
         }
-        dispatch({ type: EMPTY_POT, payload: 0 });
+        // dispatch({ type: EMPTY_POT, payload: 0 });
         dispatch({
             type: SET_SHOWDOWN_DESCRIPTION,
             payload: showdownDescription,
+        });
+        dispatch({
+            type: SET_PLAYER,
+            payload: "",
         });
     };
