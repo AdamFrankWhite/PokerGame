@@ -17,21 +17,6 @@ function BettingUI(props) {
     const [showBet, setShowBet] = useState(false);
     const [showRaise, setShowRaise] = useState(false);
     const [playerTurn, setPlayerTurn] = useState("human");
-    // useEffect(() => {
-    //     // get hand started if computer SB
-    //     if (props.user.smallBlind == "computer") {
-    //         props.updateGameplay(
-    //             "computer",
-    //             props.user.smallBlind,
-    //             "call",
-    //             prevAction,
-    //             props.user.pot,
-    //             50,
-    //             props.user.gameState
-    //         );
-    //     }
-    // }, [props.user.smallBlind]);
-    // Check which buttons to show
 
     useEffect(() => {
         // update Game State when playerTurn changes to computer or human
@@ -59,14 +44,12 @@ function BettingUI(props) {
 
         if (props.user.gameState == "preflop") {
             props.setPlayer(smallBlind);
-            console.log(59);
         } else if (props.user.gameState != "showdown") {
-            // props.setPlayer("");
-            console.log(62);
             props.setPlayer(bigBlind);
         }
     }, [props.user.gameState]);
 
+    // If computer turn first, initiate gameplay
     useEffect(() => {
         if (
             props.user.gameState == "preflop" &&
@@ -102,6 +85,8 @@ function BettingUI(props) {
             );
         }
     }, [props.user.playerTurn]);
+
+    // Check which UI buttons to show, depending on prevAction
     useEffect(() => {
         let prevAction = props.user.prevAction;
         // Check
@@ -161,11 +146,13 @@ function BettingUI(props) {
         }
     }, [props.user.prevAction, props.user.smallBlind]);
 
+    //Keep local track of prevAction
     useEffect(() => {
         setPrevAction(props.user.prevAction);
         // console.log(prevAction);
     }, [props.user.prevAction]);
 
+    // At end of showdown, deal new hand
     useEffect(() => {
         if (props.user.gameState == "showdown") {
             setPlayerTurn("computer");
@@ -176,30 +163,14 @@ function BettingUI(props) {
         }
     }, [props.user.gameState]);
 
+    // set smallblind within component state and global state
     useEffect(() => {
         if (props.user.gameState == "preflop") {
             props.setPlayer(props.user.smallBlind);
             setPlayerTurn(props.user.smallBlind);
         }
     }, [props.user.smallBlind]);
-    // new hand prompt computer when dealer to begin hand betting
-    // useEffect(() => {
-    //     if (
-    //         props.user.smallBlind == "computer" &&
-    //         props.user.gameState == "preflop" &&
-    //         props.user.prevAction == ""
-    //     ) {
-    //         props.updateGameplay(
-    //             "computer",
-    //             props.user.smallBlind,
-    //             "call",
-    //             prevAction,
-    //             props.user.pot,
-    //             50,
-    //             props.user.gameState
-    //         );
-    //     }
-    // }, [props.user.smallBlind]);
+
     return (
         <div
             className="betting-ui"

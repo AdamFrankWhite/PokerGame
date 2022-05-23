@@ -189,6 +189,7 @@ export const updateGameplay =
         computerChips
     ) =>
     (dispatch) => {
+        // Set next player's go
         if (gameState != "showdown") {
             if (player == "human") {
                 dispatch({ type: SET_PLAYER, payload: "computer" });
@@ -196,10 +197,8 @@ export const updateGameplay =
                 dispatch({ type: SET_PLAYER, payload: "human" });
             }
         }
-        // else {
-        //     dispatch({ type: SET_PLAYER, payload: "" });
-        // }
 
+        // Human action
         dispatch({
             type: UPDATE_GAMEPLAY,
             payload: {
@@ -209,31 +208,7 @@ export const updateGameplay =
             },
         });
 
-        // const updateGameState = () => {
-        //     if (gameState == "preflop") {
-        //         if (action == "call" || action == "check") {
-        //             dispatch({ type: CHANGE_GAMESTATE, payload: "flop" });
-        //         }
-        //     }
-        //     if (gameState == "flop") {
-        //         if (action == "call" || action == "check") {
-        //             dispatch({ type: CHANGE_GAMESTATE, payload: "turn" });
-        //         }
-        //     }
-        //     if (
-        //         gameState == "turn" &&
-        //         (action == "call" || action == "check")
-        //     ) {
-        //         dispatch({ type: CHANGE_GAMESTATE, payload: "river" });
-        //     }
-
-        //     if (
-        //         gameState == "river" &&
-        //         (action == "call" || action == "check")
-        //     ) {
-        //         dispatch({ type: CHANGE_GAMESTATE, payload: "showdown" });
-        //     }
-        // };
+        // Main AI move logic
         const AI_MOVE = (prevAction, currentPot, computerChips, humanBet) => {
             let updatedPot = currentPot + humanBet; // match human bet
             console.log(prevAction, currentPot, computerChips, humanBet);
@@ -324,10 +299,6 @@ export const updateGameplay =
                     // updateGameState();
                 }, 2000);
             }
-
-            // if (player == "human") {
-            //     updateGameState();
-            // }
         };
         // END OF AI_MOVE
 
