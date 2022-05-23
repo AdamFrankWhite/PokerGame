@@ -15,4 +15,4 @@ TRY to solve issue without using useEffect?
 // #3
 
 After moving updateGameState functionality, bug of changing gameState too many times, using changing player to check
-Fix: changing order to change player after changeGameState in useEffect, bettingUI line 38. Then 
+Fix: reset player turn to "" after gameState reducer changes

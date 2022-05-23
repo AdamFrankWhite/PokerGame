@@ -291,14 +291,15 @@ function BettingUI(props) {
                             );
                         }}
                     >
-                        Raise
+                        <span>Raise</span>
+                        <span>{Number(callAmount) + Number(betAmount)}</span>
                     </button>
                 )}
             </div>
             <div class="slidecontainer">
                 <input
                     type="range"
-                    min="1"
+                    min="100"
                     max={props.chips}
                     value={betAmount}
                     class="slider"

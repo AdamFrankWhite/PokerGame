@@ -226,7 +226,7 @@ export const updateGameplay =
         //     }
         // };
         const AI_MOVE = (prevAction, currentPot, humanBet) => {
-            let updatedPot = currentPot + humanBet; // match human bet
+            let updatedPot = currentPot; // match human bet
 
             // AI SB preflop
             if (prevAction == "" && gameState == "preflop") {
@@ -236,7 +236,7 @@ export const updateGameplay =
                         type: UPDATE_GAMEPLAY,
                         payload: {
                             action: "check",
-                            updatedPot: 200,
+                            updatedPot,
                             // setThinkingTimer: false,
                         },
                     });
@@ -252,7 +252,7 @@ export const updateGameplay =
                         type: UPDATE_GAMEPLAY,
                         payload: {
                             action: "call",
-                            updatedPot,
+                            updatedPot: updatedPot + humanBet,
                             // setThinkingTimer: false,
                         },
                     });
@@ -268,7 +268,7 @@ export const updateGameplay =
                         type: UPDATE_GAMEPLAY,
                         payload: {
                             action: "check",
-                            updatedPot: currentPot,
+                            updatedPot,
                             // setThinkingTimer: false,
                         },
                     });
