@@ -36,7 +36,11 @@ export const newHand = (prevSB, pot, winner) => (dispatch) => {
 
     dispatch({
         type: NEW_HAND,
-        payload: { winner, pot },
+        payload: {
+            smallBlind: prevSB == "human" ? "computer" : "human",
+            winner,
+            pot,
+        },
     });
     const getRandomCard = (currentDeckSize) => {
         return Math.floor(Math.random() * currentDeckSize);
@@ -125,6 +129,7 @@ export const setRiver = (card) => (dispatch) => {
 let checkIfBothPlayersBeen = false;
 export const updateGameState =
     (smallBlind, currentPlayer, action, gameState) => (dispatch) => {
+        console.log(gameState);
         if (gameState == "preflop") {
             if (smallBlind == currentPlayer) {
                 checkIfBothPlayersBeen = true;

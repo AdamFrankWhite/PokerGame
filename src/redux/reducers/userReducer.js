@@ -46,6 +46,7 @@ export default function (state = initialState, action) {
                 [`${action.payload.winner}Chips`]:
                     state[`${action.payload.winner}Chips`] + action.payload.pot,
                 prevAction: "",
+                // playerTurn: action.payload.smallBlind,
             };
         case SET_PLAYER:
             return {
@@ -90,6 +91,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 gameState: action.payload,
+                prevAction: "", // fix skipping gameState bug
             };
         case SET_FLOP:
             return {
@@ -164,7 +166,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 showdownDescription: action.payload,
-                // playerTurn: "",
+                playerTurn: "",
             };
         }
         default:

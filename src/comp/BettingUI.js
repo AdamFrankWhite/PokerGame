@@ -73,11 +73,11 @@ function BettingUI(props) {
             props.user.smallBlind == "computer" &&
             props.user.playerTurn == "computer"
         ) {
-            console.log("go");
+            console.log(prevAction);
             props.updateGameplay(
                 "computer",
                 props.user.smallBlind,
-                "call",
+                "",
                 prevAction,
                 150,
                 50,
