@@ -303,7 +303,7 @@ export const updateGameplay =
                             // setThinkingTimer: false,
                         },
                     });
-                    dispatch({ type: SET_PLAYER, payload: "" });
+                    dispatch({ type: SET_PLAYER, payload: "human" });
                     // updateGameState();
                 }, 2000);
             }

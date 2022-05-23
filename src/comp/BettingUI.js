@@ -159,9 +159,6 @@ function BettingUI(props) {
         } else {
             setShowRaise(false);
         }
-
-        if (props.user.gameState == "showdown") {
-        }
     }, [props.user.prevAction, props.user.smallBlind]);
 
     useEffect(() => {
