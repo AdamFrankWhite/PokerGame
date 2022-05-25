@@ -4,9 +4,9 @@ import thunk from "redux-thunk";
 import userReducer from "./reducers/userReducer";
 
 const initialState = {};
-const reduxDevTools =
-    window.__REDUX_DEVTOOLS_EXTENSION__ &&
-    window.__REDUX_DEVTOOLS_EXTENSION__();
+const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__
+    ? window.__REDUX_DEVTOOLS_EXTENSION__()
+    : (f) => f;
 const middleware = [thunk];
 
 const reducers = combineReducers({
