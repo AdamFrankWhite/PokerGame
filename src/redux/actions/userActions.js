@@ -197,7 +197,8 @@ export const updateGameplay =
                 dispatch({ type: SET_PLAYER, payload: "human" });
             }
         }
-
+        // Set player locally to avoid asynchrous issues of playerTurn
+        let playerTurn = player;
         // Human action
         if (player == "human") {
             dispatch({
@@ -208,6 +209,7 @@ export const updateGameplay =
                     setThinkingTimer: false,
                 },
             });
+            playerTurn = "computer";
         }
 
         // Main AI move logic
@@ -274,8 +276,13 @@ export const updateGameplay =
                     console.log("3");
                 }, 2000);
             }
-
-            if (prevAction == "check") {
+            // Include river conditional to avoid firing unnecessarily at showdown
+            console.log(playerTurn);
+            if (
+                prevAction == "check" &&
+                gameState != "river" &&
+                playerTurn == "computer"
+            ) {
                 // AI autocheck
                 setTimeout(() => {
                     let betAmount = currentPot * 0.8;
@@ -315,7 +322,7 @@ export const updateGameplay =
                         payload: computerChips,
                     });
                     dispatch({ type: SET_PLAYER, payload: "human" });
-                    console.log("5");
+                    console.log("5", prevAction);
                 }, 2000);
             }
 

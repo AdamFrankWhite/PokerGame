@@ -48,7 +48,7 @@ export default function (state = initialState, action) {
                     state[`${action.payload.winner}Chips`] + action.payload.pot,
                 prevAction: "",
                 computerBet: 50,
-                // playerTurn: action.payload.smallBlind,
+                // playerTurn: "",
             };
         case SET_PLAYER:
             return {

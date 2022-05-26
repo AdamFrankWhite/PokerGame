@@ -16,7 +16,7 @@ function BettingUI(props) {
     const [showCall, setShowCall] = useState(false);
     const [showBet, setShowBet] = useState(false);
     const [showRaise, setShowRaise] = useState(false);
-    const [playerTurn, setPlayerTurn] = useState("human");
+    // const [playerTurn, setPlayerTurn] = useState("human");
 
     useEffect(() => {
         // update Game State when playerTurn changes to computer or human
@@ -29,10 +29,10 @@ function BettingUI(props) {
             );
         }
 
-        setPlayerTurn(props.user.playerTurn);
-        if (props.user.gameState == "showdown") {
-            setPlayerTurn("");
-        }
+        // setPlayerTurn(props.user.playerTurn);
+        // if (props.user.gameState == "showdown") {
+        //     setPlayerTurn("");
+        // }
     }, [props.user.playerTurn]);
 
     // Ensure correct player turn each gameState
@@ -72,6 +72,7 @@ function BettingUI(props) {
 
         if (
             props.user.gameState != "preflop" &&
+            props.user.gameState != "showdown" &&
             props.user.prevAction == "" &&
             props.user.playerTurn == "computer"
         ) {
@@ -110,11 +111,16 @@ function BettingUI(props) {
         }
 
         // Call
-        if (prevAction == "bet" || prevAction == "raise" || prevAction == "") {
+        if (
+            prevAction == "bet" ||
+            prevAction == "raise" ||
+            (prevAction == "" && props.user.gameState == "preflop")
+        ) {
             setShowCall(true);
         } else if (prevAction == "check") {
             setShowCall(false);
         } else {
+            setShowCall(false);
         }
 
         // Bet
@@ -158,11 +164,11 @@ function BettingUI(props) {
     // At end of showdown, deal new hand
     useEffect(() => {
         if (props.user.gameState == "showdown") {
-            setPlayerTurn("computer");
+            // setPlayerTurn("computer");
             setTimeout(() => props.newHand(props.user.smallBlind), 4000);
         }
         if (props.user.gameState == "preflop") {
-            setPlayerTurn(props.user.smallBlind);
+            // setPlayerTurn(props.user.smallBlind);
         }
     }, [props.user.gameState]);
 
@@ -170,7 +176,7 @@ function BettingUI(props) {
     useEffect(() => {
         if (props.user.gameState == "preflop") {
             props.setPlayer(props.user.smallBlind);
-            setPlayerTurn(props.user.smallBlind);
+            // setPlayerTurn(props.user.smallBlind);
         }
     }, [props.user.smallBlind]);
 
@@ -178,7 +184,12 @@ function BettingUI(props) {
         <div
             className="betting-ui"
             style={
-                playerTurn == "computer" || playerTurn == ""
+                props.user.playerTurn == "computer" ||
+                props.user.playerTurn == "" ||
+                props.user.gameState == "showdown" ||
+                (props.user.smallBlind == "computer" &&
+                    props.user.gameState == "preflop" &&
+                    props.user.prevAction == "")
                     ? { visibility: "hidden" }
                     : {}
             }
@@ -284,7 +295,12 @@ function BettingUI(props) {
                         }}
                     >
                         <span>Raise</span>
-                        <span>{Number(callAmount) * 2}</span>
+                        <span>
+                            {props.user.gameState == "preflop" &&
+                            props.user.prevAction == ""
+                                ? 150
+                                : Number(callAmount) * 2}
+                        </span>
                     </button>
                 )}
             </div>
