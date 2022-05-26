@@ -61,7 +61,7 @@ function BettingUI(props) {
             props.updateGameplay(
                 "computer",
                 props.user.smallBlind,
-                "",
+                "call",
                 prevAction,
                 150,
                 50,
@@ -110,14 +110,11 @@ function BettingUI(props) {
         }
 
         // Call
-        if (
-            prevAction == "bet" ||
-            prevAction == "raise" ||
-            (prevAction == "" && props.user.gameState == "preflop")
-        ) {
+        if (prevAction == "bet" || prevAction == "raise" || prevAction == "") {
             setShowCall(true);
-        } else {
+        } else if (prevAction == "check") {
             setShowCall(false);
+        } else {
         }
 
         // Bet
@@ -141,7 +138,9 @@ function BettingUI(props) {
         if (
             prevAction == "bet" ||
             prevAction == "raise" ||
-            (props.user.smallBlind == "human" && prevAction == "")
+            (props.user.smallBlind == "human" &&
+                prevAction == "" &&
+                props.user.gameState == "preflop")
         ) {
             setShowRaise(true);
         } else {
@@ -285,7 +284,7 @@ function BettingUI(props) {
                         }}
                     >
                         <span>Raise</span>
-                        <span>{Number(callAmount) + Number(betAmount)}</span>
+                        <span>{Number(callAmount) * 2}</span>
                     </button>
                 )}
             </div>

@@ -20,3 +20,7 @@ Fix: reset player turn to "" after gameState reducer changes
 // #4
 
 When beginning next gameState, issue of computer having two gos in a row, eg. check, then going first next gameState. Solved by automatically setting playerTurn to "" at end of each stage, before changing back to "computer" at start of next stage
+
+What I have learnt:
+
+iterating through and improving is way to go, better to plan ahead clearly, rather that jump into problem - leads to messier code and lots of delays
