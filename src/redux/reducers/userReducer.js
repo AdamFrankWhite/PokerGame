@@ -94,6 +94,7 @@ export default function (state = initialState, action) {
                 ...state,
                 gameState: action.payload,
                 prevAction: "", // fix skipping gameState bug
+                playerTurn: "",
             };
         case SET_FLOP:
             return {

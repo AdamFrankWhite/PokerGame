@@ -9,6 +9,7 @@ import {
     updateGameState,
     setPlayer,
     setHandWinner,
+    AI_MOVE,
 } from "../redux/actions/userActions";
 function BettingUI(props) {
     const [betAmount, setBetAmount] = useState(100);
@@ -22,7 +23,7 @@ function BettingUI(props) {
 
     useEffect(() => {
         // update Game State when playerTurn changes to computer or human
-        if (props.user.playerTurn != "") {
+        if (props.user.playerTurn == "") {
             props.updateGameState(
                 props.user.smallBlind,
                 props.user.playerTurn,
@@ -61,11 +62,11 @@ function BettingUI(props) {
         ) {
             console.log(prevAction);
             // computer auto call
-            props.updateGameplay(
+            props.AI_MOVE(
                 "computer",
                 props.user.smallBlind,
                 "call",
-                prevAction,
+                props.user.prevAction,
                 150,
                 50,
                 props.user.gameState,
@@ -73,21 +74,39 @@ function BettingUI(props) {
             );
             props.updateComputerChips(props.user.computerChips, "lose", 50);
         }
-
+        // preflop AI BB
         if (
-            props.user.gameState != "preflop" &&
-            props.user.gameState != "river" &&
-            props.user.prevAction == "" &&
+            props.user.gameState == "preflop" &&
+            props.user.smallBlind == "human" &&
             props.user.playerTurn == "computer"
         ) {
             console.log(prevAction);
-            props.updateGameplay(
+            // computer auto call
+            props.AI_MOVE(
+                "computer",
+                props.user.smallBlind,
+                "call",
+                props.user.prevAction,
+                props.user.currentPot,
+                0,
+                props.user.gameState,
+                props.user.computerChips - 100
+            );
+            props.updateComputerChips(props.user.computerChips, "lose", 50);
+        }
+        if (
+            props.user.gameState != "preflop" &&
+            props.user.gameState != "river" &&
+            props.user.playerTurn == "computer"
+        ) {
+            console.log(prevAction);
+            props.AI_MOVE(
                 "computer",
                 props.user.smallBlind,
                 "",
-                prevAction,
+                props.user.prevAction,
                 props.user.pot,
-                0,
+                props.user.prevAction == "check" ? 0 : betAmount,
                 props.user.gameState,
                 props.user.computerChips
             );
@@ -339,5 +358,6 @@ const mapActionsToProps = {
     updateGameState,
     setPlayer,
     setHandWinner,
+    AI_MOVE,
 };
 export default connect(mapStateToProps, mapActionsToProps)(BettingUI);
