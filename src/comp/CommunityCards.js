@@ -101,7 +101,7 @@ function CommunityCards(props) {
     }, [props.user.gameState]);
 
     const compareHands = (computerCards, humanCards, communityCards) => {
-        console.log("comparing...");
+        // console.log("comparing...");
         let computerCardSet = { ...computerCards, ...communityCards };
         let humanCardSet = { ...humanCards, ...communityCards };
         // should handType check ascend or descend? ascend would mean unnecessary going through all, even with bad hand, descending would make more sense, algthough straigt flush needs considering
@@ -163,7 +163,7 @@ function CommunityCards(props) {
                         : -1
                     : 0
             );
-            console.log(sort2);
+            // console.log(sort2);
 
             let cardData = sort2.map((card) => card.cardData);
             let extractedCardData = [];
@@ -302,7 +302,7 @@ function CommunityCards(props) {
                             finalHand,
                         };
                     } else {
-                        console.log(straight);
+                        // console.log(straight);
                         handType = {
                             handType: "Straight",
                             description: `Straight ${textOutput}`,
@@ -371,7 +371,7 @@ function CommunityCards(props) {
                     };
                 }
             }
-            console.log(handType);
+            // console.log(handType);
             // Check high card
             if (handType.length == 0) {
                 let highCard = finalHand[4].value;
@@ -417,7 +417,7 @@ function CommunityCards(props) {
         };
 
         const checkHandWinner = (computerHandData, humanHandData) => {
-            console.log(computerHandData, humanHandData);
+            // console.log(computerHandData, humanHandData);
             let computerHandType = computerHandData.handType;
             let humanHandType = humanHandData.handType;
             let computerHand = computerHandData.finalHand;

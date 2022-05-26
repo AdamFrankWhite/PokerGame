@@ -3,10 +3,12 @@ import { useState } from "react";
 import { connect } from "react-redux";
 import {
     updateHumanChips,
+    updateComputerChips,
     updateGameplay,
     newHand,
     updateGameState,
     setPlayer,
+    setHandWinner,
 } from "../redux/actions/userActions";
 function BettingUI(props) {
     const [betAmount, setBetAmount] = useState(100);
@@ -58,6 +60,7 @@ function BettingUI(props) {
             prevAction == ""
         ) {
             console.log(prevAction);
+            // computer auto call
             props.updateGameplay(
                 "computer",
                 props.user.smallBlind,
@@ -66,13 +69,14 @@ function BettingUI(props) {
                 150,
                 50,
                 props.user.gameState,
-                props.user.computerChips
+                props.user.computerChips - 100
             );
+            props.updateComputerChips(props.user.computerChips, "lose", 50);
         }
 
         if (
             props.user.gameState != "preflop" &&
-            props.user.gameState != "showdown" &&
+            props.user.gameState != "river" &&
             props.user.prevAction == "" &&
             props.user.playerTurn == "computer"
         ) {
@@ -196,13 +200,15 @@ function BettingUI(props) {
         >
             <div className="betting-ui-btns">
                 <button
-                    onClick={() =>
-                        props.newHand(
-                            props.user.smallBlind,
+                    onClick={() => {
+                        props.newHand(props.user.smallBlind);
+                        props.setHandWinner(
+                            "computer",
+                            props.user.computerChips,
                             props.user.pot,
-                            "computer"
-                        )
-                    }
+                            `Computer wins ${props.user.pot}`
+                        );
+                    }}
                 >
                     Fold
                 </button>
@@ -328,8 +334,10 @@ const mapStateToProps = (state) => {
 const mapActionsToProps = {
     newHand,
     updateHumanChips,
+    updateComputerChips,
     updateGameplay,
     updateGameState,
     setPlayer,
+    setHandWinner,
 };
 export default connect(mapStateToProps, mapActionsToProps)(BettingUI);

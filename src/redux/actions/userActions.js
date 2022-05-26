@@ -38,8 +38,8 @@ export const newHand = (prevSB, pot, winner) => (dispatch) => {
         type: NEW_HAND,
         payload: {
             smallBlind: prevSB == "human" ? "computer" : "human",
-            winner,
-            pot,
+            // winner,
+            // pot,
         },
     });
     const getRandomCard = (currentDeckSize) => {
@@ -129,7 +129,7 @@ export const setRiver = (card) => (dispatch) => {
 let checkIfBothPlayersBeen = false;
 export const updateGameState =
     (smallBlind, currentPlayer, action, gameState) => (dispatch) => {
-        console.log(gameState);
+        // console.log(gameState);
         if (gameState == "preflop") {
             if (smallBlind == currentPlayer) {
                 checkIfBothPlayersBeen = true;
@@ -148,7 +148,11 @@ export const updateGameState =
                 }
             }
             if (gameState == "flop") {
-                if (action == "call" || action == "check") {
+                // check if computer smallBlind, to avoid moving to next gameState before computer responds
+                if (
+                    action == "call" ||
+                    (action == "check" && smallBlind != currentPlayer)
+                ) {
                     //reset check
                     checkIfBothPlayersBeen = false;
                     dispatch({ type: CHANGE_GAMESTATE, payload: "turn" });
@@ -156,7 +160,8 @@ export const updateGameState =
             }
             if (
                 gameState == "turn" &&
-                (action == "call" || action == "check")
+                (action == "call" ||
+                    (action == "check" && smallBlind != currentPlayer))
             ) {
                 //reset check
                 checkIfBothPlayersBeen = false;
@@ -165,7 +170,8 @@ export const updateGameState =
 
             if (
                 gameState == "river" &&
-                (action == "call" || action == "check")
+                (action == "call" ||
+                    (action == "check" && smallBlind != currentPlayer))
             ) {
                 //reset check
                 checkIfBothPlayersBeen = false;
@@ -189,38 +195,15 @@ export const updateGameplay =
         computerChips
     ) =>
     (dispatch) => {
-        // Set next player's go
-        if (gameState != "showdown") {
-            if (player == "human") {
-                dispatch({ type: SET_PLAYER, payload: "computer" });
-            } else if (player == "computer") {
-                dispatch({ type: SET_PLAYER, payload: "human" });
-            }
-        }
-        // Set player locally to avoid asynchrous issues of playerTurn
-        let playerTurn = player;
-        // Human action
-        if (player == "human") {
-            dispatch({
-                type: UPDATE_GAMEPLAY,
-                payload: {
-                    action,
-                    updatedPot: currentPot + bet,
-                    setThinkingTimer: false,
-                },
-            });
-            playerTurn = "computer";
-        }
-
         // Main AI move logic
         const AI_MOVE = (prevAction, currentPot, computerChips, humanBet) => {
             let updatedPot = currentPot + humanBet; // match human bet
-            console.log(prevAction, currentPot, computerChips, humanBet);
+            // console.log(prevAction, currentPot, computerChips, humanBet);
             // AI SB preflop
             if (prevAction == "" && gameState == "preflop") {
                 // AI autocall
                 setTimeout(() => {
-                    console.log(gameState);
+                    // console.log(gameState);
                     dispatch({
                         type: UPDATE_GAMEPLAY,
                         payload: {
@@ -231,7 +214,7 @@ export const updateGameplay =
                     });
                     dispatch({
                         type: UPDATE_COMPUTER_CHIPS,
-                        payload: computerChips - 50,
+                        payload: computerChips - 100,
                     });
                     dispatch({ type: SET_PLAYER, payload: "human" });
                     // updateGameState();
@@ -277,15 +260,11 @@ export const updateGameplay =
                 }, 2000);
             }
             // Include river conditional to avoid firing unnecessarily at showdown
-            console.log(playerTurn);
-            if (
-                prevAction == "check" &&
-                gameState != "river" &&
-                playerTurn == "computer"
-            ) {
+
+            if (prevAction == "check" && gameState != "showdown") {
                 // AI autocheck
                 setTimeout(() => {
-                    let betAmount = currentPot * 0.8;
+                    let betAmount = Math.floor(currentPot * 0.8);
                     dispatch({
                         type: UPDATE_GAMEPLAY,
                         payload: {
@@ -349,6 +328,26 @@ export const updateGameplay =
                 }, 2000);
             }
         };
+
+        // Human action
+        if (player == "human") {
+            dispatch({
+                type: UPDATE_GAMEPLAY,
+                payload: {
+                    action,
+                    updatedPot: currentPot + bet,
+                    setThinkingTimer: false,
+                },
+            });
+            if (smallBlind == "computer" && gameState == "preflop") {
+                // do nothing
+            } else {
+                AI_MOVE(action, currentPot, computerChips, bet);
+            }
+
+            // playerTurn = "computer";
+        }
+
         // END OF AI_MOVE
 
         // PREFLOP
@@ -368,8 +367,18 @@ export const updateGameplay =
 
         // SHOWDOWN
         console.log("316", gameState);
-        if (gameState != "showdown") {
+
+        if (player == "computer" && gameState != "showdown") {
             AI_MOVE(action, currentPot, computerChips, bet);
+        }
+
+        // Set next player's go
+        if (gameState != "showdown") {
+            if (player == "human") {
+                dispatch({ type: SET_PLAYER, payload: "computer" });
+            } else if (player == "computer") {
+                dispatch({ type: SET_PLAYER, payload: "human" });
+            }
         }
     };
 
@@ -379,7 +388,7 @@ export const setStraightFlush = () => (dispatch) => {
 
 export const setHandWinner =
     (winner, currentChips, pot, showdownDescription) => (dispatch) => {
-        console.log(showdownDescription);
+        // console.log(showdownDescription);
         let updatedChips = currentChips + pot;
         if (winner == "tie") {
             dispatch({

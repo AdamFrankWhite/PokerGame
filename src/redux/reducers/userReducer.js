@@ -99,11 +99,13 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 communityCards: action.payload,
+                playerTurn: "",
             };
         case SET_TURN:
             return {
                 ...state,
                 communityCards: { ...state.communityCards, ...action.payload },
+                playerTurn: "",
             };
         case SET_RIVER:
             return {

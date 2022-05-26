@@ -21,6 +21,13 @@ Fix: reset player turn to "" after gameState reducer changes
 
 When beginning next gameState, issue of computer having two gos in a row, eg. check, then going first next gameState. Solved by automatically setting playerTurn to "" at end of each stage, before changing back to "computer" at start of next stage
 
+
+// #5
+
+When human checks as bb OOP, computer bets before its turn
+Fix: When checking to see whether to move to next gameState, changed conditional to make sure when to fire 
+
+
 What I have learnt:
 
 iterating through and improving is way to go, better to plan ahead clearly, rather that jump into problem - leads to messier code and lots of delays
