@@ -34,6 +34,7 @@ const initialState = {
     thinkingTimer: false,
     playerTurn: "",
     showdownDescription: "",
+    computerBet: 50,
 };
 
 export default function (state = initialState, action) {
@@ -46,6 +47,7 @@ export default function (state = initialState, action) {
                 [`${action.payload.winner}Chips`]:
                     state[`${action.payload.winner}Chips`] + action.payload.pot,
                 prevAction: "",
+                computerBet: 50,
                 // playerTurn: action.payload.smallBlind,
             };
         case SET_PLAYER:
@@ -115,7 +117,10 @@ export default function (state = initialState, action) {
                 ...state,
                 prevAction: action.payload.action,
                 pot: action.payload.updatedPot,
-                thinkingTimer: true,
+                computerBet: action.payload.computerBet
+                    ? action.payload.computerBet
+                    : 0,
+                // thinkingTimer: true,
             };
         case SET_STRAIGHT_FLUSH:
             return {

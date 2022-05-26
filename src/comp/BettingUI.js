@@ -54,7 +54,8 @@ function BettingUI(props) {
         if (
             props.user.gameState == "preflop" &&
             props.user.smallBlind == "computer" &&
-            props.user.playerTurn == "computer"
+            props.user.playerTurn == "computer" &&
+            prevAction == ""
         ) {
             console.log(prevAction);
             props.updateGameplay(
@@ -64,7 +65,8 @@ function BettingUI(props) {
                 prevAction,
                 150,
                 50,
-                "preflop"
+                props.user.gameState,
+                props.user.computerChips
             );
         }
 
@@ -81,7 +83,8 @@ function BettingUI(props) {
                 prevAction,
                 props.user.pot,
                 0,
-                "preflop"
+                props.user.gameState,
+                props.user.computerChips
             );
         }
     }, [props.user.playerTurn]);
@@ -149,6 +152,7 @@ function BettingUI(props) {
     //Keep local track of prevAction
     useEffect(() => {
         setPrevAction(props.user.prevAction);
+        setCallAmount(props.user.computerBet);
         // console.log(prevAction);
     }, [props.user.prevAction]);
 
@@ -202,7 +206,8 @@ function BettingUI(props) {
                                 prevAction,
                                 props.user.pot,
                                 0,
-                                props.user.gameState
+                                props.user.gameState,
+                                props.user.computerChips
                             )
                         }
                     >
@@ -249,7 +254,8 @@ function BettingUI(props) {
                                 prevAction,
                                 props.user.pot,
                                 Number(callAmount),
-                                props.user.gameState
+                                props.user.gameState,
+                                props.user.computerChips
                             );
                             // setCallAmount("");
                         }}
@@ -268,12 +274,13 @@ function BettingUI(props) {
                             );
                             props.updateGameplay(
                                 "human",
-                                "raise",
                                 props.user.smallBlind,
+                                "raise",
                                 prevAction,
                                 props.user.pot,
                                 Number(callAmount + betAmount),
-                                props.user.gameState
+                                props.user.gameState,
+                                props.user.computerChips
                             );
                         }}
                     >

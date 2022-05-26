@@ -199,14 +199,16 @@ export const updateGameplay =
         }
 
         // Human action
-        dispatch({
-            type: UPDATE_GAMEPLAY,
-            payload: {
-                action,
-                updatedPot: currentPot + bet,
-                setThinkingTimer: false,
-            },
-        });
+        if (player == "human") {
+            dispatch({
+                type: UPDATE_GAMEPLAY,
+                payload: {
+                    action,
+                    updatedPot: currentPot + bet,
+                    setThinkingTimer: false,
+                },
+            });
+        }
 
         // Main AI move logic
         const AI_MOVE = (prevAction, currentPot, computerChips, humanBet) => {
@@ -216,17 +218,22 @@ export const updateGameplay =
             if (prevAction == "" && gameState == "preflop") {
                 // AI autocall
                 setTimeout(() => {
+                    console.log(gameState);
                     dispatch({
                         type: UPDATE_GAMEPLAY,
                         payload: {
                             action: "check",
-                            updatedPot: updatedPot + bet,
+                            updatedPot: currentPot + 50,
                             // setThinkingTimer: false,
                         },
                     });
-
+                    dispatch({
+                        type: UPDATE_COMPUTER_CHIPS,
+                        payload: computerChips - 50,
+                    });
                     dispatch({ type: SET_PLAYER, payload: "human" });
                     // updateGameState();
+                    console.log("1");
                 }, 2000);
             }
 
@@ -244,6 +251,7 @@ export const updateGameplay =
 
                     dispatch({ type: SET_PLAYER, payload: "human" });
                     // updateGameState();
+                    console.log("2");
                 }, 2000);
             }
             if (prevAction == "bet") {
@@ -259,44 +267,78 @@ export const updateGameplay =
                     });
                     dispatch({
                         type: UPDATE_COMPUTER_CHIPS,
-                        updatedPot: updatedPot + humanBet,
+                        // updatedPot: updatedPot + humanBet,
                         payload: computerChips - humanBet,
                     });
                     dispatch({ type: SET_PLAYER, payload: "human" });
-                    // updateGameState();
+                    console.log("3");
                 }, 2000);
             }
 
             if (prevAction == "check") {
                 // AI autocheck
                 setTimeout(() => {
+                    let betAmount = currentPot * 0.8;
                     dispatch({
                         type: UPDATE_GAMEPLAY,
                         payload: {
-                            action: "check",
-                            updatedPot,
+                            action: "bet",
+                            updatedPot: updatedPot + betAmount,
+                            computerBet: betAmount,
                             // setThinkingTimer: false,
                         },
                     });
+                    dispatch({
+                        type: UPDATE_COMPUTER_CHIPS,
+                        // updatedPot: updatedPot + humanBet,
+                        payload: computerChips - betAmount,
+                    });
                     dispatch({ type: SET_PLAYER, payload: "human" });
-                    // updateGameState();
+                    console.log("4");
                 }, 2000);
             }
 
             if (prevAction == "call") {
                 // AI autocheck
-                console.log("pc call");
                 setTimeout(() => {
                     dispatch({
                         type: UPDATE_GAMEPLAY,
                         payload: {
                             action: "check",
+                            updatedPot: updatedPot,
+                            // setThinkingTimer: false,
+                        },
+                    });
+                    dispatch({
+                        type: UPDATE_COMPUTER_CHIPS,
+                        // updatedPot: updatedPot + humanBet,
+                        payload: computerChips,
+                    });
+                    dispatch({ type: SET_PLAYER, payload: "human" });
+                    console.log("5");
+                }, 2000);
+            }
+
+            if (prevAction == "raise") {
+                // AI autocall
+                setTimeout(() => {
+                    dispatch({
+                        type: UPDATE_GAMEPLAY,
+                        payload: {
+                            action: "call",
                             updatedPot,
                             // setThinkingTimer: false,
                         },
                     });
+                    dispatch({
+                        type: UPDATE_COMPUTER_CHIPS,
+                        // updatedPot: updatedPot + humanBet,
+                        payload:
+                            gameState == "preflop"
+                                ? computerChips - humanBet + 50
+                                : computerChips - humanBet,
+                    });
                     dispatch({ type: SET_PLAYER, payload: "human" });
-                    // updateGameState();
                 }, 2000);
             }
         };
