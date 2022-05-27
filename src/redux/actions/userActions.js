@@ -130,8 +130,9 @@ let checkIfBothPlayersBeen = false;
 export const updateGameState =
     (smallBlind, currentPlayer, action, gameState) => (dispatch) => {
         // console.log(gameState);
+        console.log(action);
         if (gameState == "preflop") {
-            if (smallBlind == currentPlayer) {
+            if (smallBlind != currentPlayer) {
                 checkIfBothPlayersBeen = true;
             }
         }
@@ -195,6 +196,7 @@ export const updateGameplay =
         computerChips
     ) =>
     (dispatch) => {
+        console.log(action, smallBlind);
         // Human action
         if (player == "human") {
             dispatch({
@@ -236,10 +238,18 @@ export const updateGameplay =
         // }
 
         // Set next player's go
-        if (gameState != "showdown") {
+        if (
+            gameState != "preflop" &&
+            smallBlind == "human" &&
+            (action == "call" || action == "check")
+        ) {
+            dispatch({ type: SET_PLAYER, payload: "" });
+        } else if (gameState != "showdown") {
             if (player == "human") {
                 dispatch({ type: SET_PLAYER, payload: "computer" });
             }
+        } else {
+            dispatch({ type: SET_PLAYER, payload: "computer" });
         }
     };
 
@@ -275,10 +285,10 @@ export const AI_MOVE =
                     type: UPDATE_COMPUTER_CHIPS,
                     payload: computerChips - 100,
                 });
-                if (smallBlind == "computer") {
+                if (smallBlind == "human") {
                     dispatch({ type: SET_PLAYER, payload: "" });
                 } else {
-                    dispatch({ type: SET_PLAYER, payload: "human" });
+                    dispatch({ type: SET_PLAYER, payload: "computer" });
                 }
 
                 // updateGameState();
@@ -293,7 +303,7 @@ export const AI_MOVE =
                     type: UPDATE_GAMEPLAY,
                     payload: {
                         action: "check",
-                        updatedPot: updatedPot,
+                        updatedPot: currentPot,
                         // setThinkingTimer: false,
                     },
                 });
@@ -338,7 +348,7 @@ export const AI_MOVE =
                     type: UPDATE_GAMEPLAY,
                     payload: {
                         action: "bet",
-                        updatedPot: updatedPot,
+                        updatedPot: currentPot,
                         computerBet: betAmount,
                         // setThinkingTimer: false,
                     },
@@ -360,7 +370,7 @@ export const AI_MOVE =
                     type: UPDATE_GAMEPLAY,
                     payload: {
                         action: "check",
-                        updatedPot: updatedPot,
+                        updatedPot: currentPot,
                         // setThinkingTimer: false,
                     },
                 });
@@ -396,7 +406,7 @@ export const AI_MOVE =
                 dispatch({ type: SET_PLAYER, payload: "human" });
             }, 2000);
         }
-        dispatch({ type: SET_PLAYER, payload: "human" });
+        // dispatch({ type: SET_PLAYER, payload: "human" });
     };
 export const setStraightFlush = () => (dispatch) => {
     dispatch({ type: SET_STRAIGHT_FLUSH, payload: "" });

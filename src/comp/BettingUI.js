@@ -22,6 +22,7 @@ function BettingUI(props) {
     // const [playerTurn, setPlayerTurn] = useState("human");
 
     useEffect(() => {
+        console.log(props.user.playerTurn);
         // update Game State when playerTurn changes to computer or human
         if (props.user.playerTurn == "") {
             props.updateGameState(
@@ -67,7 +68,7 @@ function BettingUI(props) {
                 props.user.smallBlind,
                 "call",
                 props.user.prevAction,
-                150,
+                props.user.pot,
                 50,
                 props.user.gameState,
                 props.user.computerChips - 100
@@ -80,23 +81,22 @@ function BettingUI(props) {
             props.user.smallBlind == "human" &&
             props.user.playerTurn == "computer"
         ) {
-            console.log(prevAction);
             // computer auto call
             props.AI_MOVE(
                 "computer",
                 props.user.smallBlind,
                 "call",
                 props.user.prevAction,
-                props.user.currentPot,
+                props.user.pot,
                 0,
                 props.user.gameState,
-                props.user.computerChips - 100
+                props.user.computerChips
             );
-            props.updateComputerChips(props.user.computerChips, "lose", 50);
+            // props.updateComputerChips(props.user.computerChips, "lose", 50);
         }
         if (
             props.user.gameState != "preflop" &&
-            props.user.gameState != "river" &&
+            props.user.gameState != "showdown" &&
             props.user.playerTurn == "computer"
         ) {
             console.log(prevAction);
