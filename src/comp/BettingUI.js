@@ -215,9 +215,17 @@ function BettingUI(props) {
             playChips();
         }
         setPrevAction(props.user.prevAction);
-        setCallAmount(props.user.computerBet);
-        // console.log(prevAction);
     }, [props.user.prevAction]);
+
+    // Reset raise amount new hand
+    useEffect(() => {
+        if (props.user.gameState == "preflop" && props.user.prevAction == "") {
+            setCallAmount(50);
+            setRaiseAmount(150);
+        } else {
+            setCallAmount(props.user.computerBet);
+        }
+    }, [props.user.playerTurn]);
 
     const [playCheck] = useSound(checkSound, { volume: 0.5 });
     const [playChips] = useSound(chipSound, { volume: 0.8 });
@@ -226,15 +234,15 @@ function BettingUI(props) {
     useEffect(() => {
         if (props.user.gameState == "showdown") {
             // setPlayerTurn("computer");
-            setTimeout(
-                () =>
-                    props.newHand(
-                        props.user.smallBlind,
-                        props.user.humanChips,
-                        props.user.computerChips
-                    ),
-                4000
-            );
+            // setTimeout(
+            //     () =>
+            //         props.newHand(
+            //             props.user.smallBlind,
+            //             props.user.humanChips,
+            //             props.user.computerChips
+            //         ),
+            //     4000
+            // );
         }
 
         props.user.computerBet != 0
@@ -395,7 +403,9 @@ function BettingUI(props) {
                     value={raiseAmount}
                     class="slider"
                     id="myRange"
-                    onChange={(e) => handleSlider(e.target.value)}
+                    onChange={(e) =>
+                        handleSlider(Math.ceil(e.target.value / 10) * 10)
+                    }
                 />
             </div>
             {/* <p className="bet-amount">{betAmount}</p> */}

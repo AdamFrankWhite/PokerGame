@@ -445,6 +445,13 @@ function CommunityCards(props) {
                     props.user.pot,
                     showdownDescription
                 );
+                setTimeout(() => {
+                    props.newHand(
+                        props.user.smallBlind,
+                        props.user.humanChips,
+                        props.user.computerChips + props.user.pot
+                    );
+                }, 4000);
             } else if (
                 handTypes.indexOf(computerHandType) <
                 handTypes.indexOf(humanHandType)
@@ -456,6 +463,13 @@ function CommunityCards(props) {
                     props.user.pot,
                     showdownDescription
                 );
+                setTimeout(() => {
+                    props.newHand(
+                        props.user.smallBlind,
+                        props.user.humanChips + props.user.pot,
+                        props.user.computerChips
+                    );
+                }, 4000);
             } else if (
                 handTypes.indexOf(computerHandType) ==
                 handTypes.indexOf(humanHandType)
@@ -475,6 +489,13 @@ function CommunityCards(props) {
                                 props.user.pot,
                                 showdownDescription
                             );
+                            setTimeout(() => {
+                                props.newHand(
+                                    props.user.smallBlind,
+                                    props.user.humanChips,
+                                    props.user.computerChips + props.user.pot
+                                );
+                            }, 4000);
                             return false;
                         } else if (card.value < humanHandReverse[index].value) {
                             let showdownDescription = `Human wins ${props.user.pot} with ${humanHandData.description}`;
@@ -484,6 +505,13 @@ function CommunityCards(props) {
                                 props.user.pot,
                                 showdownDescription
                             );
+                            setTimeout(() => {
+                                props.newHand(
+                                    props.user.smallBlind,
+                                    props.user.humanChips + props.user.pot,
+                                    props.user.computerChips
+                                );
+                            }, 4000);
                             return false;
                         } else {
                             return true;
@@ -503,6 +531,15 @@ function CommunityCards(props) {
                         props.user.pot,
                         showdownDescription
                     );
+                    setTimeout(() => {
+                        props.newHand(
+                            props.user.smallBlind,
+                            props.user.humanChips +
+                                Math.ceil(props.user.pot / 2),
+                            props.user.computerChips +
+                                Math.ceil(props.user.pot / 2)
+                        );
+                    }, 4000);
                 }
             }
         };
@@ -569,5 +606,6 @@ const mapActionsToProps = {
     setTurn,
     setRiver,
     setHandWinner,
+    newHand,
 };
 export default connect(mapStateToProps, mapActionsToProps)(CommunityCards);
