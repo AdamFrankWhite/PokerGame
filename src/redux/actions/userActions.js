@@ -239,9 +239,11 @@ export const updateGameplay =
 
         // Set next player's go
         if (
-            gameState != "preflop" &&
-            smallBlind == "human" &&
-            (action == "call" || action == "check")
+            (gameState != "preflop" &&
+                smallBlind == "human" &&
+                (action == "call" || action == "check")) ||
+            (smallBlind == "computer" &&
+                (action == "call" || action == "check"))
         ) {
             dispatch({ type: SET_PLAYER, payload: "" });
         } else if (gameState != "showdown") {
@@ -283,10 +285,7 @@ export const AI_MOVE =
                 });
                 dispatch({
                     type: UPDATE_COMPUTER_CHIPS,
-                    payload:
-                        smallBlind == "human"
-                            ? computerChips - 100
-                            : computerChips - 50,
+                    payload: computerChips - humanBet,
                 });
                 if (smallBlind == "human") {
                     dispatch({ type: SET_PLAYER, payload: "" });

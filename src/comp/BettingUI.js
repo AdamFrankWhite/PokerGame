@@ -55,14 +55,14 @@ function BettingUI(props) {
 
     // If computer turn first, initiate gameplay
     useEffect(() => {
-        console.log(props.user.smallBlind, props.user.playerTurn, prevAction);
+        console.log(props.user.prevAction);
         if (
             props.user.gameState == "preflop" &&
             props.user.smallBlind == "computer" &&
             props.user.playerTurn == "computer" &&
             (props.user.prevAction == "" || props.user.prevAction == "bet")
         ) {
-            console.log(prevAction);
+            console.log(props.user.prevAction);
             // computer auto call
             props.AI_MOVE(
                 "computer",
@@ -89,7 +89,8 @@ function BettingUI(props) {
                 "call",
                 props.user.prevAction,
                 props.user.pot,
-                0,
+                // just tweaked
+                prevAction == "call" ? 50 : 50 + betAmount,
                 props.user.gameState,
                 props.user.computerChips
             );
@@ -287,7 +288,7 @@ function BettingUI(props) {
                                 "human",
                                 props.user.smallBlind,
                                 "call",
-                                prevAction,
+                                props.user.prevAction,
                                 props.user.pot,
                                 Number(callAmount),
                                 props.user.gameState,

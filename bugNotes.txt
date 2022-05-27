@@ -19,7 +19,7 @@ Fix: reset player turn to "" after gameState reducer changes
 
 // #4
 
-When beginning next gameState, issue of computer having two gos in a row, eg. check, then going first next gameState. Solved by automatically setting playerTurn to "" at end of each stage, before changing back to "computer" at start of next stage
+When beginning next gameState, issue of computer having two gos in a row, eg. check, then going first next gameState. Solved by automatically setting playerTurn to "" at end of each stage, before changing back to "computer" at start of next stage. useEffect accomplishes this nicely
 
 
 // #5
@@ -31,3 +31,4 @@ Fix: When checking to see whether to move to next gameState, changed conditional
 What I have learnt:
 
 iterating through and improving is way to go, better to plan ahead clearly, rather that jump into problem - leads to messier code and lots of delays
+i.e. i had convulated, buggy, multiple areas dealing with state, then i realised i could simplify things - instead of using same updateGameplay function for both players, which caused lots of headaches when changing smallBlind, etc, so gave separate gamePlay functions and stopped updating player all over the place. Fixed it pretty quickly and simply
