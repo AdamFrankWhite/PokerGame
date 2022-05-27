@@ -11,6 +11,9 @@ import {
     setHandWinner,
     AI_MOVE,
 } from "../redux/actions/userActions";
+import useSound from "use-sound";
+import checkSound from "../sound/check.wav";
+import chipSound from "../sound/chips.wav";
 function BettingUI(props) {
     const [betAmount, setBetAmount] = useState(100);
     const [callAmount, setCallAmount] = useState(50);
@@ -181,10 +184,23 @@ function BettingUI(props) {
 
     //Keep local track of prevAction
     useEffect(() => {
+        if (props.user.prevAction == "check") {
+            playCheck();
+        }
+        if (
+            props.user.prevAction == "bet" ||
+            props.user.prevAction == "raise" ||
+            props.user.prevAction == "call"
+        ) {
+            playChips();
+        }
         setPrevAction(props.user.prevAction);
         setCallAmount(props.user.computerBet);
         // console.log(prevAction);
     }, [props.user.prevAction]);
+
+    const [playCheck] = useSound(checkSound, { volume: 0.5 });
+    const [playChips] = useSound(chipSound, { volume: 0.8 });
 
     // At end of showdown, deal new hand
     useEffect(() => {
@@ -236,7 +252,7 @@ function BettingUI(props) {
                 </button>
                 {showCheck && (
                     <button
-                        onClick={() =>
+                        onClick={() => {
                             props.updateGameplay(
                                 "human",
                                 props.user.smallBlind,
@@ -246,8 +262,8 @@ function BettingUI(props) {
                                 0,
                                 props.user.gameState,
                                 props.user.computerChips
-                            )
-                        }
+                            );
+                        }}
                     >
                         Check
                     </button>
@@ -295,7 +311,6 @@ function BettingUI(props) {
                                 props.user.gameState,
                                 props.user.computerChips
                             );
-                            // setCallAmount("");
                         }}
                     >
                         <span>Call</span>
