@@ -272,7 +272,7 @@ function BettingUI(props) {
                         props.newHand(
                             props.user.smallBlind,
                             props.user.humanChips,
-                            props.user.computerChips
+                            props.user.computerChips + props.user.pot
                         );
                     }}
                 >

@@ -18,7 +18,11 @@ function GameView(props) {
     const [smallBlind, setSmallBlind] = useState(props.user.smallBlind);
 
     useEffect(() => {
-        props.newHand(bigBlind);
+        props.newHand(
+            bigBlind,
+            props.user.humanChips,
+            props.user.computerChips
+        );
         // preflop();
     }, []);
 

@@ -47,7 +47,7 @@ export default function (state = initialState, action) {
                 [`${action.payload.winner}Chips`]:
                     state[`${action.payload.winner}Chips`] + action.payload.pot,
                 prevAction: "",
-                computerBet: 50,
+                computerBet: 0,
                 // playerTurn: "",
             };
         case SET_PLAYER:
@@ -59,10 +59,9 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 smallBlind: action.payload.smallBlind,
-                pot: action.payload.humanChips + action.payload.computerChips,
-                humanChips: state.humanChips - action.payload.humanChips,
-                computerChips:
-                    state.computerChips - action.payload.computerChips,
+                pot: 150,
+                humanChips: action.payload.humanChips,
+                computerChips: action.payload.computerChips,
             };
         case UPDATE_COMPUTER_CHIPS:
             return {

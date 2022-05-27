@@ -31,7 +31,7 @@ export const updateComputerChips =
         dispatch({ type: UPDATE_COMPUTER_CHIPS, payload: updatedChips });
     };
 
-export const newHand = (prevSB, pot, winner) => (dispatch) => {
+export const newHand = (prevSB, humanChips, computerChips) => (dispatch) => {
     // clear community cards
 
     dispatch({
@@ -73,8 +73,8 @@ export const newHand = (prevSB, pot, winner) => (dispatch) => {
             type: SET_SMALLBLIND,
             payload: {
                 smallBlind: "computer",
-                humanChips: 100,
-                computerChips: 50,
+                humanChips: humanChips - 100,
+                computerChips: computerChips - 50,
             },
         });
         // dispatch({
@@ -86,8 +86,8 @@ export const newHand = (prevSB, pot, winner) => (dispatch) => {
             type: SET_SMALLBLIND,
             payload: {
                 smallBlind: "human",
-                humanChips: 50,
-                computerChips: 100,
+                humanChips: humanChips - 50,
+                computerChips: computerChips - 100,
             },
         });
         // dispatch({
@@ -402,7 +402,10 @@ export const AI_MOVE =
                     type: UPDATE_GAMEPLAY,
                     payload: {
                         action: "call",
-                        updatedPot,
+                        updatedPot:
+                            gameState == "preflop" && smallBlind == "human"
+                                ? updatedPot - 50
+                                : updatedPot,
                         // setThinkingTimer: false,
                     },
                 });
@@ -414,7 +417,7 @@ export const AI_MOVE =
                             ? computerChips - bet + 50
                             : computerChips - bet,
                 });
-                dispatch({ type: SET_PLAYER, payload: "human" });
+                dispatch({ type: SET_PLAYER, payload: "" });
             }, 2000);
         }
         // dispatch({ type: SET_PLAYER, payload: "human" });
@@ -441,6 +444,7 @@ export const setHandWinner =
             dispatch({ type: UPDATE_HUMAN_CHIPS, payload: updatedChips });
         }
         // dispatch({ type: EMPTY_POT, payload: 0 });
+        dispatch({ type: CHANGE_GAMESTATE, payload: "showdown" });
         dispatch({
             type: SET_SHOWDOWN_DESCRIPTION,
             payload: showdownDescription,
