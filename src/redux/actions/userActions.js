@@ -283,12 +283,15 @@ export const AI_MOVE =
                 });
                 dispatch({
                     type: UPDATE_COMPUTER_CHIPS,
-                    payload: computerChips - 100,
+                    payload:
+                        smallBlind == "human"
+                            ? computerChips - 100
+                            : computerChips - 50,
                 });
                 if (smallBlind == "human") {
                     dispatch({ type: SET_PLAYER, payload: "" });
                 } else {
-                    dispatch({ type: SET_PLAYER, payload: "computer" });
+                    dispatch({ type: SET_PLAYER, payload: "human" });
                 }
 
                 // updateGameState();

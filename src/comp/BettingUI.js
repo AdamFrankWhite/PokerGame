@@ -55,11 +55,12 @@ function BettingUI(props) {
 
     // If computer turn first, initiate gameplay
     useEffect(() => {
+        console.log(props.user.smallBlind, props.user.playerTurn, prevAction);
         if (
             props.user.gameState == "preflop" &&
             props.user.smallBlind == "computer" &&
             props.user.playerTurn == "computer" &&
-            prevAction == ""
+            (props.user.prevAction == "" || props.user.prevAction == "bet")
         ) {
             console.log(prevAction);
             // computer auto call
@@ -69,11 +70,11 @@ function BettingUI(props) {
                 "call",
                 props.user.prevAction,
                 props.user.pot,
-                50,
+                prevAction == "" ? 50 : betAmount,
                 props.user.gameState,
-                props.user.computerChips - 100
+                props.user.computerChips
             );
-            props.updateComputerChips(props.user.computerChips, "lose", 50);
+            // props.updateComputerChips(props.user.computerChips, "lose", 50);
         }
         // preflop AI BB
         if (
