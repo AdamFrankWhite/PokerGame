@@ -222,7 +222,7 @@ function BettingUI(props) {
             props.user.computerBet != 0
                 ? setRaiseAmount(props.user.computerBet * 2)
                 : setRaiseAmount(100);
-            props.user.smallBlind == "computer"
+            props.user.smallBlind == "human"
                 ? setRaiseAmount(150)
                 : setRaiseAmount(100);
             setCallAmount(50);
