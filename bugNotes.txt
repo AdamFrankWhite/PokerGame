@@ -35,3 +35,9 @@ i.e. i had convulated, buggy, multiple areas dealing with state, then i realised
 
 ## fix smallblind chips subtraction issue when folding
 fix: the current computer chips being sent to action did not include the immediately won hand, so added on pot, see BettingUI 275
+
+
+## fix raising chip count issues
+Fixed: had forgot to pass through computerBet on human updateGameplay 208
+
+## card strength straight/flush confusion issues

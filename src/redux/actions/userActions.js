@@ -185,16 +185,7 @@ export const setPlayer = (player) => (dispatch) => {
     dispatch({ type: SET_PLAYER, payload: player });
 };
 export const updateGameplay =
-    (
-        player,
-        smallBlind,
-        action,
-        prevAction,
-        currentPot,
-        bet,
-        gameState,
-        computerChips
-    ) =>
+    (player, smallBlind, action, currentPot, bet, gameState, computerBet) =>
     (dispatch) => {
         console.log(action, smallBlind);
         // Human action
@@ -205,6 +196,7 @@ export const updateGameplay =
                     action,
                     updatedPot: currentPot + bet,
                     setThinkingTimer: false,
+                    computerBet,
                 },
             });
             // if (gameState == "preflop" && action == "call") {
@@ -263,18 +255,17 @@ export const updateGameplay =
 
 export const AI_MOVE =
     (
-        player,
         smallBlind,
-        action,
         prevAction,
         currentPot,
         bet,
         gameState,
-        computerChips
+        computerChips,
+        lastComputerBet
     ) =>
     (dispatch) => {
         let updatedPot = currentPot + bet; // match human bet
-        // console.log(prevAction, currentPot, computerChips, bet);
+        console.log(lastComputerBet);
         // AI SB preflop
         console.log(prevAction);
         if (prevAction == "" && gameState == "preflop") {
@@ -405,7 +396,7 @@ export const AI_MOVE =
                         updatedPot:
                             gameState == "preflop" && smallBlind == "human"
                                 ? updatedPot - 50
-                                : updatedPot,
+                                : updatedPot - lastComputerBet,
                         // setThinkingTimer: false,
                     },
                 });
@@ -415,7 +406,7 @@ export const AI_MOVE =
                     payload:
                         gameState == "preflop"
                             ? computerChips - bet + 50
-                            : computerChips - bet,
+                            : computerChips + lastComputerBet - bet,
                 });
                 dispatch({ type: SET_PLAYER, payload: "" });
             }, 2000);

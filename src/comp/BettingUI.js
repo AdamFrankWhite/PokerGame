@@ -69,14 +69,13 @@ function BettingUI(props) {
             console.log(props.user.prevAction);
             // computer auto call
             props.AI_MOVE(
-                "computer",
                 props.user.smallBlind,
-                "call",
                 props.user.prevAction,
                 props.user.pot,
-                prevAction == "" ? 50 : betAmount,
+                props.user.prevAction == "" ? 50 : betAmount,
                 props.user.gameState,
-                props.user.computerChips
+                props.user.computerChips,
+                props.user.computerBet
             );
             // props.updateComputerChips(props.user.computerChips, "lose", 50);
         }
@@ -88,15 +87,14 @@ function BettingUI(props) {
         ) {
             // computer auto call
             props.AI_MOVE(
-                "computer",
                 props.user.smallBlind,
-                "call",
                 props.user.prevAction,
                 props.user.pot,
                 // just tweaked
-                prevAction == "call" ? 50 : 50 + betAmount,
+                Number(raiseAmount),
                 props.user.gameState,
-                props.user.computerChips
+                props.user.computerChips,
+                props.user.computerBet
             );
             // props.updateComputerChips(props.user.computerChips, "lose", 50);
         }
@@ -105,19 +103,39 @@ function BettingUI(props) {
             props.user.gameState != "showdown" &&
             props.user.playerTurn == "computer"
         ) {
-            console.log(prevAction);
+            console.log("GOGOGO", props.user.computerBet);
             props.AI_MOVE(
-                "computer",
                 props.user.smallBlind,
-                "",
                 props.user.prevAction,
                 props.user.pot,
-                props.user.prevAction == "check" ? 0 : betAmount,
+                props.user.prevAction == "check" ? 0 : raiseAmount,
                 props.user.gameState,
-                props.user.computerChips
+                props.user.computerChips,
+                props.user.computerBet
             );
         }
     }, [props.user.playerTurn]);
+
+    // useEffect(()=> {
+    //     if (
+    //         props.user.gameState != "preflop" &&
+    //         props.user.gameState != "showdown" &&
+    //         props.user.playerTurn == "computer"
+    //     ) {
+    //         console.log(prevAction);
+    //         props.AI_MOVE(
+    //             "computer",
+    //             props.user.smallBlind,
+    //             "",
+    //             props.user.prevAction,
+    //             props.user.pot,
+    //             props.user.prevAction == "check" ? 0 : raiseAmount,
+    //             props.user.gameState,
+    //             props.user.computerChips,
+    //             props.user.computerBet
+    //         );
+    //     }
+    // }, [props.user.computerBet]);
 
     // Check which UI buttons to show, depending on prevAction
     useEffect(() => {
@@ -218,16 +236,17 @@ function BettingUI(props) {
                 4000
             );
         }
+
+        props.user.computerBet != 0
+            ? setRaiseAmount(props.user.computerBet * 2)
+            : setRaiseAmount(100);
         if (props.user.gameState == "preflop") {
-            props.user.computerBet != 0
-                ? setRaiseAmount(props.user.computerBet * 2)
-                : setRaiseAmount(100);
             props.user.smallBlind == "human"
                 ? setRaiseAmount(150)
                 : setRaiseAmount(100);
-            setCallAmount(50);
         }
-    }, [props.user.gameState]);
+        // setCallAmount(50);
+    }, [props.user.prevAction]);
 
     // set smallblind within component state and global state
     useEffect(() => {
@@ -242,7 +261,7 @@ function BettingUI(props) {
     const handleSlider = (chips) => {
         // if (props.user.gameState == "preflop") {
         //     console.log(chips);
-        setRaiseAmount(chips);
+        setRaiseAmount(Number(chips));
         // }
     };
 
@@ -286,11 +305,10 @@ function BettingUI(props) {
                                 "human",
                                 props.user.smallBlind,
                                 "check",
-                                prevAction,
                                 props.user.pot,
                                 0,
                                 props.user.gameState,
-                                props.user.computerChips
+                                props.user.computerBet
                             );
                         }}
                     >
@@ -310,11 +328,10 @@ function BettingUI(props) {
                                 "human",
                                 props.user.smallBlind,
                                 "bet",
-                                prevAction,
                                 props.user.pot,
                                 Number(raiseAmount),
                                 props.user.gameState,
-                                props.user.computerChips
+                                props.user.computerBet
                             );
                         }}
                     >
@@ -334,11 +351,10 @@ function BettingUI(props) {
                                 "human",
                                 props.user.smallBlind,
                                 "call",
-                                props.user.prevAction,
                                 props.user.pot,
                                 Number(callAmount),
                                 props.user.gameState,
-                                props.user.computerChips
+                                props.user.computerBet
                             );
                         }}
                     >
@@ -352,17 +368,16 @@ function BettingUI(props) {
                             props.updateHumanChips(
                                 props.user.humanChips,
                                 "lose",
-                                Number(callAmount + betAmount)
+                                Number(raiseAmount)
                             );
                             props.updateGameplay(
                                 "human",
                                 props.user.smallBlind,
                                 "raise",
-                                prevAction,
                                 props.user.pot,
-                                raiseAmount,
+                                Number(raiseAmount),
                                 props.user.gameState,
-                                props.user.computerChips
+                                props.user.computerBet
                             );
                         }}
                     >
@@ -374,6 +389,7 @@ function BettingUI(props) {
             <div class="slidecontainer">
                 <input
                     type="range"
+                    //TODO: add min when facing AI bet to min value of bet
                     min={props.user.gameState == "preflop" ? "150" : "100"}
                     max={props.user.humanChips}
                     value={raiseAmount}
