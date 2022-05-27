@@ -32,3 +32,5 @@ What I have learnt:
 
 iterating through and improving is way to go, better to plan ahead clearly, rather that jump into problem - leads to messier code and lots of delays
 i.e. i had convulated, buggy, multiple areas dealing with state, then i realised i could simplify things - instead of using same updateGameplay function for both players, which caused lots of headaches when changing smallBlind, etc, so gave separate gamePlay functions and stopped updating player all over the place. Fixed it pretty quickly and simply
+
+## fix smallblind chips subtraction issue

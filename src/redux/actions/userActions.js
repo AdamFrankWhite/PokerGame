@@ -207,9 +207,9 @@ export const updateGameplay =
                     setThinkingTimer: false,
                 },
             });
-            if (gameState == "preflop" && action == "call") {
-                dispatch({ type: SET_PLAYER, payload: "computer" });
-            }
+            // if (gameState == "preflop" && action == "call") {
+            //     dispatch({ type: SET_PLAYER, payload: "computer" });
+            // }
             // playerTurn = "computer";
         }
 
@@ -239,12 +239,18 @@ export const updateGameplay =
 
         // Set next player's go
         if (
-            (gameState != "preflop" &&
-                smallBlind == "human" &&
-                (action == "call" || action == "check")) ||
-            (smallBlind == "computer" &&
-                (action == "call" || action == "check"))
+            gameState != "preflop" &&
+            smallBlind == "human" &&
+            (action == "call" || action == "check")
         ) {
+            dispatch({ type: SET_PLAYER, payload: "" });
+        } else if (
+            smallBlind == "computer" &&
+            (action == "call" || action == "check") &&
+            gameState == "preflop"
+        ) {
+            dispatch({ type: SET_PLAYER, payload: "" });
+        } else if (gameState != "preflop" && action == "call") {
             dispatch({ type: SET_PLAYER, payload: "" });
         } else if (gameState != "showdown") {
             if (player == "human") {
@@ -262,13 +268,13 @@ export const AI_MOVE =
         action,
         prevAction,
         currentPot,
-        humanBet,
+        bet,
         gameState,
         computerChips
     ) =>
     (dispatch) => {
-        let updatedPot = currentPot + humanBet; // match human bet
-        // console.log(prevAction, currentPot, computerChips, humanBet);
+        let updatedPot = currentPot + bet; // match human bet
+        // console.log(prevAction, currentPot, computerChips, bet);
         // AI SB preflop
         console.log(prevAction);
         if (prevAction == "" && gameState == "preflop") {
@@ -285,7 +291,7 @@ export const AI_MOVE =
                 });
                 dispatch({
                     type: UPDATE_COMPUTER_CHIPS,
-                    payload: computerChips - humanBet,
+                    payload: computerChips - bet,
                 });
                 if (smallBlind == "human") {
                     dispatch({ type: SET_PLAYER, payload: "" });
@@ -332,8 +338,8 @@ export const AI_MOVE =
                 });
                 dispatch({
                     type: UPDATE_COMPUTER_CHIPS,
-                    // updatedPot: updatedPot + humanBet,
-                    payload: computerChips - humanBet,
+                    // updatedPot: updatedPot + bet,
+                    payload: computerChips - bet,
                 });
                 dispatch({ type: SET_PLAYER, payload: "" });
 
@@ -350,14 +356,17 @@ export const AI_MOVE =
                     type: UPDATE_GAMEPLAY,
                     payload: {
                         action: "bet",
-                        updatedPot: currentPot,
+                        updatedPot:
+                            gameState == "preflop"
+                                ? currentPot
+                                : updatedPot + betAmount,
                         computerBet: betAmount,
                         // setThinkingTimer: false,
                     },
                 });
                 dispatch({
                     type: UPDATE_COMPUTER_CHIPS,
-                    // updatedPot: updatedPot + humanBet,
+                    // updatedPot: updatedPot + bet,
                     payload: computerChips - betAmount,
                 });
                 dispatch({ type: SET_PLAYER, payload: "human" });
@@ -378,7 +387,7 @@ export const AI_MOVE =
                 });
                 dispatch({
                     type: UPDATE_COMPUTER_CHIPS,
-                    // updatedPot: updatedPot + humanBet,
+                    // updatedPot: updatedPot + bet,
                     payload: computerChips,
                 });
                 dispatch({ type: SET_PLAYER, payload: "" });
@@ -399,11 +408,11 @@ export const AI_MOVE =
                 });
                 dispatch({
                     type: UPDATE_COMPUTER_CHIPS,
-                    // updatedPot: updatedPot + humanBet,
+                    // updatedPot: updatedPot + bet,
                     payload:
                         gameState == "preflop"
-                            ? computerChips - humanBet + 50
-                            : computerChips - humanBet,
+                            ? computerChips - bet + 50
+                            : computerChips - bet,
                 });
                 dispatch({ type: SET_PLAYER, payload: "human" });
             }, 2000);

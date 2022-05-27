@@ -47,11 +47,11 @@ function BettingUI(props) {
             props.user.smallBlind == "computer" ? "human" : "computer";
 
         if (props.user.gameState == "preflop") {
-            props.setPlayer(smallBlind);
+            // props.setPlayer(smallBlind);
         } else if (props.user.gameState != "showdown") {
             props.setPlayer(bigBlind);
         }
-    }, [props.user.gameState]);
+    }, [props.user.gameState, props.user.smallBlind]);
 
     // If computer turn first, initiate gameplay
     useEffect(() => {
@@ -194,6 +194,7 @@ function BettingUI(props) {
         }
         if (props.user.gameState == "preflop") {
             // setPlayerTurn(props.user.smallBlind);
+            setCallAmount(50);
         }
     }, [props.user.gameState]);
 
