@@ -17,6 +17,7 @@ import chipSound from "../sound/chips.wav";
 function BettingUI(props) {
     const [betAmount, setBetAmount] = useState(100);
     const [callAmount, setCallAmount] = useState(50);
+    const [raiseAmount, setRaiseAmount] = useState(150);
     const [prevAction, setPrevAction] = useState("");
     const [showCheck, setShowCheck] = useState(false);
     const [showCall, setShowCall] = useState(false);
@@ -183,6 +184,7 @@ function BettingUI(props) {
     }, [props.user.prevAction, props.user.smallBlind]);
 
     //Keep local track of prevAction
+    //Play SFX
     useEffect(() => {
         if (props.user.prevAction == "check") {
             playCheck();
@@ -206,10 +208,23 @@ function BettingUI(props) {
     useEffect(() => {
         if (props.user.gameState == "showdown") {
             // setPlayerTurn("computer");
-            setTimeout(() => props.newHand(props.user.smallBlind), 4000);
+            setTimeout(
+                () =>
+                    props.newHand(
+                        props.user.smallBlind,
+                        props.user.humanChips,
+                        props.user.computerChips
+                    ),
+                4000
+            );
         }
         if (props.user.gameState == "preflop") {
-            // setPlayerTurn(props.user.smallBlind);
+            props.user.computerBet != 0
+                ? setRaiseAmount(props.user.computerBet * 2)
+                : setRaiseAmount(100);
+            props.user.smallBlind == "computer"
+                ? setRaiseAmount(150)
+                : setRaiseAmount(100);
             setCallAmount(50);
         }
     }, [props.user.gameState]);
@@ -221,6 +236,15 @@ function BettingUI(props) {
             // setPlayerTurn(props.user.smallBlind);
         }
     }, [props.user.smallBlind]);
+
+    // Handle slider
+
+    const handleSlider = (chips) => {
+        // if (props.user.gameState == "preflop") {
+        //     console.log(chips);
+        setRaiseAmount(chips);
+        // }
+    };
 
     return (
         <div
@@ -239,12 +263,16 @@ function BettingUI(props) {
             <div className="betting-ui-btns">
                 <button
                     onClick={() => {
-                        props.newHand(props.user.smallBlind);
                         props.setHandWinner(
                             "computer",
                             props.user.computerChips,
                             props.user.pot,
                             `Computer wins ${props.user.pot}`
+                        );
+                        props.newHand(
+                            props.user.smallBlind,
+                            props.user.humanChips,
+                            props.user.computerChips
                         );
                     }}
                 >
@@ -253,6 +281,7 @@ function BettingUI(props) {
                 {showCheck && (
                     <button
                         onClick={() => {
+                            playCheck();
                             props.updateGameplay(
                                 "human",
                                 props.user.smallBlind,
@@ -283,14 +312,14 @@ function BettingUI(props) {
                                 "bet",
                                 prevAction,
                                 props.user.pot,
-                                Number(betAmount),
+                                Number(raiseAmount),
                                 props.user.gameState,
                                 props.user.computerChips
                             );
                         }}
                     >
                         <span>Bet</span>
-                        <span>{betAmount}</span>
+                        <span>{raiseAmount}</span>
                     </button>
                 )}
                 {showCall && (
@@ -331,31 +360,26 @@ function BettingUI(props) {
                                 "raise",
                                 prevAction,
                                 props.user.pot,
-                                Number(callAmount + betAmount),
+                                raiseAmount,
                                 props.user.gameState,
                                 props.user.computerChips
                             );
                         }}
                     >
                         <span>Raise</span>
-                        <span>
-                            {props.user.gameState == "preflop" &&
-                            props.user.prevAction == ""
-                                ? 150
-                                : Number(callAmount) * 2}
-                        </span>
+                        <span>{Number(raiseAmount)}</span>
                     </button>
                 )}
             </div>
             <div class="slidecontainer">
                 <input
                     type="range"
-                    min="100"
-                    max={props.chips}
-                    value={betAmount}
+                    min={props.user.gameState == "preflop" ? "150" : "100"}
+                    max={props.user.humanChips}
+                    value={raiseAmount}
                     class="slider"
                     id="myRange"
-                    onChange={(e) => setBetAmount(e.target.value)}
+                    onChange={(e) => handleSlider(e.target.value)}
                 />
             </div>
             {/* <p className="bet-amount">{betAmount}</p> */}
