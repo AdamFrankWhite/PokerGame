@@ -15,9 +15,11 @@ import {
     NEW_HAND,
     SET_SHOWDOWN_DESCRIPTION,
     SET_PLAYER,
+    SET_DIFFICULTY,
 } from "../types";
 
 import { cards } from "../../Model/cards";
+import { bindActionCreators } from "redux";
 
 const initialState = {
     humanChips: 3000,
@@ -35,6 +37,7 @@ const initialState = {
     playerTurn: "",
     showdownDescription: "",
     computerBet: 50,
+    difficulty: "easy",
 };
 
 export default function (state = initialState, action) {
@@ -49,6 +52,11 @@ export default function (state = initialState, action) {
                 prevAction: "",
                 computerBet: 0,
                 // playerTurn: "",
+            };
+        case SET_DIFFICULTY:
+            return {
+                ...state,
+                difficulty: action.payload,
             };
         case SET_PLAYER:
             return {

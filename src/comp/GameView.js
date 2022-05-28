@@ -10,7 +10,11 @@ import CommunityCards from "./CommunityCards";
 import ComputerTimer from "./ComputerTimer";
 import Pot from "./Pot";
 import { connect } from "react-redux";
-import { newHand, setStraightFlush } from "../redux/actions/userActions";
+import {
+    newHand,
+    setStraightFlush,
+    setDifficulty,
+} from "../redux/actions/userActions";
 function GameView(props) {
     const [computerHand, setComputerHand] = useState({ card1: "", card2: "" });
     const [userHand, setUserHand] = useState({ card1: "", card2: "" });
@@ -23,6 +27,7 @@ function GameView(props) {
             props.user.humanChips,
             props.user.computerChips
         );
+        props.setDifficulty(props.difficulty);
         // preflop();
     }, []);
 
@@ -69,5 +74,6 @@ const mapStateToProps = (state) => {
 const mapActionsToProps = {
     newHand,
     setStraightFlush,
+    setDifficulty,
 };
 export default connect(mapStateToProps, mapActionsToProps)(GameView);

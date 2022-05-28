@@ -14,8 +14,13 @@ import {
     EMPTY_POT,
     NEW_HAND,
     SET_SHOWDOWN_DESCRIPTION,
+    SET_DIFFICULTY,
 } from "../types";
 import { cards } from "../../Model/cards";
+export const setDifficulty = (difficulty) => (dispatch) => {
+    dispatch({ type: SET_DIFFICULTY, payload: difficulty });
+};
+
 export const updateHumanChips =
     (currentChips, changeType, amount) => (dispatch) => {
         let updatedChips;
