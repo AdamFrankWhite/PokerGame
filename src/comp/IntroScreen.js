@@ -3,7 +3,7 @@ import logo from "../logo.svg";
 import { useState } from "react";
 export default function IntroScreen(props) {
     const [name, setName] = useState("");
-    const [difficulty, setDifficulty] = useState("");
+    const [difficulty, setDifficulty] = useState("easy");
     return (
         <header>
             <img src={logo} className="App-logo" alt="logo" />

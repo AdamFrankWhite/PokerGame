@@ -322,25 +322,49 @@ export const AI_MOVE =
         }
 
         if (prevAction == "bet") {
+            let computerMove;
+
+            if (Math.random() * 100 < 30) {
+                computerMove = "fold";
+            } else {
+                computerMove = "call";
+            }
             // AI autocall
-            setTimeout(() => {
+            if (computerMove == "call") {
+                setTimeout(() => {
+                    dispatch({
+                        type: UPDATE_GAMEPLAY,
+                        payload: {
+                            action: "call",
+                            updatedPot: updatedPot,
+                            // setThinkingTimer: false,
+                        },
+                    });
+                    dispatch({
+                        type: UPDATE_COMPUTER_CHIPS,
+                        // updatedPot: updatedPot + bet,
+                        payload: computerChips - bet,
+                    });
+                    dispatch({ type: SET_PLAYER, payload: "" });
+
+                    console.log("3");
+                }, 2000);
+            } else {
                 dispatch({
                     type: UPDATE_GAMEPLAY,
                     payload: {
-                        action: "call",
-                        updatedPot: updatedPot,
+                        action: "fold",
+                        updatedPot: currentPot,
                         // setThinkingTimer: false,
                     },
                 });
-                dispatch({
-                    type: UPDATE_COMPUTER_CHIPS,
-                    // updatedPot: updatedPot + bet,
-                    payload: computerChips - bet,
-                });
+                // dispatch({
+                //     type: UPDATE_HUMAN_CHIPS,
+                //     // updatedPot: updatedPot + bet,
+                //     payload: humanChips + updatedPot,
+                // });
                 dispatch({ type: SET_PLAYER, payload: "" });
-
-                console.log("3");
-            }, 2000);
+            }
         }
         // Include river conditional to avoid firing unnecessarily at showdown
 

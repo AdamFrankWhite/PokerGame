@@ -245,6 +245,21 @@ function BettingUI(props) {
             // );
         }
 
+        if (props.user.prevAction == "fold") {
+            props.setHandWinner(
+                "human",
+                props.user.humanChips,
+                props.user.pot,
+                `Human wins ${props.user.pot}`
+            );
+            props.newHand(
+                props.user.smallBlind,
+                props.user.humanChips + props.user.pot,
+                props.user.computerChips
+            );
+        }
+
+        // reset raise amounts for UI buttons new hand
         props.user.computerBet != 0
             ? setRaiseAmount(props.user.computerBet * 2)
             : setRaiseAmount(100);
