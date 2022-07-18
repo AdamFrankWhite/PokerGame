@@ -49,9 +49,9 @@ function BettingUI(props) {
         let smallBlind = props.user.smallBlind;
         let bigBlind =
             props.user.smallBlind == "computer" ? "human" : "computer";
-
+        // Set first player to go each round of betting
         if (props.user.gameState == "preflop") {
-            // props.setPlayer(smallBlind);
+            props.setPlayer(smallBlind);
         } else if (props.user.gameState != "showdown") {
             props.setPlayer(bigBlind);
         }
@@ -115,6 +115,13 @@ function BettingUI(props) {
             );
         }
     }, [props.user.playerTurn]);
+
+    // Check for all in
+    useEffect(() => {
+        if (props.user.computerChips == 0 || props.user.humanChips == 0) {
+            console.log("All in");
+        }
+    }, [props.user.prevAction]);
 
     // useEffect(()=> {
     //     if (
@@ -271,19 +278,12 @@ function BettingUI(props) {
         // setCallAmount(50);
     }, [props.user.prevAction]);
 
-    // set smallblind within component state and global state
-    useEffect(() => {
-        if (props.user.gameState == "preflop") {
-            props.setPlayer(props.user.smallBlind);
-            // setPlayerTurn(props.user.smallBlind);
-        }
-    }, [props.user.smallBlind]);
-
     // Handle slider
 
     const handleSlider = (chips) => {
         // if (props.user.gameState == "preflop") {
         //     console.log(chips);
+        setBetAmount(Number(chips));
         setRaiseAmount(Number(chips));
         // }
     };
@@ -342,6 +342,7 @@ function BettingUI(props) {
                 {showBet && (
                     <button
                         onClick={() => {
+                            console.log(betAmount);
                             props.updateHumanChips(
                                 props.user.humanChips,
                                 "lose",
