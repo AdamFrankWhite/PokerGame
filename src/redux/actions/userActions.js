@@ -14,6 +14,7 @@ import {
     RETURN_UNMATCHED_CHIPS,
     EMPTY_POT,
     NEW_HAND,
+    SET_ALL_IN,
     SET_SHOWDOWN_DESCRIPTION,
     SET_DIFFICULTY,
     UPDATE_POT,
@@ -179,8 +180,13 @@ export const setRiver = (card) => (dispatch) => {
     dispatch({ type: SET_RIVER, payload: card });
 };
 let checkIfBothPlayersBeen = false;
+
+export const setAllIn = () => (dispatch) => {
+    dispatch({ type: SET_ALL_IN });
+};
+
 export const updateGameState =
-    (smallBlind, currentPlayer, action, gameState) => (dispatch) => {
+    (smallBlind, currentPlayer, action, gameState, allIn) => (dispatch) => {
         // console.log(gameState);
         console.log(action);
         if (gameState == "preflop") {
@@ -230,6 +236,10 @@ export const updateGameState =
                 checkIfBothPlayersBeen = false;
                 dispatch({ type: CHANGE_GAMESTATE, payload: "showdown" });
             }
+        }
+
+        if (allIn) {
+            dispatch({ type: CHANGE_GAMESTATE, payload: gameState });
         }
     };
 

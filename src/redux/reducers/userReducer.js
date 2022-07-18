@@ -17,6 +17,7 @@ import {
     SET_SHOWDOWN_DESCRIPTION,
     SET_PLAYER,
     SET_DIFFICULTY,
+    SET_ALL_IN,
 } from "../types";
 
 import { cards } from "../../Model/cards";
@@ -39,6 +40,7 @@ const initialState = {
     showdownDescription: "",
     computerBet: 50,
     difficulty: "easy",
+    allIn: false,
 };
 
 export default function (state = initialState, action) {
@@ -52,6 +54,7 @@ export default function (state = initialState, action) {
                     state[`${action.payload.winner}Chips`] + action.payload.pot,
                 prevAction: "",
                 computerBet: 0,
+                allIn: false,
                 // playerTurn: "",
             };
         case SET_DIFFICULTY:
@@ -103,6 +106,11 @@ export default function (state = initialState, action) {
                 gameState: action.payload,
                 prevAction: "", // fix skipping gameState bug
                 playerTurn: "",
+            };
+        case SET_ALL_IN:
+            return {
+                ...state,
+                allIn: true,
             };
         case SET_FLOP:
             return {

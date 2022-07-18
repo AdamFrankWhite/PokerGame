@@ -10,6 +10,7 @@ import {
     setPlayer,
     setHandWinner,
     AI_MOVE,
+    setAllIn,
 } from "../redux/actions/userActions";
 import useSound from "use-sound";
 import checkSound from "../sound/check.wav";
@@ -42,6 +43,13 @@ function BettingUI(props) {
         //     setPlayerTurn("");
         // }
     }, [props.user.playerTurn]);
+
+    // Monitor chip counts for all in
+    useEffect(() => {
+        if (props.user.computerChips == 0 || props.user.humanChips == 0) {
+            props.setAllIn();
+        }
+    }, [props.user.computerChips, props.user.humanChips]);
 
     // Ensure correct player turn each gameState
 
@@ -118,13 +126,6 @@ function BettingUI(props) {
         }
     }, [props.user.playerTurn]);
 
-    // Check for all in
-    useEffect(() => {
-        if (props.user.computerChips == 0 || props.user.humanChips == 0) {
-            console.log("All in");
-        }
-    }, [props.user.prevAction]);
-
     // useEffect(()=> {
     //     if (
     //         props.user.gameState != "preflop" &&
@@ -156,6 +157,8 @@ function BettingUI(props) {
             props.user.smallBlind == "human"
         ) {
             setShowCheck(false);
+        } else if (props.user.allIn == "all in") {
+            setShowCheck(false);
         } else if (
             prevAction == "" ||
             prevAction == "check" ||
@@ -173,6 +176,8 @@ function BettingUI(props) {
             (prevAction == "" && props.user.gameState == "preflop")
         ) {
             setShowCall(true);
+        } else if (props.user.allIn) {
+            setShowCall(false);
         } else if (prevAction == "check") {
             setShowCall(false);
         } else {
@@ -185,6 +190,8 @@ function BettingUI(props) {
             props.user.smallBlind == "human" &&
             props.user.gameState == "preflop"
         ) {
+            setShowBet(false);
+        } else if (props.user.allIn) {
             setShowBet(false);
         } else if (
             prevAction == "" ||
@@ -454,5 +461,6 @@ const mapActionsToProps = {
     setPlayer,
     setHandWinner,
     AI_MOVE,
+    setAllIn,
 };
 export default connect(mapStateToProps, mapActionsToProps)(BettingUI);

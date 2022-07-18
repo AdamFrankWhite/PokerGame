@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import {
     newHand,
     updateDeck,
+    updateGameState,
     setFlop,
     setTurn,
     setRiver,
@@ -99,6 +100,30 @@ function CommunityCards(props) {
             dealRiver();
         }
     }, [props.user.gameState]);
+
+    // Take hand to showdown if all in
+
+    useEffect(() => {
+        let gameStates = ["preflop", "flop", "turn", "river", "showdown"];
+        let deals = [dealFlop, dealTurn, dealRiver];
+        let currentGameStateIndex = gameStates.indexOf(props.user.gameState);
+        if (props.user.allIn) {
+            for (let i = currentGameStateIndex; i < gameStates.length; i++) {
+                setTimeout(() => {
+                    deals[i]();
+                    console.log(gameStates[i]);
+                    props.updateGameState(
+                        null,
+                        null,
+                        null,
+                        gameStates[i],
+                        true
+                    );
+                }, 2000);
+            }
+            props.updateGameState(null, null, null, "showdown");
+        }
+    }, [props.user.allIn]);
 
     const compareHands = (computerCards, humanCards, communityCards) => {
         // console.log("comparing...");
@@ -602,6 +627,7 @@ const mapStateToProps = (state) => {
 };
 const mapActionsToProps = {
     updateDeck,
+    updateGameState,
     setFlop,
     setTurn,
     setRiver,
