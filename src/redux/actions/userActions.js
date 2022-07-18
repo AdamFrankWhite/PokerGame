@@ -38,70 +38,76 @@ export const updateComputerChips =
 
 export const newHand = (prevSB, humanChips, computerChips) => (dispatch) => {
     // clear community cards
-
-    dispatch({
-        type: NEW_HAND,
-        payload: {
-            smallBlind: prevSB == "human" ? "computer" : "human",
-            // winner,
-            // pot,
-        },
-    });
-    const getRandomCard = (currentDeckSize) => {
-        return Math.floor(Math.random() * currentDeckSize);
-    };
-    // let currentDeck = cards.map((item) => item);
-    let updatedDeck = [...cards];
-
-    let card1 = updatedDeck[getRandomCard(updatedDeck.length)];
-    updatedDeck = updatedDeck.filter((item) => item.card != card1.card);
-    let card2 = updatedDeck[getRandomCard(updatedDeck.length)];
-    updatedDeck = updatedDeck.filter((item) => item.card != card2.card);
-    // setComputerHand({ card1, card2 });
-
-    let card3 = updatedDeck[getRandomCard(updatedDeck.length)];
-    updatedDeck = updatedDeck.filter((item) => item.card != card3.card);
-    let card4 = updatedDeck[getRandomCard(updatedDeck.length)];
-    updatedDeck = updatedDeck.filter((item) => item.card != card4.card);
-    // setUserHand({ card1: card3, card2: card4 });
-    dispatch({ type: SET_REMAINING_DECK, payload: { updatedDeck, trip: 0 } });
-
-    dispatch({
-        type: SET_HANDS,
-        payload: {
-            human: { card1: card3, card2: card4 },
-            computer: { card1, card2 },
-        },
-    });
-    if (prevSB == "human") {
-        dispatch({
-            type: SET_SMALLBLIND,
-            payload: {
-                smallBlind: "computer",
-                humanChips: humanChips - 100,
-                computerChips: computerChips - 50,
-            },
-        });
-        // dispatch({
-        //     type: SET_PLAYER,
-        //     payload: "computer",
-        // });
+    if (humanChips == 0 || computerChips == 0) {
+        console.log("Game over");
     } else {
         dispatch({
-            type: SET_SMALLBLIND,
+            type: NEW_HAND,
             payload: {
-                smallBlind: "human",
-                humanChips: humanChips - 50,
-                computerChips: computerChips - 100,
+                smallBlind: prevSB == "human" ? "computer" : "human",
+                // winner,
+                // pot,
             },
         });
-        // dispatch({
-        //     type: SET_PLAYER,
-        //     payload: "human",
-        // });
+        const getRandomCard = (currentDeckSize) => {
+            return Math.floor(Math.random() * currentDeckSize);
+        };
+        // let currentDeck = cards.map((item) => item);
+        let updatedDeck = [...cards];
+
+        let card1 = updatedDeck[getRandomCard(updatedDeck.length)];
+        updatedDeck = updatedDeck.filter((item) => item.card != card1.card);
+        let card2 = updatedDeck[getRandomCard(updatedDeck.length)];
+        updatedDeck = updatedDeck.filter((item) => item.card != card2.card);
+        // setComputerHand({ card1, card2 });
+
+        let card3 = updatedDeck[getRandomCard(updatedDeck.length)];
+        updatedDeck = updatedDeck.filter((item) => item.card != card3.card);
+        let card4 = updatedDeck[getRandomCard(updatedDeck.length)];
+        updatedDeck = updatedDeck.filter((item) => item.card != card4.card);
+        // setUserHand({ card1: card3, card2: card4 });
+        dispatch({
+            type: SET_REMAINING_DECK,
+            payload: { updatedDeck, trip: 0 },
+        });
+
+        dispatch({
+            type: SET_HANDS,
+            payload: {
+                human: { card1: card3, card2: card4 },
+                computer: { card1, card2 },
+            },
+        });
+        if (prevSB == "human") {
+            dispatch({
+                type: SET_SMALLBLIND,
+                payload: {
+                    smallBlind: "computer",
+                    humanChips: humanChips - 100,
+                    computerChips: computerChips - 50,
+                },
+            });
+            // dispatch({
+            //     type: SET_PLAYER,
+            //     payload: "computer",
+            // });
+        } else {
+            dispatch({
+                type: SET_SMALLBLIND,
+                payload: {
+                    smallBlind: "human",
+                    humanChips: humanChips - 50,
+                    computerChips: computerChips - 100,
+                },
+            });
+            // dispatch({
+            //     type: SET_PLAYER,
+            //     payload: "human",
+            // });
+        }
+        // setBigBlind(bigBlind == "computer" ? "human" : "computer");
+        // setSmallBlind(smallBlind == "computer" ? "human" : "computer");
     }
-    // setBigBlind(bigBlind == "computer" ? "human" : "computer");
-    // setSmallBlind(smallBlind == "computer" ? "human" : "computer");
 };
 
 export const updateDeck = (updatedDeck, holeCards) => (dispatch) => {
@@ -350,20 +356,22 @@ export const AI_MOVE =
                     console.log("3");
                 }, 2000);
             } else {
-                dispatch({
-                    type: UPDATE_GAMEPLAY,
-                    payload: {
-                        action: "fold",
-                        updatedPot: currentPot,
-                        // setThinkingTimer: false,
-                    },
-                });
-                // dispatch({
-                //     type: UPDATE_HUMAN_CHIPS,
-                //     // updatedPot: updatedPot + bet,
-                //     payload: humanChips + updatedPot,
-                // });
-                dispatch({ type: SET_PLAYER, payload: "" });
+                setTimeout(() => {
+                    dispatch({
+                        type: UPDATE_GAMEPLAY,
+                        payload: {
+                            action: "fold",
+                            updatedPot: currentPot,
+                            // setThinkingTimer: false,
+                        },
+                    });
+                    // dispatch({
+                    //     type: UPDATE_HUMAN_CHIPS,
+                    //     // updatedPot: updatedPot + bet,
+                    //     payload: humanChips + updatedPot,
+                    // });
+                    dispatch({ type: SET_PLAYER, payload: "" });
+                }, 2000);
             }
         }
         // Include river conditional to avoid firing unnecessarily at showdown
