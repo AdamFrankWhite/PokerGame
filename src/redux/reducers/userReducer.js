@@ -10,6 +10,7 @@ import {
     SET_SMALLBLIND,
     CHANGE_GAMESTATE,
     SET_STRAIGHT_FLUSH,
+    RETURN_UNMATCHED_CHIPS,
     SET_HAND_WINNER,
     EMPTY_POT,
     NEW_HAND,
@@ -131,6 +132,12 @@ export default function (state = initialState, action) {
                     ? action.payload.computerBet
                     : 0,
                 // thinkingTimer: true,
+            };
+        case RETURN_UNMATCHED_CHIPS:
+            return {
+                ...state,
+                [`${action.payload.recipient}Chips`]:
+                    action.payload.returnedChips,
             };
         case SET_STRAIGHT_FLUSH:
             return {

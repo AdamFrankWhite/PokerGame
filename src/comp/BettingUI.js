@@ -23,6 +23,7 @@ function BettingUI(props) {
     const [showCall, setShowCall] = useState(false);
     const [showBet, setShowBet] = useState(false);
     const [showRaise, setShowRaise] = useState(false);
+
     // const [playerTurn, setPlayerTurn] = useState("human");
 
     useEffect(() => {
@@ -36,7 +37,6 @@ function BettingUI(props) {
                 props.user.gameState
             );
         }
-
         // setPlayerTurn(props.user.playerTurn);
         // if (props.user.gameState == "showdown") {
         //     setPlayerTurn("");
@@ -94,7 +94,8 @@ function BettingUI(props) {
                 Number(raiseAmount),
                 props.user.gameState,
                 props.user.computerChips,
-                props.user.computerBet
+                props.user.computerBet,
+                props.user.humanChips
             );
             // props.updateComputerChips(props.user.computerChips, "lose", 50);
         }
@@ -111,7 +112,8 @@ function BettingUI(props) {
                 props.user.prevAction == "check" ? 0 : raiseAmount,
                 props.user.gameState,
                 props.user.computerChips,
-                props.user.computerBet
+                props.user.computerBet,
+                props.user.humanChips
             );
         }
     }, [props.user.playerTurn]);
@@ -346,7 +348,8 @@ function BettingUI(props) {
                             props.updateHumanChips(
                                 props.user.humanChips,
                                 "lose",
-                                betAmount
+                                betAmount,
+                                props.user.pot
                             );
                             props.updateGameplay(
                                 "human",
@@ -382,11 +385,19 @@ function BettingUI(props) {
                             );
                         }}
                     >
-                        <span>Call</span>
-                        <span>{callAmount}</span>
+                        <>
+                            {callAmount != props.user.humanChips ? (
+                                <span>Call</span>
+                            ) : (
+                                <span>All In</span>
+                            )}
+                            {callAmount > props.user.humanChips
+                                ? props.user.humanChips
+                                : callAmount}
+                        </>
                     </button>
                 )}
-                {showRaise && (
+                {showRaise && callAmount != props.user.humanChips && (
                     <button
                         onClick={() => {
                             props.updateHumanChips(

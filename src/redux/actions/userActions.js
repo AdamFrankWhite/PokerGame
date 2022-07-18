@@ -11,10 +11,12 @@ import {
     CHANGE_GAMESTATE,
     SET_STRAIGHT_FLUSH,
     SET_PLAYER,
+    RETURN_UNMATCHED_CHIPS,
     EMPTY_POT,
     NEW_HAND,
     SET_SHOWDOWN_DESCRIPTION,
     SET_DIFFICULTY,
+    UPDATE_POT,
 } from "../types";
 import { cards } from "../../Model/cards";
 export const setDifficulty = (difficulty) => (dispatch) => {
@@ -22,17 +24,56 @@ export const setDifficulty = (difficulty) => (dispatch) => {
 };
 
 export const updateHumanChips =
-    (currentChips, changeType, amount) => (dispatch) => {
+    (currentChips, changeType, amount, currentPot) => (dispatch) => {
         let updatedChips;
-        changeType == "win"
-            ? (updatedChips = currentChips + amount)
-            : (updatedChips = currentChips - amount);
+        if (changeType == "win") {
+            updatedChips = currentChips + amount;
+        } else {
+            if (amount <= currentChips) {
+                updatedChips = currentChips - amount;
+            } else {
+                let returnedChips = amount - currentChips;
+                dispatch({
+                    type: RETURN_UNMATCHED_CHIPS,
+                    payload: { recipient: "computer", returnedChips },
+                });
+                dispatch({
+                    type: UPDATE_GAMEPLAY,
+                    payload: {
+                        action: "all in",
+                        updatedPot: currentPot - returnedChips,
+                        setThinkingTimer: false,
+                    },
+                });
+            }
+        }
+
         dispatch({ type: UPDATE_HUMAN_CHIPS, payload: updatedChips });
     };
 export const updateComputerChips =
-    (currentChips, changeType, amount) => (dispatch) => {
-        let updatedChips =
-            changeType == "win" ? currentChips + amount : currentChips - amount;
+    (currentChips, changeType, amount, currentPot) => (dispatch) => {
+        let updatedChips;
+        if (changeType == "win") {
+            updatedChips = currentChips + amount;
+        } else {
+            if (amount <= currentChips) {
+                updatedChips = currentChips - amount;
+            } else {
+                let returnedChips = amount - currentChips;
+                dispatch({
+                    type: RETURN_UNMATCHED_CHIPS,
+                    payload: { recipient: "human", returnedChips },
+                });
+                dispatch({
+                    type: UPDATE_GAMEPLAY,
+                    payload: {
+                        action: "all in",
+                        updatedPot: currentPot - returnedChips,
+                        setThinkingTimer: false,
+                    },
+                });
+            }
+        }
         dispatch({ type: UPDATE_COMPUTER_CHIPS, payload: updatedChips });
     };
 
@@ -272,7 +313,8 @@ export const AI_MOVE =
         bet,
         gameState,
         computerChips,
-        lastComputerBet
+        lastComputerBet,
+        humanChips
     ) =>
     (dispatch) => {
         let updatedPot = currentPot + bet; // match human bet
@@ -380,6 +422,10 @@ export const AI_MOVE =
             // AI autocheck
             setTimeout(() => {
                 let betAmount = Math.floor(currentPot * 0.8);
+                console.log(betAmount, humanChips);
+                if (betAmount > humanChips) {
+                    betAmount = humanChips;
+                }
                 dispatch({
                     type: UPDATE_GAMEPLAY,
                     payload: {
