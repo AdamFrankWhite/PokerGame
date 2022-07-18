@@ -8,7 +8,7 @@ html {
 }
 
 .App-logo {
-    height: 30vmin;
+    height: 25vmin;
     pointer-events: none;
 }
 .App {
@@ -48,13 +48,13 @@ html {
     padding: 0.25em 0.5em;
     border: 2px black solid;
     border-radius: 50px;
-    min-width: 12%;
+    width: 13%;
     position: absolute;
     background: white;
     img {
         // width: 5em;
         // height: auto;
-        width:35%;
+        width:30%;
         padding: 0.5em;
         height: auto;
     }
@@ -99,11 +99,11 @@ html {
     }
     &.avatar-1 {
         top: 14%;
-        left: 43%;
+        left: 45%;
     }
     &.avatar-2 {
         bottom: 14%;
-        left: 43%;
+        left: 44%;
     }
 }
 
@@ -180,7 +180,7 @@ header {
 .thinking-timer {
     position: absolute;
     top: 13%;
-    right: 40%;
+    right: 38%;
 }
 .community-cards {
     position: absolute;
