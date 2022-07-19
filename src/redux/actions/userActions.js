@@ -19,6 +19,7 @@ import {
     SET_DIFFICULTY,
     SET_GAME_WINNER,
     UPDATE_POT,
+    NEW_GAME,
 } from "../types";
 import { cards } from "../../Model/cards";
 export const setDifficulty = (difficulty) => (dispatch) => {
@@ -511,6 +512,9 @@ export const setStraightFlush = () => (dispatch) => {
     dispatch({ type: SET_STRAIGHT_FLUSH, payload: "" });
 };
 
+export const newGame = () => (dispatch) => {
+    dispatch({ type: NEW_GAME });
+};
 export const setHandWinner =
     (winner, currentChips, pot, showdownDescription) => (dispatch) => {
         // console.log(showdownDescription);

@@ -1,27 +1,50 @@
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import IntroScreen from "./comp/IntroScreen";
+import GameOverScreen from "./comp/GameOverScreen";
 import GameView from "./comp/GameView";
-
-function App() {
+import { newGame } from "./redux/actions/userActions";
+import { connect } from "react-redux";
+function App(props) {
     const [user, setUser] = useState("");
     const [difficulty, setDifficulty] = useState("");
-    const createGame = (newGame, name, difficulty) => {
-        if (newGame) {
+    const [gameOver, toggleGameOver] = useState(false);
+    const createGame = (name, difficulty) => {
+        if (name) {
+            props.newGame();
             setUser(name);
             setDifficulty(difficulty);
+            toggleGameOver(false);
         }
     };
 
+    useEffect(() => {
+        if (props.user.gameWinner) {
+            toggleGameOver(true);
+        }
+    }, [props.user.gameWinner]);
     return (
         <div className="App">
-            {user ? (
+            {!gameOver && user && (
                 <GameView name={user} difficulty={difficulty} />
-            ) : (
-                <IntroScreen createGame={createGame} />
+            )}
+            {!gameOver && !user && <IntroScreen createGame={createGame} />}
+            {gameOver && (
+                <GameOverScreen
+                    winner={props.user.gameWinner}
+                    createGame={createGame}
+                />
             )}
         </div>
     );
 }
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+    };
+};
 
-export default App;
+const mapActionsToProps = {
+    newGame,
+};
+export default connect(mapStateToProps, mapActionsToProps)(App);

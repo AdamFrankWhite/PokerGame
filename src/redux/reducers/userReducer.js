@@ -19,6 +19,7 @@ import {
     SET_DIFFICULTY,
     SET_ALL_IN,
     SET_GAME_WINNER,
+    NEW_GAME,
 } from "../types";
 
 import { cards } from "../../Model/cards";
@@ -47,6 +48,10 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case NEW_GAME:
+            return {
+                ...initialState,
+            };
         case NEW_HAND:
             return {
                 ...state,
