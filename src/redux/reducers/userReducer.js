@@ -44,6 +44,7 @@ const initialState = {
     difficulty: "easy",
     allIn: false,
     gameWinner: null,
+    playerName: "",
 };
 
 export default function (state = initialState, action) {
@@ -51,6 +52,7 @@ export default function (state = initialState, action) {
         case NEW_GAME:
             return {
                 ...initialState,
+                playerName: action.payload,
             };
         case NEW_HAND:
             return {

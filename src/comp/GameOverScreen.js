@@ -2,7 +2,8 @@ import React from "react";
 import trophy from "../img/trophy.svg";
 import loser from "../img/loser.svg";
 import { useState } from "react";
-export default function GameOverScreen(props) {
+import { connect } from "react-redux";
+function GameOverScreen(props) {
     return (
         <header>
             <img
@@ -11,14 +12,17 @@ export default function GameOverScreen(props) {
                 alt="logo"
             />
             {props.winner == "computer" ? (
-                <h2>Sorry. Better luck next time</h2>
+                <h2>Sorry {props.user.playerName}. Better luck next time</h2>
             ) : (
-                <h2>Congratulations. You are a poker titan.</h2>
+                <h2>
+                    Congratulations, {props.user.playerName}. You are a poker
+                    titan.
+                </h2>
             )}
 
             <button
                 onClick={() => {
-                    props.createGame("name", "");
+                    props.createGame(props.user.playerName, "");
                 }}
             >
                 New Game
@@ -26,3 +30,12 @@ export default function GameOverScreen(props) {
         </header>
     );
 }
+
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+    };
+};
+
+const mapActionsToProps = {};
+export default connect(mapStateToProps, mapActionsToProps)(GameOverScreen);

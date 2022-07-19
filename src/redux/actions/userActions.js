@@ -512,8 +512,8 @@ export const setStraightFlush = () => (dispatch) => {
     dispatch({ type: SET_STRAIGHT_FLUSH, payload: "" });
 };
 
-export const newGame = () => (dispatch) => {
-    dispatch({ type: NEW_GAME });
+export const newGame = (playerName) => (dispatch) => {
+    dispatch({ type: NEW_GAME, payload: playerName });
 };
 export const setHandWinner =
     (winner, currentChips, pot, showdownDescription) => (dispatch) => {

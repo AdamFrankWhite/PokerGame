@@ -11,7 +11,7 @@ function App(props) {
     const [gameOver, toggleGameOver] = useState(false);
     const createGame = (name, difficulty) => {
         if (name) {
-            props.newGame();
+            props.newGame(name);
             setUser(name);
             setDifficulty(difficulty);
             toggleGameOver(false);
