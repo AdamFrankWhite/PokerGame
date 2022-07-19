@@ -340,7 +340,7 @@ export const AI_MOVE =
                 dispatch({
                     type: UPDATE_GAMEPLAY,
                     payload: {
-                        action: "check",
+                        action: "call",
                         updatedPot: currentPot + 50,
                         // setThinkingTimer: false,
                     },
@@ -366,7 +366,7 @@ export const AI_MOVE =
                 dispatch({
                     type: UPDATE_GAMEPLAY,
                     payload: {
-                        action: "check",
+                        action: "call",
                         updatedPot: currentPot,
                         // setThinkingTimer: false,
                     },

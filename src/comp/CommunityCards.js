@@ -11,6 +11,8 @@ import {
     setHandWinner,
 } from "../redux/actions/userActions";
 function CommunityCards(props) {
+    const [pot, setPot] = useState(props.user.pot);
+
     function importAll(r) {
         let images = {};
         r.keys().map((item) => {
@@ -100,6 +102,11 @@ function CommunityCards(props) {
             dealRiver();
         }
     }, [props.user.gameState]);
+
+    // Monitor changes to pot, keep up to date for function calls
+    useEffect(() => {
+        setPot(props.user.pot);
+    }, [props.user.pot]);
 
     // Take hand to showdown if all in
 
@@ -465,36 +472,36 @@ function CommunityCards(props) {
                 handTypes.indexOf(computerHandType) >
                 handTypes.indexOf(humanHandType)
             ) {
-                let showdownDescription = `Computer wins ${props.user.pot} with ${computerHandData.description}`;
+                let showdownDescription = `Computer wins ${pot} with ${computerHandData.description}`;
                 props.setHandWinner(
                     "computer",
                     props.user.computerChips,
-                    props.user.pot,
+                    pot,
                     showdownDescription
                 );
                 setTimeout(() => {
                     props.newHand(
                         props.user.smallBlind,
                         props.user.humanChips,
-                        props.user.computerChips + props.user.pot
+                        props.user.computerChips + pot
                     );
                 }, 4000);
             } else if (
                 handTypes.indexOf(computerHandType) <
                 handTypes.indexOf(humanHandType)
             ) {
-                let showdownDescription = `Human wins ${props.user.pot} with ${humanHandData.description}`;
+                let showdownDescription = `Human wins ${pot} with ${humanHandData.description}`;
                 props.setHandWinner(
                     "human",
                     props.user.humanChips,
-                    props.user.pot,
+                    pot,
                     showdownDescription
                 );
                 setTimeout(() => {
                     console.log("deal new hand, but cant");
                     props.newHand(
                         props.user.smallBlind,
-                        props.user.humanChips + props.user.pot,
+                        props.user.humanChips + pot,
                         props.user.computerChips
                     );
                 }, 4000);
@@ -510,11 +517,11 @@ function CommunityCards(props) {
                     .reverse()
                     .every((card, index) => {
                         if (card.value > humanHandReverse[index].value) {
-                            let showdownDescription = `Computer wins ${props.user.pot} with ${computerHandData.description}`;
+                            let showdownDescription = `Computer wins ${pot} with ${computerHandData.description}`;
                             props.setHandWinner(
                                 "computer",
                                 props.user.computerChips,
-                                props.user.pot,
+                                pot,
                                 showdownDescription
                             );
                             setTimeout(() => {
@@ -522,22 +529,22 @@ function CommunityCards(props) {
                                 props.newHand(
                                     props.user.smallBlind,
                                     props.user.humanChips,
-                                    props.user.computerChips + props.user.pot
+                                    props.user.computerChips + pot
                                 );
                             }, 4000);
                             return false;
                         } else if (card.value < humanHandReverse[index].value) {
-                            let showdownDescription = `Human wins ${props.user.pot} with ${humanHandData.description}`;
+                            let showdownDescription = `Human wins ${pot} with ${humanHandData.description}`;
                             props.setHandWinner(
                                 "human",
                                 props.user.humanChips,
-                                props.user.pot,
+                                pot,
                                 showdownDescription
                             );
                             setTimeout(() => {
                                 props.newHand(
                                     props.user.smallBlind,
-                                    props.user.humanChips + props.user.pot,
+                                    props.user.humanChips + pot,
                                     props.user.computerChips
                                 );
                             }, 4000);
@@ -557,16 +564,14 @@ function CommunityCards(props) {
                     props.setHandWinner(
                         "tie",
                         props.user.humanChips,
-                        props.user.pot,
+                        pot,
                         showdownDescription
                     );
                     setTimeout(() => {
                         props.newHand(
                             props.user.smallBlind,
-                            props.user.humanChips +
-                                Math.ceil(props.user.pot / 2),
-                            props.user.computerChips +
-                                Math.ceil(props.user.pot / 2)
+                            props.user.humanChips + Math.ceil(pot / 2),
+                            props.user.computerChips + Math.ceil(pot / 2)
                         );
                     }, 4000);
                 }

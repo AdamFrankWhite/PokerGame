@@ -83,7 +83,8 @@ function BettingUI(props) {
                 props.user.prevAction == "" ? 50 : betAmount,
                 props.user.gameState,
                 props.user.computerChips,
-                props.user.computerBet
+                props.user.computerBet,
+                props.user.allIn
             );
             // props.updateComputerChips(props.user.computerChips, "lose", 50);
         }
@@ -103,7 +104,8 @@ function BettingUI(props) {
                 props.user.gameState,
                 props.user.computerChips,
                 props.user.computerBet,
-                props.user.humanChips
+                props.user.humanChips,
+                props.user.allIn
             );
             // props.updateComputerChips(props.user.computerChips, "lose", 50);
         }
@@ -121,7 +123,8 @@ function BettingUI(props) {
                 props.user.gameState,
                 props.user.computerChips,
                 props.user.computerBet,
-                props.user.humanChips
+                props.user.humanChips,
+                props.user.allIn
             );
         }
     }, [props.user.playerTurn]);
@@ -320,11 +323,13 @@ function BettingUI(props) {
                             props.user.pot,
                             `Computer wins ${props.user.pot}`
                         );
+                        // setTimeout(() => {
                         props.newHand(
                             props.user.smallBlind,
                             props.user.humanChips,
                             props.user.computerChips + props.user.pot
                         );
+                        // }, 2000);
                     }}
                 >
                     Fold
