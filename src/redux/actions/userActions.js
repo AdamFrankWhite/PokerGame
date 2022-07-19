@@ -17,6 +17,7 @@ import {
     SET_ALL_IN,
     SET_SHOWDOWN_DESCRIPTION,
     SET_DIFFICULTY,
+    SET_GAME_WINNER,
     UPDATE_POT,
 } from "../types";
 import { cards } from "../../Model/cards";
@@ -81,7 +82,8 @@ export const updateComputerChips =
 export const newHand = (prevSB, humanChips, computerChips) => (dispatch) => {
     // clear community cards
     if (humanChips == 0 || computerChips == 0) {
-        console.log("Game over");
+        let winner = humanChips == 0 ? "computer" : "player_name";
+        dispatch({ type: SET_GAME_WINNER, payload: winner });
     } else {
         dispatch({
             type: NEW_HAND,
@@ -187,7 +189,10 @@ export const setAllIn = () => (dispatch) => {
 
 export const updateGameState =
     (smallBlind, currentPlayer, action, gameState, allIn) => (dispatch) => {
-        // console.log(gameState);
+        console.log(gameState, allIn);
+        if (allIn) {
+            dispatch({ type: CHANGE_GAMESTATE, payload: gameState });
+        }
         console.log(action);
         if (gameState == "preflop") {
             if (smallBlind != currentPlayer) {
@@ -236,10 +241,6 @@ export const updateGameState =
                 checkIfBothPlayersBeen = false;
                 dispatch({ type: CHANGE_GAMESTATE, payload: "showdown" });
             }
-        }
-
-        if (allIn) {
-            dispatch({ type: CHANGE_GAMESTATE, payload: gameState });
         }
     };
 

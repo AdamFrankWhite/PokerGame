@@ -103,25 +103,27 @@ function CommunityCards(props) {
 
     // Take hand to showdown if all in
 
-    useEffect(() => {
+    const doSetTimeout = (i) => {
         let gameStates = ["preflop", "flop", "turn", "river", "showdown"];
         let deals = [dealFlop, dealTurn, dealRiver];
+        setTimeout(() => {
+            console.log(i);
+            if (i < gameStates.length - 2) deals[i]();
+            console.log(gameStates[i]);
+            props.updateGameState(null, null, null, gameStates[i], true);
+        }, 2000);
+    };
+
+    useEffect(() => {
+        let gameStates = ["preflop", "flop", "turn", "river", "showdown"];
+
         let currentGameStateIndex = gameStates.indexOf(props.user.gameState);
         if (props.user.allIn) {
             for (let i = currentGameStateIndex; i < gameStates.length; i++) {
-                setTimeout(() => {
-                    deals[i]();
-                    console.log(gameStates[i]);
-                    props.updateGameState(
-                        null,
-                        null,
-                        null,
-                        gameStates[i],
-                        true
-                    );
-                }, 2000);
+                doSetTimeout(i);
             }
-            props.updateGameState(null, null, null, "showdown");
+            console.log("showdown now");
+            // props.updateGameState(null, null, null, "showdown", true);
         }
     }, [props.user.allIn]);
 
@@ -489,6 +491,7 @@ function CommunityCards(props) {
                     showdownDescription
                 );
                 setTimeout(() => {
+                    console.log("deal new hand, but cant");
                     props.newHand(
                         props.user.smallBlind,
                         props.user.humanChips + props.user.pot,
@@ -515,6 +518,7 @@ function CommunityCards(props) {
                                 showdownDescription
                             );
                             setTimeout(() => {
+                                console.log("deal new hand, but cant");
                                 props.newHand(
                                     props.user.smallBlind,
                                     props.user.humanChips,

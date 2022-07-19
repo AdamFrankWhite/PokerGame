@@ -19,3 +19,4 @@ export const NEW_HAND = "NEW_HAND";
 export const SET_PLAYER = "SET_PLAYER";
 export const RETURN_UNMATCHED_CHIPS = "RETURN_UNMATCHED_CHIPS";
 export const SET_ALL_IN = "SET_ALL_IN";
+export const SET_GAME_WINNER = "SET_GAME_WINNER";

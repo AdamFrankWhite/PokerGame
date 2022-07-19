@@ -18,6 +18,7 @@ import {
     SET_PLAYER,
     SET_DIFFICULTY,
     SET_ALL_IN,
+    SET_GAME_WINNER,
 } from "../types";
 
 import { cards } from "../../Model/cards";
@@ -41,6 +42,7 @@ const initialState = {
     computerBet: 50,
     difficulty: "easy",
     allIn: false,
+    gameWinner: null,
 };
 
 export default function (state = initialState, action) {
@@ -146,6 +148,11 @@ export default function (state = initialState, action) {
                 ...state,
                 [`${action.payload.recipient}Chips`]:
                     action.payload.returnedChips,
+            };
+        case SET_GAME_WINNER:
+            return {
+                ...state,
+                gameWinner: action.payload,
             };
         case SET_STRAIGHT_FLUSH:
             return {
